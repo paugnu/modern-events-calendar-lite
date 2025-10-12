@@ -7,8 +7,8 @@
     "phpcompatibility/php-compatibility": "^9.3",
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "php-stubs/wordpress-stubs": "^6.6",
-    "rector/rector": "^1.2",
-    "vimeo/psalm": "^6"
+    "vimeo/psalm": "^6",
+    "rector/rector": "^2.2"
   },
   "scripts": {
     "lint": "phpcs",
