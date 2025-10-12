@@ -3,7 +3,7 @@ name: Compat PHP 8.4 (Auto PR)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 4 * * 1" # lunes 04:00 UTC
+    - cron: '0 4 * * 1'
 
 permissions:
   contents: write
@@ -17,30 +17,34 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: shivammathur/setup-php@v2
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.4"
+          php-version: '8.4'
           tools: composer
+          extensions: simplexml, dom, mbstring, intl
 
-      - name: Install deps
+      - name: Install Composer deps
         run: composer install --no-interaction --prefer-dist
 
       - name: Rector (auto-fixes for PHP 8.4)
         run: composer rector
 
-      - name: PHPCS - report & autofix
-        run: |
-          vendor/bin/phpcs || true
-          vendor/bin/phpcbf || true
-          vendor/bin/phpcs || true
+      - name: PHPCS report
+        run: vendor/bin/phpcs || true
 
-      - name: Psalm (static analysis)
+      - name: PHPCBF autofix
+        run: vendor/bin/phpcbf || true
+
+      - name: PHPCS after fixes
+        run: vendor/bin/phpcs || true
+
+      - name: Psalm
         run: composer psalm || true
 
-      # --- Smoke test: levantar WP + activar plugin ---
       - name: Start WordPress 8.4 (Docker)
         run: |
-          cat > docker-compose.yml <<'YAML'
+          cat > docker-compose.yml << 'EOF'
           services:
             db:
               image: mariadb:10.6
@@ -51,7 +55,8 @@ jobs:
                 MYSQL_PASSWORD: wp
             wp:
               image: wordpress:php8.4-apache
-              depends_on: [ db ]
+              depends_on:
+                - db
               environment:
                 WORDPRESS_DB_HOST: db
                 WORDPRESS_DB_USER: wp
@@ -59,9 +64,10 @@ jobs:
                 WORDPRESS_DB_NAME: wp
               volumes:
                 - ./:/var/www/html/wp-content/plugins/modern-events-calendar-lite
-          YAML
+              ports:
+                - "8080:80"
+          EOF
           docker compose up -d
-          # Espera breve y comprueba que el contenedor arranca
           sleep 20
           docker ps
 
@@ -70,11 +76,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git status --porcelain
-          if [[ -n "$(git status --porcelain)" ]]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Create Pull Request
@@ -86,10 +91,8 @@ jobs:
           title: "PHP 8.4 compatibility: automated fixes"
           body: |
             This automated PR:
-            - Runs Rector (UP_TO_PHP_84) for syntax & safe upgrades
-            - Applies PHPCS (WordPress + PHPCompatibilityWP) and auto-fixes
-            - Runs Psalm for static analysis (non-blocking)
-            - Boots WordPress on PHP 8.4 (Docker) for a smoke container check
-
-            Please review changes, especially signatures and typed params.
-          labels: ["automation", "php-8.4"]
+            - Runs Rector (UP_TO_PHP_84)
+            - Applies PHPCBF and PHPCS
+            - Runs Psalm (non-blocking)
+            - Boots WordPress on PHP 8.4 (Docker) for a smoke check
+          labels: automation, php-8.4
