@@ -1,0 +1,98 @@
+name: Compatibility PHP 8.4 (Auto PR)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  compat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer
+          extensions: simplexml, dom, mbstring, intl
+
+      - name: Install Composer deps
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Rector (auto-fixes for PHP 8.4)
+        run: composer rector
+
+      - name: PHPCS report
+        run: vendor/bin/phpcs || true
+
+      - name: PHPCBF autofix
+        run: vendor/bin/phpcbf || true
+
+      - name: PHPCS after fixes
+        run: vendor/bin/phpcs || true
+
+      - name: Psalm
+        run: composer psalm || true
+
+      - name: Start WordPress 8.4 (Docker)
+        run: |
+          cat > docker-compose.yml << 'EOF'
+          services:
+            db:
+              image: mariadb:10.6
+              environment:
+                MYSQL_ROOT_PASSWORD: root
+                MYSQL_DATABASE: wp
+                MYSQL_USER: wp
+                MYSQL_PASSWORD: wp
+            wp:
+              image: wordpress:php8.4-apache
+              depends_on:
+                - db
+              environment:
+                WORDPRESS_DB_HOST: db
+                WORDPRESS_DB_USER: wp
+                WORDPRESS_DB_PASSWORD: wp
+                WORDPRESS_DB_NAME: wp
+              volumes:
+                - ./:/var/www/html/wp-content/plugins/modern-events-calendar-lite
+              ports:
+                - "8080:80"
+          EOF
+          docker compose up -d
+          sleep 20
+          docker ps
+
+      - name: Detect changes
+        id: git_status
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create Pull Request
+        if: steps.git_status.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "chore: PHP 8.4 compatibility (Rector/PHPCS/Psalm)"
+          branch: chore/php84-auto-fixes
+          title: "PHP 8.4 compatibility: automated fixes"
+          body: |
+            This automated PR:
+            - Runs Rector (UP_TO_PHP_84)
+            - Applies PHPCBF and PHPCS
+            - Runs Psalm (non-blocking)
+            - Boots WordPress on PHP 8.4 (Docker) for a smoke check
+          labels: automation, php-8.4
