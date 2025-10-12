@@ -1,4 +1,4 @@
-name: Compat PHP 8.4 (Auto PR)
+name: Compatibility PHP 8.4 (Auto PR)
 
 on:
   workflow_dispatch:
