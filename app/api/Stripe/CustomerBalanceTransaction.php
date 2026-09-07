@@ -74,7 +74,7 @@ class CustomerBalanceTransaction extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function retrieve($_id, $_opts = null)
+    public static function retrieve($_id, $_opts = null): never
     {
         $msg = 'Customer Balance Transactions cannot be retrieved without a ' .
                'customer ID. Retrieve a Customer Balance Transaction using ' .
@@ -91,7 +91,7 @@ class CustomerBalanceTransaction extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function update($_id, $_params = null, $_options = null)
+    public static function update($_id, $_params = null, $_options = null): never
     {
         $msg = 'Customer Balance Transactions cannot be updated without a ' .
                'customer ID. Update a Customer Balance Transaction using ' .

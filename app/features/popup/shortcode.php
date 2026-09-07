@@ -10,8 +10,8 @@ $events = $this->main->get_events();
 
 // MEC Settings
 $settings = $this->main->get_settings();
-$wizard_page = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-$main_page = isset($_REQUEST['post_type']) ? $_REQUEST['post_type'] : '';
+$wizard_page = $_REQUEST['page'] ?? '';
+$main_page = $_REQUEST['post_type'] ?? '';
 ?>
 <div id="mec_popup_shortcode" class="lity-hide">
     <div class="mec-steps-container">

@@ -46,11 +46,11 @@ class MEC_addon_learndash extends MEC_base
         if(!isset($this->settings['ld_status']) or (isset($this->settings['ld_status']) and !$this->settings['ld_status'])) return false;
 
         // Tickets
-        add_action('custom_field_ticket', array($this, 'add_courses_dropdown_to_tickets'), 10, 2);
-        add_action('custom_field_dynamic_ticket', array($this, 'add_courses_dropdown_to_raw_tickets'));
+        add_action('custom_field_ticket', $this->add_courses_dropdown_to_tickets(...), 10, 2);
+        add_action('custom_field_dynamic_ticket', $this->add_courses_dropdown_to_raw_tickets(...));
 
         // Add to Course
-        add_action('mec_booking_completed', array($this, 'assign'), 10, 1);
+        add_action('mec_booking_completed', $this->assign(...), 10, 1);
 
         return true;
     }
@@ -80,14 +80,14 @@ class MEC_addon_learndash extends MEC_base
         // LearnDash is not installed
         if(!defined('LEARNDASH_VERSION')) return;
 
-        $this->add_courses_dropdown_to_tickets(array(), ':i:');
+        $this->add_courses_dropdown_to_tickets([], ':i:');
     }
 
     public function get_courses()
     {
-        $courses = array();
+        $courses = [];
 
-        $posts = get_posts(array('post_type' => 'sfwd-courses', 'posts_per_page' => -1));
+        $posts = get_posts(['post_type' => 'sfwd-courses', 'posts_per_page' => -1]);
         if($posts) foreach($posts as $post) $courses[$post->ID] = $post->post_title;
 
         return $courses;
@@ -105,7 +105,7 @@ class MEC_addon_learndash extends MEC_base
 
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
 
-        $courses = array();
+        $courses = [];
         foreach($tickets as $ticket_id => $ticket)
         {
             if(!is_numeric($ticket_id)) continue;

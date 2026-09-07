@@ -40,11 +40,11 @@ class MEC_addon_elementor extends MEC_base
         // Elementor is not installed
         if(!did_action('elementor/loaded')) return false;
 
-        add_action('elementor/widgets/widgets_registered', array($this, 'register_shortcode'));
+        add_action('elementor/widgets/widgets_registered', $this->register_shortcode(...));
 
         add_action( 'elementor/preview/enqueue_styles', function() {
-            wp_enqueue_style( 'mec-elementor-owl-carousel-css', plugins_url( '../../assets/packages/owl-carousel/owl.carousel.min.css', __FILE__ ), array() );
-            wp_enqueue_style( 'mec-elementor-frontend-css',     plugins_url( '../../assets/css/frontend.css', __FILE__ ), array() );
+            wp_enqueue_style( 'mec-elementor-owl-carousel-css', plugins_url( '../../assets/packages/owl-carousel/owl.carousel.min.css', __FILE__ ), [] );
+            wp_enqueue_style( 'mec-elementor-frontend-css',     plugins_url( '../../assets/css/frontend.css', __FILE__ ), [] );
         });
 
 		add_action('elementor/editor/after_enqueue_scripts', function() {

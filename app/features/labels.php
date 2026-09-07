@@ -37,18 +37,18 @@ class MEC_feature_labels extends MEC_base
      */
     public function init()
     {
-        $this->factory->action('init', array($this, 'register_taxonomy'), 15);
-        $this->factory->action('mec_label_edit_form_fields', array($this, 'edit_form'));
-        $this->factory->action('mec_label_add_form_fields', array($this, 'add_form'));
-        $this->factory->action('edited_mec_label', array($this, 'save_metadata'));
-        $this->factory->action('created_mec_label', array($this, 'save_metadata'));
+        $this->factory->action('init', [$this, 'register_taxonomy'], 15);
+        $this->factory->action('mec_label_edit_form_fields', [$this, 'edit_form']);
+        $this->factory->action('mec_label_add_form_fields', [$this, 'add_form']);
+        $this->factory->action('edited_mec_label', [$this, 'save_metadata']);
+        $this->factory->action('created_mec_label', [$this, 'save_metadata']);
         
-        $this->factory->action('add_meta_boxes', array($this, 'register_meta_boxes'));
+        $this->factory->action('add_meta_boxes', [$this, 'register_meta_boxes']);
         
-        $this->factory->filter('manage_edit-mec_label_columns', array($this, 'filter_columns'));
-        $this->factory->filter('manage_mec_label_custom_column', array($this, 'filter_columns_content'), 10, 3);
+        $this->factory->filter('manage_edit-mec_label_columns', [$this, 'filter_columns']);
+        $this->factory->filter('manage_mec_label_custom_column', [$this, 'filter_columns_content'], 10, 3);
         
-        $this->factory->action('save_post', array($this, 'save_event'), 3);
+        $this->factory->action('save_post', [$this, 'save_event'], 3);
     }
     
     /**
@@ -63,9 +63,9 @@ class MEC_feature_labels extends MEC_base
         register_taxonomy(
             'mec_label',
             $this->main->get_main_post_type(),
-            array(
+            [
                 'label'=>$plural_label,
-                'labels'=>array(
+                'labels'=>[
                     'name'=>$plural_label,
                     'singular_name'=>$singular_label,
                     'all_items'=>sprintf(__('All %s', 'modern-events-calendar-lite'), $plural_label),
@@ -78,12 +78,12 @@ class MEC_feature_labels extends MEC_base
                     'search_items'=>sprintf(__('Search %s', 'modern-events-calendar-lite'), $plural_label),
                     'back_to_items'=>sprintf(__('← Back to %s', 'modern-events-calendar-lite'), $plural_label),
                     'not_found'=>sprintf(__('no %s found.', 'modern-events-calendar-lite'), strtolower($plural_label)),
-                ),
-                'rewrite'=>array('slug'=>'events-label'),
+                ],
+                'rewrite'=>['slug'=>'events-label'],
                 'public'=>false,
                 'show_ui'=>true,
                 'hierarchical'=>false,
-            )
+            ]
         );
         
         register_taxonomy_for_object_type('mec_label', $this->main->get_main_post_type());
@@ -224,7 +224,7 @@ class MEC_feature_labels extends MEC_base
      */
     public function register_meta_boxes()
     {
-        add_meta_box('mec_metabox_label', sprintf(__('Event %s', 'modern-events-calendar-lite'), $this->main->m('taxonomy_labels', __('Labels', 'modern-events-calendar-lite'))), array($this, 'meta_box_labels'), $this->main->get_main_post_type(), 'side');
+        add_meta_box('mec_metabox_label', sprintf(__('Event %s', 'modern-events-calendar-lite'), $this->main->m('taxonomy_labels', __('Labels', 'modern-events-calendar-lite'))), $this->meta_box_labels(...), $this->main->get_main_post_type(), 'side');
     }
     
     /**
@@ -234,8 +234,8 @@ class MEC_feature_labels extends MEC_base
      */
     public function meta_box_labels($post)
     {
-        $labels = get_terms('mec_label', array('orderby'=>'name', 'order'=>'ASC', 'hide_empty'=>'0'));
-        $terms = wp_get_post_terms($post->ID, 'mec_label', array('fields'=>'ids'));
+        $labels = get_terms('mec_label', ['orderby'=>'name', 'order'=>'ASC', 'hide_empty'=>'0']);
+        $terms = wp_get_post_terms($post->ID, 'mec_label', ['fields'=>'ids']);
     ?>
         <div class="mec-meta-box-labels-container">
             <div class="mec-form-row">
@@ -270,11 +270,11 @@ class MEC_feature_labels extends MEC_base
         if(defined('DOING_AUTOSAVE') and DOING_AUTOSAVE) return;
 
         // Get Modern Events Calendar Data
-        $_mec = isset($_POST['mec']) ? $_POST['mec'] : array();
+        $_mec = $_POST['mec'] ?? [];
         
-        $_labels = isset($_mec['labels']) ? (array) $_mec['labels'] : array();
+        $_labels = isset($_mec['labels']) ? (array) $_mec['labels'] : [];
         
-        $_labels = array_map('intval', $_labels);
+        $_labels = array_map(intval(...), $_labels);
         $_labels = array_unique($_labels);
         
         wp_set_object_terms($post_id, $_labels, 'mec_label');

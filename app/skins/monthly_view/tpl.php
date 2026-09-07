@@ -45,14 +45,14 @@ if($this->next_previous_button)
 // Return the data if called by AJAX
 if(isset($this->atts['return_items']) and $this->atts['return_items'])
 {
-    echo json_encode(array(
+    echo json_encode([
         'month'=>$month_html,
-        'events_side'=>(in_array($this->style, array('clean', 'modern')) ? $this->events_str : ''),
+        'events_side'=>(in_array($this->style, ['clean', 'modern']) ? $this->events_str : ''),
         'navigator'=>$navigator_html,
-        'previous_month'=>array('label'=>$this->main->date_i18n('Y F', $_1month_before), 'id'=>date('Ym', $_1month_before), 'year'=>date('Y', $_1month_before), 'month'=>date('m', $_1month_before)),
-        'current_month'=>array('label'=>$this->main->date_i18n('Y F', $current_month_time), 'id'=>date('Ym', $current_month_time), 'year'=>date('Y', $current_month_time), 'month'=>date('m', $current_month_time)),
-        'next_month'=>array('label'=>$this->main->date_i18n('Y F', $_1month_after), 'id'=>date('Ym', $_1month_after), 'year'=>date('Y', $_1month_after), 'month'=>date('m', $_1month_after)),
-    ));
+        'previous_month'=>['label'=>$this->main->date_i18n('Y F', $_1month_before), 'id'=>date('Ym', $_1month_before), 'year'=>date('Y', $_1month_before), 'month'=>date('m', $_1month_before)],
+        'current_month'=>['label'=>$this->main->date_i18n('Y F', $current_month_time), 'id'=>date('Ym', $current_month_time), 'year'=>date('Y', $current_month_time), 'month'=>date('m', $current_month_time)],
+        'next_month'=>['label'=>$this->main->date_i18n('Y F', $_1month_after), 'id'=>date('Ym', $_1month_after), 'year'=>date('Y', $_1month_after), 'month'=>date('m', $_1month_after)],
+    ]);
     exit;
 }
 
@@ -74,8 +74,8 @@ jQuery(document).ready(function()
         events_label: "'.esc_attr__('Events', 'modern-events-calendar-lite').'",
         event_label: "'.esc_attr__('Event', 'modern-events-calendar-lite').'",
         month_navigator: '.($this->next_previous_button ? 1 : 0).',
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
-        style: "'.(isset($this->skin_options['style']) ? $this->skin_options['style'] : NULL).'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
+        style: "'.($this->skin_options['style'] ?? NULL).'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",
@@ -96,7 +96,7 @@ else $this->factory->params('footer', $javascript);
 $styling = $this->main->get_styling();
 $event_colorskin = (isset($styling['mec_colorskin'] ) || isset($styling['color'])) ? 'colorskin-custom' : '';
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 

@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -44,13 +44,13 @@ class Google_Signer_P12 extends Google_Signer_Abstract
     // format. Different versions of openssl support different p12 formats
     // and the key from google wasn't being accepted by the version available
     // at the time.
-    if (!$password && strpos($p12, "-----BEGIN RSA PRIVATE KEY-----") !== false) {
+    if (!$password && str_contains($p12, "-----BEGIN RSA PRIVATE KEY-----")) {
       $this->privateKey = openssl_pkey_get_private($p12);
-    } elseif ($password === 'notasecret' && strpos($p12, "-----BEGIN PRIVATE KEY-----") !== false) {
+    } elseif ($password === 'notasecret' && str_contains($p12, "-----BEGIN PRIVATE KEY-----")) {
       $this->privateKey = openssl_pkey_get_private($p12);
     } else {
       // This throws on error
-      $certs = array();
+      $certs = [];
       if (!openssl_pkcs12_read($p12, $certs, $password)) {
         throw new Google_Auth_Exception(
             "Unable to parse the p12 file.  " .

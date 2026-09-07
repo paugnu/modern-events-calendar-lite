@@ -21,7 +21,7 @@ $date_format1 = (isset($settings['single_date_format1']) and trim($settings['sin
 $time_format = get_option('time_format', 'H:i');
 
 $occurrence = isset($_GET['occurrence']) ? sanitize_text_field($_GET['occurrence']) : '';
-$occurrence_end_date = trim($occurrence) ? $this->get_end_date_by_occurrence($event->data->ID, (isset($event->date['start']['date']) ? $event->date['start']['date'] : $occurrence)) : '';
+$occurrence_end_date = trim($occurrence) ? $this->get_end_date_by_occurrence($event->data->ID, ($event->date['start']['date'] ?? $occurrence)) : '';
 
 $gmt_offset_seconds = $this->get_gmt_offset_seconds((trim($occurrence) ? $occurrence : $event->date['start']['date']), $event);
 
@@ -36,15 +36,15 @@ $offset = $user_timezone->getOffset($gmt_datetime);
 $user_start_time = $gmt_start_time + $offset;
 $user_end_time = $gmt_end_time + $offset;
 
-$allday = isset($event->data->meta['mec_allday']) ? $event->data->meta['mec_allday'] : 0;
-$hide_time = isset($event->data->meta['mec_hide_time']) ? $event->data->meta['mec_hide_time'] : 0;
-$hide_end_time = isset($event->data->meta['mec_hide_end_time']) ? $event->data->meta['mec_hide_end_time'] : 0;
+$allday = $event->data->meta['mec_allday'] ?? 0;
+$hide_time = $event->data->meta['mec_hide_time'] ?? 0;
+$hide_end_time = $event->data->meta['mec_hide_end_time'] ?? 0;
 ?>
 <div class="mec-local-time-details mec-frontbox" id="mec_local_time_details">
     <i class="mec-sl-clock"></i><h3 class="mec-local-time mec-frontbox-title"><?php _e('Local Time', 'modern-events-calendar-lite'); ?></h3>
     <ul>
         <li><?php echo sprintf(__('Timezone: %s', 'modern-events-calendar-lite'), '<span>'.$timezone.'</span>'); ?></li>
-        <li><?php echo sprintf(__('Date: %s', 'modern-events-calendar-lite'), $this->date_label(array('date'=>date('Y-m-d', $user_start_time)), array('date'=>date('Y-m-d', $user_end_time)), $date_format1)); ?></li>
+        <li><?php echo sprintf(__('Date: %s', 'modern-events-calendar-lite'), $this->date_label(['date'=>date('Y-m-d', $user_start_time)], ['date'=>date('Y-m-d', $user_end_time)], $date_format1)); ?></li>
         <?php if(!$hide_time and trim($time_format)): ?>
         <li><?php echo sprintf(__('Time: %s', 'modern-events-calendar-lite'), '<span>'.($allday ? $this->m('all_day', __('All Day' , 'modern-events-calendar-lite')) : ($hide_end_time ? date($time_format, $user_start_time) : date($time_format, $user_start_time).' - '.date($time_format, $user_end_time))).'</span>'); ?></li>
         <?php endif; ?>

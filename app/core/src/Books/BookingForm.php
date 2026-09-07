@@ -27,8 +27,8 @@ class BookingForm extends Singleton {
         $MEC_Events = $single->get_event_mec($event_id);
         $single_event = $MEC_Events[0];
         $booking_options = get_post_meta($event_id, 'mec_booking', true);
-        $occurrence = (isset($single_event->date['start']['date']) ? $single_event->date['start']['date'] : (isset($_GET['occurrence']) ? sanitize_text_field($_GET['occurrence']) : ''));
-        $occurrence_end_date = trim($occurrence) ? $mainClass->get_end_date_by_occurrence($single_event->data->ID, (isset($single_event->date['start']['date']) ? $single_event->date['start']['date'] : $occurrence)) : '';
+        $occurrence = ($single_event->date['start']['date'] ?? (isset($_GET['occurrence']) ? sanitize_text_field($_GET['occurrence']) : ''));
+        $occurrence_end_date = trim($occurrence) ? $mainClass->get_end_date_by_occurrence($single_event->data->ID, ($single_event->date['start']['date'] ?? $occurrence)) : '';
 
         if ($mainClass->is_sold($single_event, (trim($occurrence) ? $occurrence : $single_event->date['start']['date'])) && count($single_event->dates) <= 1) : ?>
             <div class="mec-sold-tickets warning-msg"><?php esc_html_e('Sold out!', 'wpl'); ?></div>
@@ -46,7 +46,7 @@ class BookingForm extends Singleton {
                 } elseif ( isset($settings['booking_user_login']) && $settings['booking_user_login'] == '0' && !is_user_logged_in() && isset($booking_options['bookings_limit_for_users']) && $booking_options['bookings_limit_for_users'] == '1' ) {
                     echo do_shortcode('[MEC_login]');
                 } else {
-                    echo $mainClass->module('booking.default', array('event' => $MEC_Events));
+                    echo $mainClass->module('booking.default', ['event' => $MEC_Events]);
                 }
                 ?>
             </div>

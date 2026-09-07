@@ -24,7 +24,7 @@ class MEC
         if(!defined('EP_MEC_EVENTS')) define('EP_MEC_EVENTS', 555);
 
         // Import Base library
-        $this->import('app.libraries.base');
+        static::import('app.libraries.base');
     }
 
     private function __clone()
@@ -87,34 +87,34 @@ class MEC
         $factory->load_addons();
 
         // Register MEC Widget
-        $factory->action('widgets_init', array($factory, 'load_widgets'));
+        $factory->action('widgets_init', [$factory, 'load_widgets']);
 
         // MEC Body Class
-        $factory->action('body_class', array($factory, 'mec_body_class'));
+        $factory->action('body_class', [$factory, 'mec_body_class']);
 
         // MEC Admin Body Class
-        $factory->action('admin_body_class', array($factory, 'mec_admin_body_class'));
+        $factory->action('admin_body_class', [$factory, 'mec_admin_body_class']);
 
         // Register MEC Menus
-        $factory->action('admin_menu', array($factory, 'load_menus'), 1);
+        $factory->action('admin_menu', [$factory, 'load_menus'], 1);
 
         // Register MEC Menus
-        $factory->action('init', array($factory, 'mec_dyncss'));
+        $factory->action('init', [$factory, 'mec_dyncss']);
 
         // Include needed assets (CSS, JavaScript etc) in the WordPress backend
-        $factory->action('admin_enqueue_scripts', array($factory, 'load_backend_assets'), 0);
+        $factory->action('admin_enqueue_scripts', [$factory, 'load_backend_assets'], 0);
 
         // Include needed assets (CSS, JavaScript etc) in the website frontend
-		$factory->action('wp_enqueue_scripts', array($factory, 'load_frontend_assets'), 0);
+		$factory->action('wp_enqueue_scripts', [$factory, 'load_frontend_assets'], 0);
 
         // Register the shortcodes
-        $factory->action('init', array($factory, 'load_shortcodes'));
+        $factory->action('init', [$factory, 'load_shortcodes']);
 
         // Register language files for localization
-        $factory->action('plugins_loaded', array($factory, 'load_languages'));
+        $factory->action('plugins_loaded', [$factory, 'load_languages']);
 
         // Plugin Update Notification
-        $factory->action('in_plugin_update_message-' . MEC_BASENAME , array($factory, 'mecShowUpgradeNotification') , 10,2);
+        $factory->action('in_plugin_update_message-' . MEC_BASENAME , [$factory, 'mecShowUpgradeNotification'] , 10,2);
     }
     
     /**
@@ -259,7 +259,7 @@ class MEC
     {
         // Import Render Library
         $render = MEC::getInstance('app.libraries.render');
-        return $render->vsingle(array('id'=>get_the_ID()));
+        return $render->vsingle(['id'=>get_the_ID()]);
     }
     
     /**

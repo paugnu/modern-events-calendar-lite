@@ -22,14 +22,14 @@ $end_time_hour = 6;
 $end_time_minutes = 0;
 $end_time_ampm = 'PM';
 
-$locations = get_terms('mec_location', array('orderby'=>'name', 'hide_empty'=>'0'));
+$locations = get_terms('mec_location', ['orderby'=>'name', 'hide_empty'=>'0']);
 $location_id = 1;
 $dont_show_map = 1;
 
-$organizers = get_terms('mec_organizer', array('orderby'=>'name', 'hide_empty'=>'0'));
+$organizers = get_terms('mec_organizer', ['orderby'=>'name', 'hide_empty'=>'0']);
 $organizer_id = 1;
-$wizard_page = isset($_REQUEST['page']) ? $_REQUEST['page'] : '';
-$main_page = isset($_REQUEST['post_type']) ? $_REQUEST['post_type'] : '';
+$wizard_page = $_REQUEST['page'] ?? '';
+$main_page = $_REQUEST['post_type'] ?? '';
 // This date format used for input type of datepicker.
 $datepicker_format = (isset($settings['datepicker_format']) and trim($settings['datepicker_format'])) ? $settings['datepicker_format'] : 'Y-m-d';
 ?>
@@ -77,14 +77,14 @@ $datepicker_format = (isset($settings['datepicker_format']) and trim($settings['
                                        placeholder="<?php _e('Start Date', 'modern-events-calendar-lite'); ?>" autocomplete="off"/>
                             </div>
                             <div class="mec-col-6 mec-time-picker <?php echo ($allday == 1) ? 'mec-util-hidden' : ''; ?>">
-                            <?php $this->main->timepicker(array(
-                                'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                            <?php $this->main->timepicker([
+                                'method' => ($this->settings['time_format'] ?? 12),
                                 'time_hour' => $start_time_hour,
                                 'time_minutes' => $start_time_minutes,
                                 'time_ampm' => $start_time_ampm,
                                 'name' => 'mec[date][start]',
                                 'id_key' => 'start_',
-                            )); ?>
+                            ]); ?>
                         </div>
                         </div>
                         <div class="mec-form-row">
@@ -94,14 +94,14 @@ $datepicker_format = (isset($settings['datepicker_format']) and trim($settings['
                                        autocomplete="off"/>
                             </div>
                             <div class="mec-col-6 mec-time-picker <?php echo ($allday == 1) ? 'mec-util-hidden' : ''; ?>">
-                                <?php $this->main->timepicker(array(
-                                    'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                                <?php $this->main->timepicker([
+                                    'method' => ($this->settings['time_format'] ?? 12),
                                     'time_hour' => $end_time_hour,
                                     'time_minutes' => $end_time_minutes,
                                     'time_ampm' => $end_time_ampm,
                                     'name' => 'mec[date][end]',
                                     'id_key' => 'end_',
-                                )); ?>
+                                ]); ?>
                             </div>
                         </div>
                         <div class="mec-form-row mec-all-day-event">
@@ -221,9 +221,9 @@ $datepicker_format = (isset($settings['datepicker_format']) and trim($settings['
                     </div>
                     <div class="mec-categories-tab-contents mec-form-row">
                         <ul>
-                            <?php wp_terms_checklist(0, array(
+                            <?php wp_terms_checklist(0, [
                                 'taxonomy' => 'mec_category',
-                            )); ?>
+                            ]); ?>
                         </ul>
                     </div>
                     <div class="mec-categories-add-new">

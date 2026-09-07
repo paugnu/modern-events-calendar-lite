@@ -32,7 +32,7 @@ class MEC_feature_tag extends MEC_base
         $this->PT = $this->main->get_main_post_type();
 
         // Taxonomy
-        $this->taxonomy = (isset($this->settings['tag_method']) ? $this->settings['tag_method'] : 'post_tag');
+        $this->taxonomy = ($this->settings['tag_method'] ?? 'post_tag');
     }
     
     /**
@@ -41,11 +41,11 @@ class MEC_feature_tag extends MEC_base
      */
     public function init()
     {
-        $this->factory->action('init', array($this, 'register_taxonomy'), 100);
-        $this->factory->filter('mec_taxonomy_tag', array($this, 'taxonomy'), 10);
+        $this->factory->action('init', $this->register_taxonomy(...), 100);
+        $this->factory->filter('mec_taxonomy_tag', $this->taxonomy(...), 10);
 
         // Toggle Tag Method
-        $this->factory->action('mec_tag_method_changed', array($this, 'toggle'), 10, 2);
+        $this->factory->action('mec_tag_method_changed', $this->toggle(...), 10, 2);
     }
 
     public function register_taxonomy($taxonomy = NULL)
@@ -61,9 +61,9 @@ class MEC_feature_tag extends MEC_base
             register_taxonomy(
                 'mec_tag',
                 $this->PT,
-                array(
+                [
                     'label'=>$plural_label,
-                    'labels'=>array(
+                    'labels'=>[
                         'name'=>$plural_label,
                         'singular_name'=>$singular_label,
                         'all_items'=>sprintf(__('All %s', 'modern-events-calendar-lite'), $plural_label),
@@ -76,12 +76,12 @@ class MEC_feature_tag extends MEC_base
                         'search_items'=>sprintf(__('Search %s', 'modern-events-calendar-lite'), $plural_label),
                         'back_to_items'=>sprintf(__('← Back to %s', 'modern-events-calendar-lite'), $plural_label),
                         'not_found'=>sprintf(__('no %s found.', 'modern-events-calendar-lite'), strtolower($plural_label)),
-                    ),
-                    'rewrite'=>array('slug'=>'events-tag'),
+                    ],
+                    'rewrite'=>['slug'=>'events-tag'],
                     'public'=>false,
                     'show_ui'=>true,
                     'hierarchical'=>false,
-                )
+                ]
             );
 
             register_taxonomy_for_object_type('mec_tag', $this->PT);
@@ -98,18 +98,18 @@ class MEC_feature_tag extends MEC_base
         // Register New Taxonomy
         $this->register_taxonomy($new_method);
 
-        $events = get_posts(array(
+        $events = get_posts([
             'post_type' => $this->PT,
-            'post_status' => array('publish', 'pending', 'draft', 'future', 'private', 'trash'),
+            'post_status' => ['publish', 'pending', 'draft', 'future', 'private', 'trash'],
             'numberposts' => -1
-        ));
+        ]);
 
         foreach($events as $event)
         {
             $old_terms = get_the_terms($event, $old_method);
             if(!is_array($old_terms) or (is_array($old_terms) and !count($old_terms))) continue;
 
-            $new_term_ids = array();
+            $new_term_ids = [];
             foreach($old_terms as $old_term)
             {
                 $term = wp_create_term($old_term->name, $new_method);

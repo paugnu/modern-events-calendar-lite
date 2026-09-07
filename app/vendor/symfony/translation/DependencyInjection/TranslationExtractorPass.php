@@ -21,13 +21,8 @@ use Symfony\Component\DependencyInjection\Exception\RuntimeException;
  */
 class TranslationExtractorPass implements CompilerPassInterface
 {
-    private $extractorServiceId;
-    private $extractorTag;
-
-    public function __construct(string $extractorServiceId = 'translation.extractor', string $extractorTag = 'translation.extractor')
+    public function __construct(private readonly string $extractorServiceId = 'translation.extractor', private readonly string $extractorTag = 'translation.extractor')
     {
-        $this->extractorServiceId = $extractorServiceId;
-        $this->extractorTag = $extractorTag;
     }
 
     public function process(ContainerBuilder $container)
@@ -43,7 +38,7 @@ class TranslationExtractorPass implements CompilerPassInterface
                 throw new RuntimeException(sprintf('The alias for the tag "translation.extractor" of service "%s" must be set.', $id));
             }
 
-            $definition->addMethodCall('addExtractor', array($attributes[0]['alias'], new Reference($id)));
+            $definition->addMethodCall('addExtractor', [$attributes[0]['alias'], new Reference($id)]);
         }
     }
 }

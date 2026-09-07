@@ -28,13 +28,13 @@ $ix_options = $this->main->get_ix_options();
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_facebook_app_token"><?php _e('Facebook Page Access Token', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_facebook_app_token" name="ix[facebook_app_token]" value="<?php echo (isset($ix_options['facebook_app_token']) ? $ix_options['facebook_app_token'] : ''); ?>" />
+                            <input type="text" id="mec_ix_facebook_app_token" name="ix[facebook_app_token]" value="<?php echo ($ix_options['facebook_app_token'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_facebook_import_page_link"><?php _e('Facebook Page Link', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_facebook_import_page_link" name="ix[facebook_import_page_link]" value="<?php echo (isset($ix_options['facebook_import_page_link']) ? $ix_options['facebook_import_page_link'] : ''); ?>" />
+                            <input type="text" id="mec_ix_facebook_import_page_link" name="ix[facebook_import_page_link]" value="<?php echo ($ix_options['facebook_import_page_link'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-options-fields">
@@ -89,8 +89,8 @@ $ix_options = $this->main->get_ix_options();
                             </label>
                         </div>
                         <input type="hidden" name="mec-ix-action" value="facebook-calendar-import-do" />
-                        <input type="hidden" name="ix[facebook_import_page_link]" value="<?php echo (isset($this->ix['facebook_import_page_link']) ? $this->ix['facebook_import_page_link'] : ''); ?>" />
-                        <input type="hidden" name="ix[facebook_app_token]" value="<?php echo (isset($this->ix['facebook_app_token']) ? $this->ix['facebook_app_token'] : ''); ?>" />
+                        <input type="hidden" name="ix[facebook_import_page_link]" value="<?php echo ($this->ix['facebook_import_page_link'] ?? ''); ?>" />
+                        <input type="hidden" name="ix[facebook_app_token]" value="<?php echo ($this->ix['facebook_app_token'] ?? ''); ?>" />
                         <button id="mec_ix_facebook_import_do_form_button" class="button button-primary mec-button-primary" type="submit"><?php _e('Import', 'modern-events-calendar-lite'); ?></button>
                     </div>
                 </form>

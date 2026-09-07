@@ -67,7 +67,7 @@ class MEC_parser extends MEC_base
         // MEC main post type name
         $PT = $this->main->get_main_post_type();
 
-        return array(
+        return [
             // '(?:'.$slug.')/(\d{4}-\d{2})/?$'=>'index.php?post_type='.$PT.'&MecDisplay=month&MecDate=$matches[1]',
             // '(?:'.$slug.')/(?:yearly)/?$'=>'index.php?post_type='.$PT.'&MecDisplay=year',
             // '(?:'.$slug.')/(?:monthly)/?$'=>'index.php?post_type='.$PT.'&MecDisplay=month',
@@ -81,7 +81,7 @@ class MEC_parser extends MEC_base
             // '(?:'.$slug.')/(?:masonry)/?$'=>'index.php?post_type='.$PT.'&MecDisplay=masonry',
             '(?:'.$slug.')/?$'=>'index.php?post_type='.$PT.'&MecDisplay=default',
             '(?:'.$slug.')/(feed|rdf|rss|rss2|atom)/?$'=>'index.php?post_type='.$PT.'&feed=$matches[1]',
-        );
+        ];
     }
     
     /**
@@ -165,9 +165,9 @@ class MEC_parser extends MEC_base
                 // MEC factory library
                 $factory = $this->getFactory();
 
-                $factory->filter('the_content', array($this, 'archive_content'));
-                $factory->filter('mec_archive_title', array($this, 'archive_title'));
-                $factory->filter('post_thumbnail_html', array($this, 'archive_thumbnail'));
+                $factory->filter('the_content', [$this, 'archive_content']);
+                $factory->filter('mec_archive_title', [$this, 'archive_title']);
+                $factory->filter('post_thumbnail_html', [$this, 'archive_thumbnail']);
             });
 		}
         elseif(is_tax('mec_category'))
@@ -198,7 +198,7 @@ class MEC_parser extends MEC_base
     public function archive_content($content)
     {
         // only run it once
-        remove_filter('the_content', array($this, 'archive_content'));
+        remove_filter('the_content', $this->archive_content(...));
         
         // WP_Query
         $wp_query = $this->get_wp_query();
@@ -226,7 +226,7 @@ class MEC_parser extends MEC_base
     public function archive_title($title)
     {
         // only run it once
-        remove_filter('mec_archive_title', array($this, 'archive_title'));
+        remove_filter('mec_archive_title', $this->archive_title(...));
 
         return $this->main->get_archive_title();
     }
@@ -239,7 +239,7 @@ class MEC_parser extends MEC_base
     public function archive_thumbnail($html)
     {
         // only run it once
-        remove_filter('post_thumbnail_html', array($this, 'archive_thumbnail'));
+        remove_filter('post_thumbnail_html', $this->archive_thumbnail(...));
         
         return $this->main->get_archive_thumbnail();
     }
@@ -255,7 +255,7 @@ class MEC_parser extends MEC_base
         if(!is_singular($this->main->get_main_post_type())) return $content;
         
         $event_id = get_the_ID();
-        return $this->render->vsingle(array('id'=>$event_id, 'content'=>$content));
+        return $this->render->vsingle(['id'=>$event_id, 'content'=>$content]);
     }
 
     public function archive_document_title($title)

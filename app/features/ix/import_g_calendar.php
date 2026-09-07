@@ -25,25 +25,25 @@ $ix_options = $this->main->get_ix_options();
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_import_api_key"><?php _e('Google API Key', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_import_api_key" name="ix[google_import_api_key]" value="<?php echo (isset($ix_options['google_import_api_key']) ? $ix_options['google_import_api_key'] : ''); ?>" />
+                            <input type="text" id="mec_ix_google_import_api_key" name="ix[google_import_api_key]" value="<?php echo ($ix_options['google_import_api_key'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_import_calendar_id"><?php _e('Calendar ID', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_import_calendar_id" name="ix[google_import_calendar_id]" value="<?php echo (isset($ix_options['google_import_calendar_id']) ? $ix_options['google_import_calendar_id'] : ''); ?>" />
+                            <input type="text" id="mec_ix_google_import_calendar_id" name="ix[google_import_calendar_id]" value="<?php echo ($ix_options['google_import_calendar_id'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_import_start_date"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_import_start_date" name="ix[google_import_start_date]" value="<?php echo (isset($ix_options['google_import_start_date']) ? $ix_options['google_import_start_date'] : date('Y-m-d', strtotime('-1 Month'))); ?>" class="mec_date_picker" />
+                            <input type="text" id="mec_ix_google_import_start_date" name="ix[google_import_start_date]" value="<?php echo ($ix_options['google_import_start_date'] ?? date('Y-m-d', strtotime('-1 Month'))); ?>" class="mec_date_picker" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_import_end_date"><?php _e('End Date', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_import_end_date" name="ix[google_import_end_date]" value="<?php echo (isset($ix_options['google_import_end_date']) ? $ix_options['google_import_end_date'] : date('Y-m-d', strtotime('+3 Months'))); ?>" class="mec_date_picker" />
+                            <input type="text" id="mec_ix_google_import_end_date" name="ix[google_import_end_date]" value="<?php echo ($ix_options['google_import_end_date'] ?? date('Y-m-d', strtotime('+3 Months'))); ?>" class="mec_date_picker" />
                         </div>
                     </div>
                     <div class="mec-options-fields">
@@ -77,7 +77,7 @@ $ix_options = $this->main->get_ix_options();
                                 <li>
                                     <label>
                                         <input type="checkbox" name="g-events[]" value="<?php echo $event['id']; ?>" checked="checked" />
-                                        <span><?php echo sprintf(__('Event Title: %s Event Date: %s - %s', 'modern-events-calendar-lite'), '<strong>'.$event['title'].'</strong>', '<strong title="'.esc_attr('First Date of Event', 'modern-events-calendar-lite').'">'.($date_start->format('Y-m-d H:i:s')).'</strong>', '<strong title="'.esc_attr('First Date of Event', 'modern-events-calendar-lite').'">'.($date_end->format('Y-m-d H:i:s')).'</strong>'); ?></span>
+                                        <span><?php echo sprintf(__('Event Title: %s Event Date: %s - %s', 'modern-events-calendar-lite'), '<strong>'.$event['title'].'</strong>', '<strong title="'.esc_attr('First Date of Event').'">'.($date_start->format('Y-m-d H:i:s')).'</strong>', '<strong title="'.esc_attr('First Date of Event').'">'.($date_end->format('Y-m-d H:i:s')).'</strong>'); ?></span>
                                     </label>
                                 </li>
                                 <?php endforeach; ?>
@@ -98,8 +98,8 @@ $ix_options = $this->main->get_ix_options();
                                 </label>
                             </div>
                             <input type="hidden" name="mec-ix-action" value="google-calendar-import-do" />
-                            <input type="hidden" name="ix[google_import_api_key]" value="<?php echo (isset($this->ix['google_import_api_key']) ? $this->ix['google_import_api_key'] : ''); ?>" />
-                            <input type="hidden" name="ix[google_import_calendar_id]" value="<?php echo (isset($this->ix['google_import_calendar_id']) ? $this->ix['google_import_calendar_id'] : ''); ?>" />
+                            <input type="hidden" name="ix[google_import_api_key]" value="<?php echo ($this->ix['google_import_api_key'] ?? ''); ?>" />
+                            <input type="hidden" name="ix[google_import_calendar_id]" value="<?php echo ($this->ix['google_import_calendar_id'] ?? ''); ?>" />
                             <button id="mec_ix_google_import_do_form_button" class="button button-primary mec-button-primary" type="submit"><?php _e('Import', 'modern-events-calendar-lite'); ?></button>
                         </div>
                     </form>

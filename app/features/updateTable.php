@@ -41,7 +41,7 @@ class MEC_feature_updateTable extends MEC_base
         if(!is_admin()) return;
 
         // Run the Update Function
-        $this->factory->action('wp_loaded', array($this, 'calculate'));
+        $this->factory->action('wp_loaded', $this->calculate(...));
     }
 
     public function calculate()
@@ -66,7 +66,7 @@ class MEC_feature_updateTable extends MEC_base
                 $discount = $transaction && isset($transaction['discount']) ? $transaction['discount'] : 0;
                 $eventTickets = get_post_meta($eventID, 'mec_tickets', true);
 
-                $attendeesMeta = get_post_meta($booking->ID, 'mec_attendees', true) ? get_post_meta($booking->ID, 'mec_attendees', true) : (get_post_meta($booking->ID, 'mec_attendee', true) ? get_post_meta($booking->ID, 'mec_attendee', true) : []);
+                $attendeesMeta = get_post_meta($booking->ID, 'mec_attendees', true) ?: ((get_post_meta($booking->ID, 'mec_attendee', true) ?: []));
                 $mecAttendeesPrice = [];
 
                 if($attendeesMeta)

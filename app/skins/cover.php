@@ -46,7 +46,7 @@ class MEC_skin_cover extends MEC_skins
     public function initialize($atts)
     {
         $this->atts = $atts;
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Date Formats
         $this->date_format_clean1 = (isset($this->skin_options['date_format_clean1']) and trim($this->skin_options['date_format_clean1'])) ? $this->skin_options['date_format_clean1'] : 'd';
@@ -64,20 +64,20 @@ class MEC_skin_cover extends MEC_skins
         $this->id = mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // The style
-        $this->style = isset($this->skin_options['style']) ? $this->skin_options['style'] : 'classic';
+        $this->style = $this->skin_options['style'] ?? 'classic';
         if($this->style == 'fluent' and !is_plugin_active('mec-fluent-layouts/mec-fluent-layouts.php')) $this->style = 'classic';
         
         // Override the style if the style forced by us in a widget etc
         if(isset($this->atts['style']) and trim($this->atts['style']) != '') $this->style = $this->atts['style'];
 
         // reason_for_cancellation
-        $this->reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+        $this->reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
         // display_label
-        $this->display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
+        $this->display_label = $this->skin_options['display_label'] ?? false;
         
         // HTML class
         $this->html_class = '';
@@ -89,8 +89,8 @@ class MEC_skin_cover extends MEC_skins
         // Init MEC
         $this->args['mec-skin'] = $this->skin;
         
-        $this->event_id = isset($this->skin_options['event_id']) ? $this->skin_options['event_id'] : 0;
-        $this->maximum_dates = isset($this->atts['maximum_dates']) ? $this->atts['maximum_dates'] : 6;
+        $this->event_id = $this->skin_options['event_id'] ?? 0;
+        $this->maximum_dates = $this->atts['maximum_dates'] ?? 6;
     }
     
     /**
@@ -100,16 +100,16 @@ class MEC_skin_cover extends MEC_skins
      */
     public function search()
     {
-        if(!get_post($this->event_id)) return array();
+        if(!get_post($this->event_id)) return [];
 
-        $events = array();
-        $rendered = $this->render->data($this->event_id, (isset($this->atts['content']) ? $this->atts['content'] : ''));
+        $events = [];
+        $rendered = $this->render->data($this->event_id, ($this->atts['content'] ?? ''));
         
         $data = new stdClass();
         $data->ID = $this->event_id;
         $data->data = $rendered;
         $data->dates = $this->render->dates($this->event_id, $rendered, $this->maximum_dates);
-        $data->date = isset($data->dates[0]) ? $data->dates[0] : array();
+        $data->date = $data->dates[0] ?? [];
 
         $events[] = $this->render->after_render($data, $this);
         

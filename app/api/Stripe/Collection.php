@@ -63,13 +63,13 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     public function all($params = null, $opts = null)
     {
         self::_validateParams($params);
-        list($url, $params) = $this->extractPathAndUpdateParams($params);
+        [$url, $params] = $this->extractPathAndUpdateParams($params);
 
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
+        [$response, $opts] = $this->_request('get', $url, $params, $opts);
         $obj = Util\Util::convertToStripeObject($response, $opts);
         if (!($obj instanceof \Stripe\Collection)) {
             throw new \Stripe\Exception\UnexpectedValueException(
-                'Expected type ' . \Stripe\Collection::class . ', got "' . \get_class($obj) . '" instead.'
+                'Expected type ' . \Stripe\Collection::class . ', got "' . $obj::class . '" instead.'
             );
         }
         $obj->setFilters($params);
@@ -80,9 +80,9 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     public function create($params = null, $opts = null)
     {
         self::_validateParams($params);
-        list($url, $params) = $this->extractPathAndUpdateParams($params);
+        [$url, $params] = $this->extractPathAndUpdateParams($params);
 
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
 
         return Util\Util::convertToStripeObject($response, $opts);
     }
@@ -90,11 +90,11 @@ class Collection extends StripeObject implements \Countable, \IteratorAggregate
     public function retrieve($id, $params = null, $opts = null)
     {
         self::_validateParams($params);
-        list($url, $params) = $this->extractPathAndUpdateParams($params);
+        [$url, $params] = $this->extractPathAndUpdateParams($params);
 
         $id = Util\Util::utf8($id);
         $extn = \urlencode($id);
-        list($response, $opts) = $this->_request(
+        [$response, $opts] = $this->_request(
             'get',
             "{$url}/{$extn}",
             $params,

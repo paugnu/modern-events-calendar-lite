@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -104,7 +104,7 @@ class Google_Logger_File extends Google_Logger_Abstract
     $this->trappedErrorNumber = null;
     $this->trappedErrorString = null;
 
-    $old = set_error_handler(array($this, 'trapError'));
+    $old = set_error_handler($this->trapError(...));
 
     $needsChmod = !file_exists($this->file);
     $fh = fopen($this->file, 'a');

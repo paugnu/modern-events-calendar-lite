@@ -44,7 +44,7 @@ class MEC_file extends MEC_base
      */
 	public static function makeSafe($file)
 	{
-		$regex = array('#(\.){2,}#', '#[^A-Za-z0-9\.\_\- ]#', '#^\.#');
+		$regex = ['#(\.){2,}#', '#[^A-Za-z0-9\.\_\- ]#', '#^\.#'];
 		return preg_replace($regex, '', $file);
 	}
     
@@ -376,7 +376,7 @@ class MEC_folder extends MEC_base
 			foreach ($obdArray as $test)
 			{
 				$test = MEC_path::clean($test);
-				if (strpos($path, $test) === 0)
+				if (str_starts_with($path, $test))
 				{
 					$inBaseDir = true;
 					break;
@@ -429,7 +429,7 @@ class MEC_folder extends MEC_base
 		}
 
 		// Remove all the files in folder if they exist; disable all filtering
-		$files = self::files($path, '.', false, true, array(), array());
+		$files = self::files($path, '.', false, true, [], []);
 		if (!empty($files))
 		{
 			if (MEC_file::delete($files) !== true)
@@ -439,7 +439,7 @@ class MEC_folder extends MEC_base
 		}
 
 		// Remove sub-folders of folder; disable all filtering
-		$folders = self::folders($path, '.', false, true, array(), array());
+		$folders = self::folders($path, '.', false, true, [], []);
 		foreach ($folders as $folder)
 		{
 			if (is_link($folder))
@@ -515,7 +515,7 @@ class MEC_folder extends MEC_base
      * @param array $excludefilter
      * @return boolean|array
      */
-	public static function files($path, $filter = '.', $recurse = false, $full = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'), $excludefilter = array('^\..*', '.*~'))
+	public static function files($path, $filter = '.', $recurse = false, $full = false, $exclude = ['.svn', 'CVS', '.DS_Store', '__MACOSX'], $excludefilter = ['^\..*', '.*~'])
 	{
 		// Check to make sure the path valid and clean
 		$path = MEC_path::clean($path);
@@ -554,7 +554,7 @@ class MEC_folder extends MEC_base
      * @param array $excludefilter
      * @return boolean|array
      */
-	public static function folders($path, $filter = '.', $recurse = false, $full = false, $exclude = array('.svn', 'CVS', '.DS_Store', '__MACOSX'), $excludefilter = array('^\..*'))
+	public static function folders($path, $filter = '.', $recurse = false, $full = false, $exclude = ['.svn', 'CVS', '.DS_Store', '__MACOSX'], $excludefilter = ['^\..*'])
 	{
 		// Check to make sure the path valid and clean
 		$path = MEC_path::clean($path);
@@ -599,7 +599,7 @@ class MEC_folder extends MEC_base
 		@set_time_limit(ini_get('max_execution_time'));
 
 		// Initialise variables.
-		$arr = array();
+		$arr = [];
 
 		// Read the source directory
 		if (!($handle = @opendir($path)))
@@ -660,7 +660,7 @@ class MEC_folder extends MEC_base
      */
 	public static function makeSafe($path)
 	{
-		$regex = array('#[^A-Za-z0-9:_\\\/-]#');
+		$regex = ['#[^A-Za-z0-9:_\\\/-]#'];
 		return preg_replace($regex, '', $path);
 	}
 }
@@ -841,7 +841,7 @@ class MEC_path extends MEC_base
 			$fullname = $path . '/' . $file;
 
 			// Is the path based on a stream?
-			if (strpos($path, '://') === false)
+			if (!str_contains($path, '://'))
 			{
 				// Not a stream, so do a realpath() to avoid directory
 				// traversal attempts on the local file system.
@@ -853,7 +853,7 @@ class MEC_path extends MEC_base
 			// results in a directory registered so that
 			// non-registered directories are not accessible via directory
 			// traversal attempts.
-			if (file_exists($fullname) && substr($fullname, 0, strlen($path)) == $path)
+			if (file_exists($fullname) && str_starts_with($fullname, $path))
 			{
 				return $fullname;
 			}

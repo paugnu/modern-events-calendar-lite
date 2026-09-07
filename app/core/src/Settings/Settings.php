@@ -24,7 +24,7 @@ class Settings extends Singleton {
 
 		if ( !is_null( $key ) ) {
 
-			return isset( $this->options[ $key ] ) ? $this->options[ $key ] : null;
+			return $this->options[ $key ] ?? null;
 		}
 
 		return $this->options;
@@ -40,10 +40,10 @@ class Settings extends Singleton {
 
 		if ( !is_null( $key ) ) {
 
-			return isset( $this->options['settings'][ $key ] ) ? $this->options['settings'][ $key ] : null;
+			return $this->options['settings'][ $key ] ?? null;
 		}
 
-		return isset( $this->options['settings'] ) ? $this->options['settings'] : array();
+		return $this->options['settings'] ?? [];
 	}
 
 

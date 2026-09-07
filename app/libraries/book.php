@@ -41,10 +41,10 @@ class MEC_book extends MEC_base
      * @param boolean $apply_fees
      * @return array
      */
-    public function get_price_details($tickets, $event_id, $event_tickets, $variations = array(), $apply_fees = true)
+    public function get_price_details($tickets, $event_id, $event_tickets, $variations = [], $apply_fees = true)
     {
         $total = 0;
-        $details = array();
+        $details = [];
 
         $total_tickets_count = 0;
         foreach($tickets as $ticket_id=>$count)
@@ -60,7 +60,7 @@ class MEC_book extends MEC_base
             $total = $total+($t_price*$count);
         }
 
-        $details[] = array('amount'=>$total, 'description'=>sprintf(__('%s Price', 'modern-events-calendar-lite'), $this->main->m('tickets', __('Tickets', 'modern-events-calendar-lite'))), 'type'=>'tickets');
+        $details[] = ['amount'=>$total, 'description'=>sprintf(__('%s Price', 'modern-events-calendar-lite'), $this->main->m('tickets', __('Tickets', 'modern-events-calendar-lite'))), 'type'=>'tickets'];
 
         // Default variations amount
         $total_variations_amount = 0;
@@ -75,12 +75,12 @@ class MEC_book extends MEC_base
                 if(!is_numeric($key)) continue;
                 if(!isset($ticket_variation['title']) or (isset($ticket_variation['title']) and !trim($ticket_variation['title']))) continue;
 
-                $variation_count = isset($variations[$key]) ? $variations[$key] : 0;
+                $variation_count = $variations[$key] ?? 0;
                 if(!$variation_count or ($variation_count and $variation_count < 0)) continue;
 
                 $variation_amount = $ticket_variation['price']*$variation_count;
                 $variation_title = $ticket_variation['title'].' ('.$variation_count.')';
-                $details[] = array('amount'=>$variation_amount, 'description'=>__($variation_title, 'modern-events-calendar-lite'), 'type'=>'variation');
+                $details[] = ['amount'=>$variation_amount, 'description'=>__($variation_title, 'modern-events-calendar-lite'), 'type'=>'variation'];
 
                 $total_variations_amount += $variation_amount;
             }
@@ -103,13 +103,13 @@ class MEC_book extends MEC_base
                 elseif($fee['type'] == 'amount') $fee_amount += ($total_tickets_count*$fee['amount']);
                 elseif($fee['type'] == 'amount_per_booking') $fee_amount += $fee['amount'];
 
-                $details[] = array('amount'=>$fee_amount, 'description'=>__($fee['title'], 'modern-events-calendar-lite'), 'type'=>'fee', 'fee_type'=>$fee['type'], 'fee_amount'=>$fee['amount']);
+                $details[] = ['amount'=>$fee_amount, 'description'=>__($fee['title'], 'modern-events-calendar-lite'), 'type'=>'fee', 'fee_type'=>$fee['type'], 'fee_amount'=>$fee['amount']];
 
                 $total_fee_amount += $fee_amount;
             }
         }
 
-        return array('total'=>($total+$total_fee_amount+$total_variations_amount), 'details'=>$details);
+        return ['total'=>($total+$total_fee_amount+$total_variations_amount), 'details'=>$details];
     }
 
     /**
@@ -127,7 +127,7 @@ class MEC_book extends MEC_base
         $fees = get_post_meta($event_id, 'mec_fees', true);
 
         // Get fees from global options
-        if($fees_global_inheritance) $fees = isset($this->settings['fees']) ? $this->settings['fees'] : array();
+        if($fees_global_inheritance) $fees = $this->settings['fees'] ?? [];
 
         return $fees;
     }
@@ -138,7 +138,7 @@ class MEC_book extends MEC_base
      * @param array $data
      * @return int
      */
-    public function temporary($data = array())
+    public function temporary($data = [])
     {
         $transaction_id = $this->get_transaction_id();
         update_option($transaction_id, $data, false);
@@ -187,7 +187,7 @@ class MEC_book extends MEC_base
      */
     public function get_transaction($transaction_id)
     {
-        return get_option($transaction_id, array());
+        return get_option($transaction_id, []);
     }
 
     /**
@@ -227,12 +227,12 @@ class MEC_book extends MEC_base
         $transaction = $this->get_transaction($transaction_id);
         $event_id = $transaction['event_id'];
 
-        $attention_date = isset($transaction['date']) ? $transaction['date'] : '';
+        $attention_date = $transaction['date'] ?? '';
         $attention_times = explode(':', $attention_date);
 
         // Default values
-        if(!isset($values['post_date'])) $values['post_date'] = date('Y-m-d H:i:s', trim($attention_times[0]));
-        if(!isset($values['post_status'])) $values['post_status'] = 'publish';
+        $values['post_date'] ??= date('Y-m-d H:i:s', trim($attention_times[0]));
+        $values['post_status'] ??= 'publish';
 
         $book_id = wp_insert_post($values);
 
@@ -284,7 +284,7 @@ class MEC_book extends MEC_base
                 if(!is_numeric($k)) continue;
                 $values['mec_attendees'][$k]['buyerip'] = $this->main->get_client_ip();
 
-                $ticket_id = isset($mec_attendee['id']) ? $mec_attendee['id'] : 0;
+                $ticket_id = $mec_attendee['id'] ?? 0;
                 $ticket_price = (isset($tickets[$ticket_id]) ? $tickets[$ticket_id]['price'] : 0);
 
                 update_post_meta($book_id, 'mec_ticket_price_'.$ticket_id, $ticket_price);
@@ -293,7 +293,7 @@ class MEC_book extends MEC_base
             update_post_meta($book_id, 'mec_attendees', $values['mec_attendees']);
         }
 
-        $price = isset($transaction['price']) ? $transaction['price'] : (isset($transaction['total']) ? $transaction['total'] : 0);
+        $price = $transaction['price'] ?? $transaction['total'] ?? 0;
         update_post_meta($book_id, 'mec_price', $price);
 
         // A coupon applied
@@ -310,8 +310,8 @@ class MEC_book extends MEC_base
         // Fires after adding a new booking to send notifications etc
         do_action('mec_booking_added', $book_id);
 
-        list($auto_verify_free, $auto_verify_paid) = $this->get_auto_verification_status($event_id);
-        list($auto_confirm_free, $auto_confirm_paid) = $this->get_auto_confirmation_status($event_id);
+        [$auto_verify_free, $auto_verify_paid] = $this->get_auto_verification_status($event_id);
+        [$auto_confirm_free, $auto_confirm_paid] = $this->get_auto_confirmation_status($event_id);
 
         // Auto verification for free bookings is enabled
         if($price <= 0 and $auto_verify_free)
@@ -335,7 +335,7 @@ class MEC_book extends MEC_base
         if($price > 0 and $auto_confirm_paid)
         {
             // Work or don't work auto confirmation when pay through pay locally payment.
-            $gateways_settings = get_option('mec_options', array());
+            $gateways_settings = get_option('mec_options', []);
             $pay_locally_gateway = ((isset($_GET['action']) and trim($_GET['action']) == 'mec_do_transaction_pay_locally') and (isset($gateways_settings['gateways'][1]['disable_auto_confirmation']) and trim($gateways_settings['gateways'][1]['disable_auto_confirmation']))) ? true : false;
             $bank_transfer_gateway = ((isset($_GET['action']) and trim($_GET['action']) == 'mec_do_transaction_bank_transfer') and (isset($gateways_settings['gateways'][8]['disable_auto_confirmation']) and trim($gateways_settings['gateways'][8]['disable_auto_confirmation']))) ? true : false;
 
@@ -483,7 +483,7 @@ class MEC_book extends MEC_base
 
         if(!is_numeric($timestamp)) $timestamp = strtotime($timestamp);
 
-        $availability = array();
+        $availability = [];
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
 
         // No Ticket Found!
@@ -494,10 +494,10 @@ class MEC_book extends MEC_base
         }
 
         $booking_options = get_post_meta($event_id, 'mec_booking', true);
-        if(!is_array($booking_options)) $booking_options = array();
+        if(!is_array($booking_options)) $booking_options = [];
 
         $total_bookings_limit = (isset($booking_options['bookings_limit']) and trim($booking_options['bookings_limit'])) ? $booking_options['bookings_limit'] : 100;
-        $bookings_limit_unlimited = isset($booking_options['bookings_limit_unlimited']) ? $booking_options['bookings_limit_unlimited'] : 0;
+        $bookings_limit_unlimited = $booking_options['bookings_limit_unlimited'] ?? 0;
         $book_all_occurrences = isset($booking_options['bookings_all_occurrences']) ? (int) $booking_options['bookings_all_occurrences'] : 0;
 
         if($bookings_limit_unlimited == '1') $total_bookings_limit = '-1';
@@ -519,19 +519,19 @@ class MEC_book extends MEC_base
 
         if(!$book_all_occurrences)
         {
-            $date_query = array(
-                array(
+            $date_query = [
+                [
                     'year'=>$year,
                     'monthnum'=>$month,
                     'day'=>$day,
                     'hour'=>$hour,
                     'minute'=>$minutes,
-                ),
-            );
+                ],
+            ];
         }
         else
         {
-            $date_query = array();
+            $date_query = [];
         }
 
         $booked = 0;
@@ -539,19 +539,19 @@ class MEC_book extends MEC_base
         {
             $limit = (isset($ticket['limit']) and trim($ticket['limit']) != '') ? $ticket['limit'] : -1;
 
-            $query = new WP_Query(array(
+            $query = new WP_Query([
                 'post_type' => $this->PT,
                 'posts_per_page' => -1,
-                'post_status' => array('publish', 'pending', 'draft', 'future', 'private'),
+                'post_status' => ['publish', 'pending', 'draft', 'future', 'private'],
                 'date_query'=> $date_query,
-                'meta_query' => array
-                (
-                    array('key'=>'mec_event_id', 'value'=>$event_id, 'compare'=>'='),
-                    array('key'=>'mec_ticket_id', 'value'=>','.$ticket_id.',', 'compare'=>'LIKE'),
-                    array('key'=>'mec_verified', 'value'=>'-1', 'compare'=>'!='), // Don't include canceled bookings
-                    array('key'=>'mec_confirmed', 'value'=>'-1', 'compare'=>'!='), // Don't include rejected bookings
-                )
-            ));
+                'meta_query' => 
+                [
+                    ['key'=>'mec_event_id', 'value'=>$event_id, 'compare'=>'='],
+                    ['key'=>'mec_ticket_id', 'value'=>','.$ticket_id.',', 'compare'=>'LIKE'],
+                    ['key'=>'mec_verified', 'value'=>'-1', 'compare'=>'!='], // Don't include canceled bookings
+                    ['key'=>'mec_confirmed', 'value'=>'-1', 'compare'=>'!='], // Don't include rejected bookings
+                ]
+            ]);
 
             $bookings = 0;
             if($query->have_posts())
@@ -612,7 +612,7 @@ class MEC_book extends MEC_base
         // Do not send higher limit for tickets compared to total limit
         if($total_bookings_limit != '-1' and $total_bookings_limit > 0)
         {
-            $new_availability = array();
+            $new_availability = [];
             foreach($availability as $ticket_id=>$limit)
             {
                 if(is_numeric($ticket_id)) $new_availability[$ticket_id] = min($limit, $total_bookings_limit);
@@ -625,7 +625,7 @@ class MEC_book extends MEC_base
         // Total Booking Limit Reached
         if($total_bookings_limit_original != -1 and $booked >= $total_bookings_limit_original)
         {
-            $new_availability = array();
+            $new_availability = [];
             foreach($availability as $ticket_id=>$limit)
             {
                 if(is_numeric($ticket_id)) $new_availability[$ticket_id] = 0;
@@ -649,7 +649,7 @@ class MEC_book extends MEC_base
     public function coupon_check_validity($coupon, $event_id, $transaction)
     {
         $term = get_term_by('name', $coupon, 'mec_coupon');
-        $coupon_id = isset($term->term_id) ? $term->term_id : 0;
+        $coupon_id = $term->term_id ?? 0;
 
         // Coupon is not exists
         if(!$coupon_id) return 0;
@@ -677,7 +677,7 @@ class MEC_book extends MEC_base
             $target_events = get_term_meta($coupon_id, 'target_events', true);
             if(!is_array($target_events))
             {
-                $target_events = array();
+                $target_events = [];
                 if($all_events and $all_events != 1) $target_events[] = $all_events;
             }
 
@@ -696,17 +696,8 @@ class MEC_book extends MEC_base
             $target_categories = get_term_meta($coupon_id, 'target_categories', true);
             if(!$all_target_categories and is_array($target_categories) and count($target_categories))
             {
-                $event_categories = wp_get_post_terms($event_id, 'mec_category', array('fields' => 'ids'));
-
-                $found = false;
-                foreach($target_categories as $target_category)
-                {
-                    if(in_array($target_category, $event_categories))
-                    {
-                        $found = true;
-                        break;
-                    }
-                }
+                $event_categories = wp_get_post_terms($event_id, 'mec_category', ['fields' => 'ids']);
+                $found = array_any($target_categories, fn($target_category) => in_array($target_category, $event_categories));
 
                 if(!$found) $status = -6;
             }
@@ -718,7 +709,7 @@ class MEC_book extends MEC_base
             $ticket_minimum = get_term_meta($coupon_id, 'ticket_minimum', true);
             if(!trim($ticket_minimum)) $ticket_minimum = 1;
 
-            $tickets = isset($transaction['tickets']) ? $transaction['tickets'] : array();
+            $tickets = $transaction['tickets'] ?? [];
             if(isset($tickets['attachments'])) unset($tickets['attachments']);
 
             if(count($tickets) < $ticket_minimum)
@@ -733,7 +724,7 @@ class MEC_book extends MEC_base
             $ticket_maximum = get_term_meta($coupon_id, 'ticket_maximum', true);
             if(trim($ticket_maximum))
             {
-                $tickets = isset($transaction['tickets']) ? $transaction['tickets'] : array();
+                $tickets = $transaction['tickets'] ?? [];
                 if(isset($tickets['attachments'])) unset($tickets['attachments']);
 
                 if(count($tickets) > $ticket_maximum)
@@ -756,7 +747,7 @@ class MEC_book extends MEC_base
     public function coupon_apply($coupon, $transaction_id)
     {
         $transaction = $this->get_transaction($transaction_id);
-        $event_id = isset($transaction['event_id']) ? $transaction['event_id'] : NULL;
+        $event_id = $transaction['event_id'] ?? NULL;
 
         // Verify validity of coupon
         if($this->coupon_check_validity($coupon, $event_id, $transaction) != 1) return 0;
@@ -774,7 +765,7 @@ class MEC_book extends MEC_base
             if(isset($price_detail['type']) and $price_detail['type'] == 'discount' and isset($price_detail['coupon'])) unset($price_details[$i]);
         }
 
-        $price_details[] = array('amount'=>$discount, 'description'=>__('Discount', 'modern-events-calendar-lite'), 'type'=>'discount', 'coupon'=>$coupon);
+        $price_details[] = ['amount'=>$discount, 'description'=>__('Discount', 'modern-events-calendar-lite'), 'type'=>'discount', 'coupon'=>$coupon];
 
         $transaction['price_details']['details'] = $price_details;
         $transaction['discount'] = $discount;
@@ -787,7 +778,7 @@ class MEC_book extends MEC_base
         // Update Transaction
         $this->update_transaction($transaction_id, $transaction);
 
-        return (isset($transaction['discount']) ? $transaction['discount'] : $discount);
+        return ($transaction['discount'] ?? $discount);
     }
 
     /**
@@ -800,7 +791,7 @@ class MEC_book extends MEC_base
     public function coupon_get_discount($coupon, $total)
     {
         $term = get_term_by('name', $coupon, 'mec_coupon');
-        $coupon_id = isset($term->term_id) ? $term->term_id : 0;
+        $coupon_id = $term->term_id ?? 0;
 
         // Coupon is not exists
         if(!$coupon_id) return 0;
@@ -829,7 +820,7 @@ class MEC_book extends MEC_base
     public function coupon_get_id($coupon)
     {
         $term = get_term_by('name', $coupon, 'mec_coupon');
-        return isset($term->term_id) ? $term->term_id : 0;
+        return $term->term_id ?? 0;
     }
 
     public function recalculate($transaction)
@@ -840,20 +831,20 @@ class MEC_book extends MEC_base
         $total_fee_amount = 0;
         $taxable = 0;
         $total_discount = 0;
-        $fees_to_apply = array();
-        $discounts_to_apply = array();
+        $fees_to_apply = [];
+        $discounts_to_apply = [];
 
         foreach($price_details as $i => $item)
         {
-            $type = isset($item['type']) ? $item['type'] : '';
-            $amount = isset($item['amount']) ? $item['amount'] : 0;
+            $type = $item['type'] ?? '';
+            $amount = $item['amount'] ?? 0;
 
             if($type == 'fee') $fees_to_apply[] = $item;
             elseif($type == 'discount') $discounts_to_apply[] = $item;
             else $taxable += $amount;
 
             // Remove Fee and Discount Items
-            if(in_array($type, array('fee', 'discount'))) unset($price_details[$i]);
+            if(in_array($type, ['fee', 'discount'])) unset($price_details[$i]);
         }
 
         $total = $taxable;
@@ -865,7 +856,7 @@ class MEC_book extends MEC_base
             $taxable = max(0, ($taxable - $discount));
             $total_discount += $discount;
 
-            $price_details[] = array('amount'=>$discount, 'description'=>__('Discount', 'modern-events-calendar-lite'), 'type'=>'discount', 'coupon'=>$discount_item['coupon']);
+            $price_details[] = ['amount'=>$discount, 'description'=>__('Discount', 'modern-events-calendar-lite'), 'type'=>'discount', 'coupon'=>$discount_item['coupon']];
         }
 
         // Apply Fees
@@ -878,7 +869,7 @@ class MEC_book extends MEC_base
             elseif($fee_item['fee_type'] == 'amount_per_booking') $fee_amount += $fee_item['fee_amount'];
 
             $total_fee_amount += $fee_amount;
-            $price_details[] = array('amount'=>$fee_amount, 'description'=>__($fee_item['description'], 'modern-events-calendar-lite'), 'type'=>'fee', 'fee_type'=>$fee_item['fee_type'], 'fee_amount'=>$fee_item['fee_amount']);
+            $price_details[] = ['amount'=>$fee_amount, 'description'=>__($fee_item['description'], 'modern-events-calendar-lite'), 'type'=>'fee', 'fee_type'=>$fee_item['fee_type'], 'fee_amount'=>$fee_item['fee_amount']];
         }
 
         $total += $total_fee_amount;
@@ -935,12 +926,12 @@ class MEC_book extends MEC_base
     {
         $main = $this->getMain();
 
-        return get_posts(array(
+        return get_posts([
             'posts_per_page' => -1,
             'post_type' => $main->get_book_post_type(),
             'meta_key' => 'mec_transaction_id',
             'meta_value' => $transaction_id,
-        ));
+        ]);
     }
 
     public function get_thankyou_page($page_id, $transaction_id)
@@ -982,7 +973,7 @@ class MEC_book extends MEC_base
     public function get_attendees($book_id)
     {
         $attendees = get_post_meta($book_id, 'mec_attendees', true);
-        $clean = array();
+        $clean = [];
 
         if(is_array($attendees))
         {
@@ -1020,9 +1011,9 @@ class MEC_book extends MEC_base
 
     public function get_ticket_price_key($ticket, $date, $event_id, $key)
     {
-        $data = isset($ticket[$key]) ? $ticket[$key] : NULL;
+        $data = $ticket[$key] ?? NULL;
 
-        $price_dates = (isset($ticket['dates']) and is_array($ticket['dates'])) ? $ticket['dates'] : array();
+        $price_dates = (isset($ticket['dates']) and is_array($ticket['dates'])) ? $ticket['dates'] : [];
         if(!count($price_dates)) return $this->get_price_for_loggedin_users($event_id, $data, $key);
 
         $time = strtotime($date);
@@ -1053,7 +1044,7 @@ class MEC_book extends MEC_base
      */
     public function get_tickets_prices($event_id, $date, $key = 'price')
     {
-        $prices = array();
+        $prices = [];
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
 
         // No Ticket Found!
@@ -1077,7 +1068,7 @@ class MEC_book extends MEC_base
         if(!$user_id) return $price;
 
         $booking_options = get_post_meta($event_id, 'mec_booking', true);
-        if(!is_array($booking_options)) $booking_options = array();
+        if(!is_array($booking_options)) $booking_options = [];
 
         // User
         $user = get_user_by('id', $user_id);
@@ -1087,7 +1078,7 @@ class MEC_book extends MEC_base
 
         $roles = (array) $user->roles;
 
-        $loggedin_discount = (isset($booking_options['loggedin_discount']) ? $booking_options['loggedin_discount'] : 0);
+        $loggedin_discount = ($booking_options['loggedin_discount'] ?? 0);
         $role_discount = $loggedin_discount;
 
         // Step through all roles in Array that comes from WordPress Core
@@ -1132,7 +1123,7 @@ class MEC_book extends MEC_base
             else $limit = trim($mec_settings['booking_limit']);
         }
 
-        return array($limit, $unlimited);
+        return [$limit, $unlimited];
     }
 
     public function timestamp($start, $end)
@@ -1158,7 +1149,7 @@ class MEC_book extends MEC_base
     public function get_event_id_by_transaction_id($transaction_id)
     {
         $transaction = $this->get_transaction($transaction_id);
-        return (isset($transaction['event_id']) ? $transaction['event_id'] : 0);
+        return ($transaction['event_id'] ?? 0);
     }
 
     public function get_attendee_price($transaction, $email)
@@ -1168,7 +1159,7 @@ class MEC_book extends MEC_base
         // No Attendees found!
         if(!isset($transaction['tickets']) or (isset($transaction['tickets']) and !is_array($transaction['tickets']))) return false;
 
-        $attendee = array();
+        $attendee = [];
         foreach($transaction['tickets'] as $key => $ticket)
         {
             if(!is_numeric($key)) continue;
@@ -1183,7 +1174,7 @@ class MEC_book extends MEC_base
         // Attendee not found
         if(!count($attendee)) return false;
 
-        $event_id = isset($transaction['event_id']) ? $transaction['event_id'] : 0;
+        $event_id = $transaction['event_id'] ?? 0;
         if(!$event_id) return false;
 
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
@@ -1203,7 +1194,7 @@ class MEC_book extends MEC_base
             {
                 if(!$variation_count or ($variation_count and $variation_count < 0)) continue;
 
-                $variation_price += isset($ticket_variations[$variation_id]['price']) ? $ticket_variations[$variation_id]['price'] : 0;
+                $variation_price += $ticket_variations[$variation_id]['price'] ?? 0;
             }
         }
 
@@ -1214,15 +1205,15 @@ class MEC_book extends MEC_base
     {
         // Booking Options
         $BO = get_post_meta($event_id, 'mec_booking', true);
-        if(!is_array($BO)) $BO = array();
+        if(!is_array($BO)) $BO = [];
 
         $event_auto_verify = (isset($BO['auto_verify']) and trim($BO['auto_verify']) != '') ? $BO['auto_verify'] : 'global';
         if(is_numeric($event_auto_verify)) $event_auto_verify = (int) $event_auto_verify;
 
         if($event_auto_verify == 'global')
         {
-            $auto_verify_free = (isset($this->settings['booking_auto_verify_free']) ? $this->settings['booking_auto_verify_free'] : 0);
-            $auto_verify_paid = (isset($this->settings['booking_auto_verify_paid']) ? $this->settings['booking_auto_verify_paid'] : 0);
+            $auto_verify_free = ($this->settings['booking_auto_verify_free'] ?? 0);
+            $auto_verify_paid = ($this->settings['booking_auto_verify_paid'] ?? 0);
         }
         else
         {
@@ -1230,22 +1221,22 @@ class MEC_book extends MEC_base
             $auto_verify_paid = $event_auto_verify;
         }
 
-        return array($auto_verify_free, $auto_verify_paid);
+        return [$auto_verify_free, $auto_verify_paid];
     }
 
     public function get_auto_confirmation_status($event_id)
     {
         // Booking Options
         $BO = get_post_meta($event_id, 'mec_booking', true);
-        if(!is_array($BO)) $BO = array();
+        if(!is_array($BO)) $BO = [];
 
         $event_auto_confirm = (isset($BO['auto_confirm']) and trim($BO['auto_confirm']) != '') ? $BO['auto_confirm'] : 'global';
         if(is_numeric($event_auto_confirm)) $event_auto_confirm = (int) $event_auto_confirm;
 
         if($event_auto_confirm == 'global')
         {
-            $auto_confirm_free = (isset($this->settings['booking_auto_confirm_free']) ? $this->settings['booking_auto_confirm_free'] : 0);
-            $auto_confirm_paid = (isset($this->settings['booking_auto_confirm_paid']) ? $this->settings['booking_auto_confirm_paid'] : 0);
+            $auto_confirm_free = ($this->settings['booking_auto_confirm_free'] ?? 0);
+            $auto_confirm_paid = ($this->settings['booking_auto_confirm_paid'] ?? 0);
         }
         else
         {
@@ -1253,20 +1244,20 @@ class MEC_book extends MEC_base
             $auto_confirm_paid = $event_auto_confirm;
         }
 
-        return array($auto_confirm_free, $auto_confirm_paid);
+        return [$auto_confirm_free, $auto_confirm_paid];
     }
 
     public function get_all_sold_tickets($event_id)
     {
-        $query = new WP_Query(array(
+        $query = new WP_Query([
             'post_type' => $this->PT,
             'posts_per_page' => -1,
-            'post_status' => array('publish', 'pending', 'draft', 'future', 'private'),
-            'meta_query' => array
-            (
-                array('key'=>'mec_event_id', 'value'=>$event_id, 'compare'=>'='),
-            )
-        ));
+            'post_status' => ['publish', 'pending', 'draft', 'future', 'private'],
+            'meta_query' => 
+            [
+                ['key'=>'mec_event_id', 'value'=>$event_id, 'compare'=>'='],
+            ]
+        ]);
 
         $sold = 0;
         if($query->have_posts())
@@ -1290,7 +1281,7 @@ class MEC_book extends MEC_base
         $event_id = $transaction['event_id'];
 
         $all_attendees = get_post_meta($booking_id, 'mec_attendees', true);
-        if(!is_array($all_attendees) or (is_array($all_attendees) and !count($all_attendees))) $all_attendees = array(get_post_meta($booking_id, 'mec_attendee', true));
+        if(!is_array($all_attendees) or (is_array($all_attendees) and !count($all_attendees))) $all_attendees = [get_post_meta($booking_id, 'mec_attendee', true)];
 
         if(isset($all_attendees['attachments'])) unset($all_attendees['attachments']);
 
@@ -1371,7 +1362,7 @@ class MEC_book extends MEC_base
             $ticket_total_price = ($ticket_price + $variation_price + ($total_fees / count($all_attendees))) - ($discounts / count($all_attendees));
         }
 
-        return (!is_null($ticket_total_price) ? $ticket_total_price : $total_price);
+        return ($ticket_total_price ?? $total_price);
     }
 
     /**
@@ -1385,7 +1376,7 @@ class MEC_book extends MEC_base
         $transaction = $this->get_transaction($transaction_id);
         $price_details = $transaction['price_details']['details'];
 
-        $removed_fees = array();
+        $removed_fees = [];
         foreach($price_details as $i => $price_detail)
         {
             if(isset($price_detail['type']) and $price_detail['type'] == 'fee')
@@ -1397,7 +1388,7 @@ class MEC_book extends MEC_base
 
         $transaction['price_details']['details'] = $price_details;
         $transaction['removed_fees_status'] = 1;
-        $transaction['removed_fees'] = (count($removed_fees) ? $removed_fees : (isset($transaction['removed_fees']) ? $transaction['removed_fees'] : array()));
+        $transaction['removed_fees'] = (count($removed_fees) ? $removed_fees : ($transaction['removed_fees'] ?? []));
 
         // Re-caclculate
         $transaction = $this->recalculate($transaction);
@@ -1418,12 +1409,12 @@ class MEC_book extends MEC_base
     {
         $transaction = $this->get_transaction($transaction_id);
 
-        $is_removed = (isset($transaction['removed_fees_status']) ? $transaction['removed_fees_status'] : 0);
+        $is_removed = ($transaction['removed_fees_status'] ?? 0);
         if(!$is_removed) return false;
 
         $price_details = $transaction['price_details']['details'];
 
-        $removed_fees = (isset($transaction['removed_fees']) and is_array($transaction['removed_fees'])) ? $transaction['removed_fees'] : array();
+        $removed_fees = (isset($transaction['removed_fees']) and is_array($transaction['removed_fees'])) ? $transaction['removed_fees'] : [];
         foreach($removed_fees as $removed_fee) $price_details[] = $removed_fee;
 
         $transaction['price_details']['details'] = $price_details;

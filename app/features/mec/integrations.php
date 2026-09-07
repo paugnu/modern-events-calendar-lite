@@ -166,12 +166,12 @@ $pages = get_pages();
                                     $lists = '';
                                     if ( isset($settings['constantcontact_access_token']) and trim($settings['constantcontact_access_token']) != '' and isset($settings['constantcontact_api_key']) and trim($settings['constantcontact_api_key']) != '' ){
                                         $api_key = $settings['constantcontact_api_key'];
-                                        $lists  = wp_remote_retrieve_body(wp_remote_get("https://api.constantcontact.com/v2/lists?api_key=".$api_key, array(
+                                        $lists  = wp_remote_retrieve_body(wp_remote_get("https://api.constantcontact.com/v2/lists?api_key=".$api_key, [
                                             'body' => null,
                                             'timeout' => '10',
                                             'redirection' => '10',
-                                            'headers' => array('Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $settings['constantcontact_access_token']),
-                                        )));
+                                            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $settings['constantcontact_access_token']],
+                                        ]));
                                     }
                                     
                                     ?>

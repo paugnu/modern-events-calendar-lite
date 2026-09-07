@@ -6,7 +6,7 @@ $event_id = $event->ID;
 ?>
 <?php if(isset($message)): ?>
 <div class="mec-event-book-message mec-gateway-message mec-success">
-    <div class="<?php echo (isset($message_class) ? $message_class : ''); ?>">
+    <div class="<?php echo ($message_class ?? ''); ?>">
         <?php echo stripslashes($message); ?>
     </div>
 </div>

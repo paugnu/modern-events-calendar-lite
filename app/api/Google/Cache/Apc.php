@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -55,14 +55,14 @@ class Google_Cache_Apc extends Google_Cache_Abstract
     if ($ret === false) {
       $this->client->getLogger()->debug(
           'APC cache miss',
-          array('key' => $key)
+          ['key' => $key]
       );
       return false;
     }
     if (is_numeric($expiration) && (time() - $ret['time'] > $expiration)) {
       $this->client->getLogger()->debug(
           'APC cache miss (expired)',
-          array('key' => $key, 'var' => $ret)
+          ['key' => $key, 'var' => $ret]
       );
       $this->delete($key);
       return false;
@@ -70,7 +70,7 @@ class Google_Cache_Apc extends Google_Cache_Abstract
 
     $this->client->getLogger()->debug(
         'APC cache hit',
-        array('key' => $key, 'var' => $ret)
+        ['key' => $key, 'var' => $ret]
     );
 
     return $ret['data'];
@@ -81,20 +81,20 @@ class Google_Cache_Apc extends Google_Cache_Abstract
    */
   public function set($key, $value)
   {
-    $var = array('time' => time(), 'data' => $value);
+    $var = ['time' => time(), 'data' => $value];
     $rc = apc_store($key, $var);
 
     if ($rc == false) {
       $this->client->getLogger()->error(
           'APC cache set failed',
-          array('key' => $key, 'var' => $var)
+          ['key' => $key, 'var' => $var]
       );
       throw new Google_Cache_Exception("Couldn't store data");
     }
 
     $this->client->getLogger()->debug(
         'APC cache set',
-        array('key' => $key, 'var' => $var)
+        ['key' => $key, 'var' => $var]
     );
   }
 
@@ -106,7 +106,7 @@ class Google_Cache_Apc extends Google_Cache_Abstract
   {
     $this->client->getLogger()->debug(
         'APC cache delete',
-        array('key' => $key)
+        ['key' => $key]
     );
     apc_delete($key);
   }

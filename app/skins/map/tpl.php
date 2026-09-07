@@ -4,13 +4,13 @@ defined('MECEXEC') or die();
 
 // MEC Settings
 $settings = $this->main->get_settings();
-$settings['view_mode'] = isset($this->atts['location_view_mode'])?$this->atts['location_view_mode']:'normal';
-$settings['map'] = isset($settings['default_maps_view'])?$settings['default_maps_view']:'google';
+$settings['view_mode'] = $this->atts['location_view_mode'] ?? 'normal';
+$settings['map'] = $settings['default_maps_view'] ?? 'google';
 
 // Return the data if called by AJAX
 if(isset($this->atts['return_items']) and $this->atts['return_items'])
 {
-    echo json_encode(array('markers'=>$this->render->markers($this->events)));
+    echo json_encode(['markers'=>$this->render->markers($this->events)]);
     exit;
 }
 
@@ -26,8 +26,8 @@ if(count($this->events))
         jQuery("#mec_map_canvas'.$this->id.'").mecGoogleMaps(
         {
             id: "'.$this->id.'",
-            atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
-            zoom: '.(isset($settings['google_maps_zoomlevel']) ? $settings['google_maps_zoomlevel'] : 14).',
+            atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
+            zoom: '.($settings['google_maps_zoomlevel'] ?? 14).',
             icon: "'.apply_filters('mec_marker_icon', $this->main->asset('img/m-04.png')).'",
             styles: '.((isset($settings['google_maps_style']) and trim($settings['google_maps_style']) != '') ? $this->main->get_googlemap_style($settings['google_maps_style']) : "''").',
             fullscreen_button: '.((isset($settings['google_maps_fullscreen_button']) and trim($settings['google_maps_fullscreen_button'])) ? 'true' : 'false').',

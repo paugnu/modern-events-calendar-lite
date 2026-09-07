@@ -119,7 +119,7 @@ class Event
      * @param  array $data
      * @return void
      */
-    public function __construct(array $data = array())
+    public function __construct(array $data = [])
     {
         if (!empty($data)) {
             foreach ($data as $key => $value) {
@@ -140,7 +140,7 @@ class Event
         if (is_string($value)) {
             return stripslashes(trim(str_replace('\n', "\n", $value)));
         } elseif (is_array($value)) {
-            return array_map('self::prepareData', $value);
+            return array_map(self::prepareData(...), $value);
         }
 
         return $value;
@@ -155,7 +155,7 @@ class Event
      */
     public function printData($html = self::HTML_TEMPLATE)
     {
-        $data = array(
+        $data = [
             'SUMMARY'       => $this->summary,
             'DTSTART'       => $this->dtstart,
             'DTEND'         => $this->dtend,
@@ -173,7 +173,7 @@ class Event
             'TRANSP'        => $this->transp,
             'ORGANISER'     => $this->organizer,
             'ATTENDEE(S)'   => $this->attendee,
-        );
+        ];
 
         $data   = array_filter($data); // Remove any blank values
         $output = '';
@@ -196,7 +196,7 @@ class Event
     protected static function snakeCase($input, $glue = '_', $separator = '-')
     {
         $input = preg_split('/(?<=[a-z])(?=[A-Z])/x', $input);
-        $input = join($input, $glue);
+        $input = join($glue, $input);
         $input = str_replace($separator, $glue, $input);
 
         return strtolower($input);

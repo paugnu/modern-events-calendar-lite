@@ -42,8 +42,8 @@ class MEC_addon_divi extends MEC_base
 
         if('Divi' != $theme->get_template()) return false;
 
-        add_action('divi_extensions_init', array($this, 'mecdivi_initialize_extension'));
-        add_filter('et_builder_load_actions', array($this, 'add_ajax_actions'));
+        add_action('divi_extensions_init', $this->mecdivi_initialize_extension(...));
+        add_filter('et_builder_load_actions', $this->add_ajax_actions(...));
 
         return true;
     }

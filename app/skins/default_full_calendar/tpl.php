@@ -15,7 +15,7 @@ jQuery(document).ready(function()
     jQuery("#mec_skin_'.$this->id.'").mecFullCalendar(
     {
         id: "'.$this->id.'",
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",
@@ -37,7 +37,7 @@ else $this->factory->params('footer', $javascript);
 $styling = $this->main->get_styling();
 $event_colorskin = (isset($styling['mec_colorskin'] ) || isset($styling['color'])) ? 'colorskin-custom' : '';
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 
@@ -50,8 +50,8 @@ do_action('mec_full_skin_head');
         <?php
         if($this->sf_status): ?>        
         <?php
-            $sf_month_filter = array("type"=> "dropdown");
-            $sf_text_search = array( "type"=> "text_input" );
+            $sf_month_filter = ["type"=> "dropdown"];
+            $sf_text_search = [ "type"=> "text_input" ];
 
             $sf_month_filter_status = true;
             $sf_text_search_status = true;

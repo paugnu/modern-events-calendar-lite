@@ -51,7 +51,7 @@ $boxed = ot_get_option('_uncode_boxed');
 
 if ($boxed !== 'on')
 {
-	$page_content_full = (isset($metabox_data['_uncode_specific_layout_width'][0])) ? $metabox_data['_uncode_specific_layout_width'][0] : '';
+	$page_content_full = $metabox_data['_uncode_specific_layout_width'][0] ?? '';
 	if ($page_content_full === '')
 	{
 
@@ -119,10 +119,10 @@ else
 	$page_header_type = ot_get_option('_uncode_' . $post_type . '_header');
 	if ($page_header_type !== '' && $page_header_type !== 'none')
 	{
-		$metabox_data['_uncode_header_type'] = array($page_header_type);
+		$metabox_data['_uncode_header_type'] = [$page_header_type];
 		$meta_data = uncode_get_general_header_data($metabox_data, $post_type, $featured_image);
 		$metabox_data = $meta_data['meta'];
-		if ($meta_data['media']) $metabox_data['_uncode_header_background'] = array(array('background-image' => $meta_data['media']));
+		if ($meta_data['media']) $metabox_data['_uncode_header_background'] = [['background-image' => $meta_data['media']]];
 		$show_title = $meta_data['show_title'];
 	}
 }
@@ -132,12 +132,12 @@ if (isset($metabox_data['_uncode_active_sidebar'][0]) && $metabox_data['_uncode_
 {
 	if ($metabox_data['_uncode_active_sidebar'][0] !== 'off')
 	{
-		$layout = (isset($metabox_data['_uncode_sidebar_position'][0])) ? $metabox_data['_uncode_sidebar_position'][0] : '';
-		$sidebar = (isset($metabox_data['_uncode_sidebar'][0])) ? $metabox_data['_uncode_sidebar'][0] : '';
-		$sidebar_size = (isset($metabox_data['_uncode_sidebar_size'][0])) ? $metabox_data['_uncode_sidebar_size'][0] : 4;
+		$layout = $metabox_data['_uncode_sidebar_position'][0] ?? '';
+		$sidebar = $metabox_data['_uncode_sidebar'][0] ?? '';
+		$sidebar_size = $metabox_data['_uncode_sidebar_size'][0] ?? 4;
 		$sidebar_sticky = (isset($metabox_data['_uncode_sidebar_sticky'][0]) && $metabox_data['_uncode_sidebar_sticky'][0] === 'on') ? ' sticky-element' : '';
-		$sidebar_fill = (isset($metabox_data['_uncode_sidebar_fill'][0])) ? $metabox_data['_uncode_sidebar_fill'][0] : '';
-		$sidebar_style = (isset($metabox_data['_uncode_sidebar_style'][0])) ? $metabox_data['_uncode_sidebar_style'][0] : $style;
+		$sidebar_fill = $metabox_data['_uncode_sidebar_fill'][0] ?? '';
+		$sidebar_style = $metabox_data['_uncode_sidebar_style'][0] ?? $style;
 		$sidebar_bg_color = (isset($metabox_data['_uncode_sidebar_bgcolor'][0]) && $metabox_data['_uncode_sidebar_bgcolor'][0] !== '') ? ' style-' . $metabox_data['_uncode_sidebar_bgcolor'][0] . '-bg' : '';
 	}
 }
@@ -162,7 +162,7 @@ if ($sidebar_style === '') $sidebar_style = $style;
 
 /** Get breadcrumb info **/
 $generic_breadcrumb = ot_get_option('_uncode_' . $post_type . '_breadcrumb');
-$page_breadcrumb = (isset($metabox_data['_uncode_specific_breadcrumb'][0])) ? $metabox_data['_uncode_specific_breadcrumb'][0] : '';
+$page_breadcrumb = $metabox_data['_uncode_specific_breadcrumb'][0] ?? '';
 if ($page_breadcrumb === '')
 {
 	$breadcrumb_align = ot_get_option('_uncode_' . $post_type . '_breadcrumb_align');
@@ -170,13 +170,13 @@ if ($page_breadcrumb === '')
 }
 else
 {
-	$breadcrumb_align = (isset($metabox_data['_uncode_specific_breadcrumb_align'][0])) ? $metabox_data['_uncode_specific_breadcrumb_align'][0] : '';
+	$breadcrumb_align = $metabox_data['_uncode_specific_breadcrumb_align'][0] ?? '';
 	$show_breadcrumb = ($page_breadcrumb === 'off') ? false : true;
 }
 
 /** Get title info **/
 $generic_show_title = ot_get_option('_uncode_' . $post_type . '_title');
-$page_show_title = (isset($metabox_data['_uncode_specific_title'][0])) ? $metabox_data['_uncode_specific_title'][0] : '';
+$page_show_title = $metabox_data['_uncode_specific_title'][0] ?? '';
 if ($page_show_title === '')
 {
 	$show_title = ($generic_show_title === 'off') ? false : true;
@@ -188,7 +188,7 @@ else
 
 /** Get media info **/
 $generic_show_media = ot_get_option('_uncode_' . $post_type . '_media');
-$page_show_media = (isset($metabox_data['_uncode_specific_media'][0])) ? $metabox_data['_uncode_specific_media'][0] : '';
+$page_show_media = $metabox_data['_uncode_specific_media'][0] ?? '';
 if ($page_show_media === '')
 {
 	$show_media = ($generic_show_media === 'off') ? false : true;
@@ -250,9 +250,9 @@ else
 		$media_array = explode(',', $media);
 		$media_counter = count($media_array);
 		$rand_id = big_rand();
-		if ($media_counter === 0) $media_array = array(
+		if ($media_counter === 0) $media_array = [
 			$media
-		);
+		];
 
 		if ($media_display === 'isotope') $media_content.=
 			'<div id="gallery-' . $rand_id . '" class="isotope-system post-media">
@@ -262,11 +262,11 @@ else
 		foreach ($media_array as $key => $value)
 		{
 			if ($media_display === 'carousel') $value = $media;
-			$block_data = array();
+			$block_data = [];
 			$block_data['media_id'] = $value;
-			$block_data['classes'] = array(
+			$block_data['classes'] = [
 				'tmb'
-			);
+			];
 			$block_data['text_padding'] = 'no-block-padding';
 			if ($media_display === 'isotope')
 			{
@@ -284,7 +284,7 @@ else
 				$block_data['single_icon'] = 'fa fa-plus2';
 				$block_data['overlay_color'] = ($style == 'light') ? 'style-black-bg' : 'style-white-bg';
 				$block_data['overlay_opacity'] = '20';
-				$lightbox_classes = array();
+				$lightbox_classes = [];
 				$lightbox_classes['data-noarr'] = false;
 			}
 			else
@@ -293,10 +293,10 @@ else
 				$block_data['link_class'] = 'inactive-link';
 				$block_data['link'] = '#';
 			}
-			$block_data['title_classes'] = array();
-			$block_data['tmb_data'] = array();
-			$block_layout['media'] = array();
-			$block_layout['icon'] = array();
+			$block_data['title_classes'] = [];
+			$block_data['tmb_data'] = [];
+			$block_layout['media'] = [];
+			$block_layout['icon'] = [];
 			$media_html = uncode_create_single_block($block_data, $rand_id, 'masonry', $block_layout, $lightbox_classes, false, true);
 			if ($media_display !== 'isotope') $media_content.= '<div class="post-media">' . $media_html . '</div>';
 			else

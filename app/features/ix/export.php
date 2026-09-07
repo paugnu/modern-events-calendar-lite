@@ -22,11 +22,11 @@ $events = $this->main->get_events('-1');
                 <h3><?php _e('Export all events to file', 'modern-events-calendar-lite'); ?></h3>
                 <p class="description"><?php _e("This will export all of your website events' data into your desired format.", 'modern-events-calendar-lite'); ?></p>
                 <ul>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-events', 'format'=>'ical')); ?>"><?php _e('iCal', 'modern-events-calendar-lite'); ?></a></li>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-events', 'format'=>'csv')); ?>"><?php _e('CSV', 'modern-events-calendar-lite'); ?></a></li>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-events', 'format'=>'ms-excel')); ?>"><?php _e('MS Excel', 'modern-events-calendar-lite'); ?></a></li>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-events', 'format'=>'xml')); ?>"><?php _e('XML', 'modern-events-calendar-lite'); ?></a></li>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-events', 'format'=>'json')); ?>"><?php _e('JSON', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-events', 'format'=>'ical']); ?>"><?php _e('iCal', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-events', 'format'=>'csv']); ?>"><?php _e('CSV', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-events', 'format'=>'ms-excel']); ?>"><?php _e('MS Excel', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-events', 'format'=>'xml']); ?>"><?php _e('XML', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-events', 'format'=>'json']); ?>"><?php _e('JSON', 'modern-events-calendar-lite'); ?></a></li>
                 </ul>
             </div>
             <div class="mec-export-certain-events">
@@ -38,8 +38,8 @@ $events = $this->main->get_events('-1');
                 <h3><?php _e('Export all bookings to file', 'modern-events-calendar-lite'); ?></h3>
                 <p class="description"><?php _e("This will export all of your website bookings' data into your desired format.", 'modern-events-calendar-lite'); ?></p>
                 <ul>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-bookings', 'format'=>'csv')); ?>"><?php _e('CSV', 'modern-events-calendar-lite'); ?></a></li>
-                    <li><a href="<?php echo $this->main->add_qs_vars(array('mec-ix-action'=>'export-bookings', 'format'=>'ms-excel')); ?>"><?php _e('MS Excel', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-bookings', 'format'=>'csv']); ?>"><?php _e('CSV', 'modern-events-calendar-lite'); ?></a></li>
+                    <li><a href="<?php echo $this->main->add_qs_vars(['mec-ix-action'=>'export-bookings', 'format'=>'ms-excel']); ?>"><?php _e('MS Excel', 'modern-events-calendar-lite'); ?></a></li>
                 </ul>
             </div>
             <div class="mec-export-certain-bookings">

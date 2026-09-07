@@ -40,7 +40,7 @@ class MEC_addon_VC extends MEC_base
         // Visual Composer is not installed
         if(!function_exists('vc_map')) return false;
         
-        $this->factory->action('vc_before_init', array($this, 'map'));
+        $this->factory->action('vc_before_init', [$this, 'map']);
         return true;
     }
     
@@ -50,20 +50,20 @@ class MEC_addon_VC extends MEC_base
      */
     public function map()
     {
-        $calendar_posts = get_posts(array('post_type'=>'mec_calendars', 'posts_per_page'=>'-1'));
+        $calendar_posts = get_posts(['post_type'=>'mec_calendars', 'posts_per_page'=>'-1']);
         
-        $calendars = array();
+        $calendars = [];
         foreach($calendar_posts as $calendar_post) $calendars[$calendar_post->post_title] = $calendar_post->ID;
         
-        vc_map(array(
+        vc_map([
             'name'=>esc_html__('Modern Events Calendar', 'modern-events-calendar-lite'),
             'base'=>'MEC',
             'class'=>'',
             'controls'=>'full',
             'icon'=>$this->main->asset('img/ico-mec-vc.png'),
             'category'=>esc_html__('Content', 'modern-events-calendar-lite'),
-            'params'=>array(
-               array(
+            'params'=>[
+               [
                   'type'=>'dropdown',
                   'holder'=>'div',
                   'class'=>'',
@@ -71,8 +71,8 @@ class MEC_addon_VC extends MEC_base
                   'param_name'=>'id',
                   'value'=>$calendars,
                   'description'=>esc_html__('Select from predefined shortcodes', 'modern-events-calendar-lite')
-               )
-            )
-        ));
+               ]
+            ]
+        ]);
     }
 }

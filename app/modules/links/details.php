@@ -8,7 +8,7 @@ $settings = $this->get_settings();
 // Social networds on single page is disabled
 if(!isset($settings['social_network_status']) or (isset($settings['social_network_status']) and !$settings['social_network_status'])) return;
 
-$url = isset($event->data->permalink) ? $event->data->permalink : '';
+$url = $event->data->permalink ?? '';
 if(trim($url) == '') return;
 
 $socials = $this->get_social_networks();

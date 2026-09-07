@@ -44,12 +44,12 @@ class MEC_skin_grid extends MEC_skins
      */
     public function actions()
     {
-        $this->factory->action('wp_ajax_mec_grid_load_more', array($this, 'load_more'));
-        $this->factory->action('wp_ajax_nopriv_mec_grid_load_more', array($this, 'load_more'));
+        $this->factory->action('wp_ajax_mec_grid_load_more', $this->load_more(...));
+        $this->factory->action('wp_ajax_nopriv_mec_grid_load_more', $this->load_more(...));
 
         // Fluent view
-        $this->factory->action('wp_ajax_mec_grid_load_month', array($this, 'load_month'));
-        $this->factory->action('wp_ajax_nopriv_mec_grid_load_month', array($this, 'load_month'));
+        $this->factory->action('wp_ajax_mec_grid_load_month', $this->load_month(...));
+        $this->factory->action('wp_ajax_nopriv_mec_grid_load_month', $this->load_month(...));
     }
     
     /**
@@ -62,10 +62,10 @@ class MEC_skin_grid extends MEC_skins
         $this->atts = $atts;
         
         // Skin Options
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // The style
-        $this->style = isset($this->skin_options['style']) ? $this->skin_options['style'] : 'modern';
+        $this->style = $this->skin_options['style'] ?? 'modern';
         if($this->style == 'fluent' and !is_plugin_active('mec-fluent-layouts/mec-fluent-layouts.php')) $this->style = 'modern';
         
         // Date Formats
@@ -97,26 +97,26 @@ class MEC_skin_grid extends MEC_skins
         }
 
         // Event Times
-        $this->include_events_times = isset($this->skin_options['include_events_times']) ? $this->skin_options['include_events_times'] : false;
-        $this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
+        $this->include_events_times = $this->skin_options['include_events_times'] ?? false;
+        $this->localtime = $this->skin_options['include_local_time'] ?? false;
         
         // Search Form Options
-        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : array();
+        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : [];
         
         // Search Form Status
-        $this->sf_status = isset($this->atts['sf_status']) ? $this->atts['sf_status'] : true;
-        $this->sf_display_label = isset($this->atts['sf_display_label']) ? $this->atts['sf_display_label'] : false;
-        $this->sf_reset_button = isset($this->atts['sf_reset_button']) ? $this->atts['sf_reset_button'] : false;
-        $this->sf_refine = isset($this->atts['sf_refine']) ? $this->atts['sf_refine'] : false;
+        $this->sf_status = $this->atts['sf_status'] ?? true;
+        $this->sf_display_label = $this->atts['sf_display_label'] ?? false;
+        $this->sf_reset_button = $this->atts['sf_reset_button'] ?? false;
+        $this->sf_refine = $this->atts['sf_refine'] ?? false;
         
         // Generate an ID for the sking
-        $this->id = isset($this->atts['id']) ? $this->atts['id'] : mt_rand(100, 999);
+        $this->id = $this->atts['id'] ?? mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // Show "Load More" button or not
-        $this->load_more_button = isset($this->skin_options['load_more_button']) ? $this->skin_options['load_more_button'] : true;
+        $this->load_more_button = $this->skin_options['load_more_button'] ?? true;
         
         // Override the style if the style forced by us in a widget etc
         if(isset($this->atts['style']) and trim($this->atts['style']) != '') $this->style = $this->atts['style'];
@@ -129,10 +129,10 @@ class MEC_skin_grid extends MEC_skins
         $this->booking_button = isset($this->skin_options['booking_button']) ? (int) $this->skin_options['booking_button'] : 0;
 
         // SED Method
-        $this->sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
+        $this->sed_method = $this->skin_options['sed_method'] ?? '0';
 
         // Image popup
-        $this->image_popup = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
+        $this->image_popup = $this->skin_options['image_popup'] ?? '0';
         
         // From Widget
         $this->widget = (isset($this->atts['widget']) and trim($this->atts['widget'])) ? true : false;
@@ -149,22 +149,22 @@ class MEC_skin_grid extends MEC_skins
         $this->display_price = (isset($this->skin_options['display_price']) and trim($this->skin_options['display_price'])) ? true : false;
         
         // The count in row
-        $this->count = isset($this->skin_options['count']) ? $this->skin_options['count'] : '3';
+        $this->count = $this->skin_options['count'] ?? '3';
 
         // Map on top
-        $this->map_on_top = isset($this->skin_options['map_on_top']) ? $this->skin_options['map_on_top'] : false;
+        $this->map_on_top = $this->skin_options['map_on_top'] ?? false;
         
         // Map geolocation
         $this->geolocation = ((isset($this->skin_options['map_on_top']) and (isset($this->skin_options['set_geolocation']))) and ($this->skin_options['map_on_top'] == '1' and $this->skin_options['set_geolocation'] == '1')) ? true : false;
         
         // Geolocation Focus
-        $this->geolocation_focus = isset($this->skin_options['set_geolocation_focus']) ? $this->skin_options['set_geolocation_focus'] : 0;
+        $this->geolocation_focus = $this->skin_options['set_geolocation_focus'] ?? 0;
 
         // reason_for_cancellation
-        $this->reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+        $this->reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
         // display_label
-        $this->display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
+        $this->display_label = $this->skin_options['display_label'] ?? false;
 
         // Init MEC
         $this->args['mec-init'] = true;
@@ -223,10 +223,10 @@ class MEC_skin_grid extends MEC_skins
         }
 
         // Show Past Events
-        $this->args['mec-past-events'] = isset($this->atts['show_past_events']) ? $this->atts['show_past_events'] : '0';
+        $this->args['mec-past-events'] = $this->atts['show_past_events'] ?? '0';
 
         // Start Date
-        if (strpos($this->style, 'fluent') === false)
+        if (!str_contains($this->style, 'fluent'))
         {
             // Start Date
             $this->start_date = $this->get_start_date();
@@ -234,7 +234,7 @@ class MEC_skin_grid extends MEC_skins
         else
         {
             // Start Date
-            list($this->year, $this->month, $this->day) = $this->get_start_date();
+            [$this->year, $this->month, $this->day] = $this->get_start_date();
             $this->start_date = date('Y-m-d', strtotime($this->year.'-'.$this->month.'-'.$this->day));
             $this->active_day = $this->year . '-' . $this->month.'-' . $this->day;
         }
@@ -247,7 +247,7 @@ class MEC_skin_grid extends MEC_skins
         if($this->show_ongoing_events)
         {
             $this->args['mec-show-ongoing-events'] = $this->show_ongoing_events;
-            if(strpos($this->style, 'fluent') === false) $this->maximum_date = $this->start_date;
+            if(!str_contains($this->style, 'fluent')) $this->maximum_date = $this->start_date;
         }
 
         // Include Ongoing Events
@@ -258,11 +258,11 @@ class MEC_skin_grid extends MEC_skins
         if(isset($this->atts['seconds']))
         {
             $this->args['mec-seconds'] = $this->atts['seconds'];
-            $this->args['mec-seconds-date'] = isset($this->atts['seconds_date']) ? $this->atts['seconds_date'] : $this->start_date;
+            $this->args['mec-seconds-date'] = $this->atts['seconds_date'] ?? $this->start_date;
         }
         
         // Apply Maximum Date
-        if (strpos($this->style, 'fluent') === false) {
+        if (!str_contains($this->style, 'fluent')) {
             if($this->request->getVar('apply_sf_date', 0) == 1 and isset($this->sf) and isset($this->sf['month']) and trim($this->sf['month'])) $this->maximum_date = date('Y-m-t', strtotime($this->start_date));
         }
         
@@ -280,7 +280,7 @@ class MEC_skin_grid extends MEC_skins
      */
     public function search()
     {
-        if(strpos($this->style, 'fluent') === false)
+        if(!str_contains($this->style, 'fluent'))
         {
             return parent::search();
         }
@@ -324,7 +324,7 @@ class MEC_skin_grid extends MEC_skins
 
             $i = 0;
             $found = 0;
-            $events = array();
+            $events = [];
 
             foreach($dates as $date=>$IDs)
             {
@@ -356,10 +356,10 @@ class MEC_skin_grid extends MEC_skins
                 $query = new WP_Query($this->args);
                 if($query->have_posts())
                 {
-                    if(!isset($events[$date])) $events[$date] = array();
+                    $events[$date] ??= [];
 
                     // Day Events
-                    $d = array();
+                    $d = [];
 
                     // The Loop
                     while($query->have_posts())
@@ -367,7 +367,7 @@ class MEC_skin_grid extends MEC_skins
                         $query->the_post();
                         $ID = get_the_ID();
 
-                        $ID_count = isset($IDs_count[$ID]) ? $IDs_count[$ID] : 1;
+                        $ID_count = $IDs_count[$ID] ?? 1;
                         for($i = 1; $i <= $ID_count; $i++)
                         {
                             $rendered = $this->render->data($ID);
@@ -376,11 +376,11 @@ class MEC_skin_grid extends MEC_skins
                             $data->ID = $ID;
                             $data->data = $rendered;
 
-                            $data->date = array
-                            (
-                                'start'=>array('date'=>$date),
-                                'end'=>array('date'=>$this->main->get_end_date($date, $rendered))
-                            );
+                            $data->date = 
+                            [
+                                'start'=>['date'=>$date],
+                                'end'=>['date'=>$this->main->get_end_date($date, $rendered)]
+                            ];
 
                             $d[] = $this->render->after_render($data, $this, $i);
                             $found++;
@@ -391,7 +391,7 @@ class MEC_skin_grid extends MEC_skins
                             // Next Offset
                             $this->next_offset = ($query->post_count-($query->current_post+1)) >= 0 ? ($query->current_post+1)+$this->offset : 0;
 
-                            usort($d, array($this, 'sort_day_events'));
+                            usort($d, $this->sort_day_events(...));
                             $events[$date] = $d;
 
                             // Restore original Post Data
@@ -401,7 +401,7 @@ class MEC_skin_grid extends MEC_skins
                         }
                     }
 
-                    usort($d, array($this, 'sort_day_events'));
+                    usort($d, $this->sort_day_events(...));
                     $events[$date] = $d;
                 }
 
@@ -456,11 +456,11 @@ class MEC_skin_grid extends MEC_skins
             if(strtotime($date) > strtotime($now)) $date = $now;
         }
         
-        if(strpos($this->style, 'fluent') === false) return $date;
+        if(!str_contains($this->style, 'fluent')) return $date;
         else
         {
             $time = strtotime($date);
-            return array(date('Y', $time), date('m', $time), date('d', $time));
+            return [date('Y', $time), date('m', $time), date('d', $time)];
         }
     }
     
@@ -471,15 +471,15 @@ class MEC_skin_grid extends MEC_skins
      */
     public function load_more()
     {
-        $this->sf = $this->request->getVar('sf', array());
+        $this->sf = $this->request->getVar('sf', []);
         $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-        $atts = $this->sf_apply($this->request->getVar('atts', array()), $this->sf, $apply_sf_date);
+        $atts = $this->sf_apply($this->request->getVar('atts', []), $this->sf, $apply_sf_date);
         
         // Initialize the skin
         $this->initialize($atts);
         
         // Override variables
-        if(strpos($this->style, 'fluent') === false)
+        if(!str_contains($this->style, 'fluent'))
         {
             $this->start_date = sanitize_text_field($this->request->getVar('mec_start_date', date('y-m-d')));
         }
@@ -519,9 +519,9 @@ class MEC_skin_grid extends MEC_skins
     */
     public function load_month()
     {
-        $this->sf = $this->request->getVar('sf', array());
+        $this->sf = $this->request->getVar('sf', []);
         $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-        $atts = $this->sf_apply($this->request->getVar('atts', array()), $this->sf, $apply_sf_date);
+        $atts = $this->sf_apply($this->request->getVar('atts', []), $this->sf, $apply_sf_date);
         $navigator_click = $this->request->getVar('navigator_click', false);
 
         // Initialize the skin

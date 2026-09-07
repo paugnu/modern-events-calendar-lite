@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -28,18 +28,18 @@ if (!class_exists('Google_Client')) {
 class Google_Service_Resource
 {
   // Valid query parameters that work, but don't appear in discovery.
-  private $stackParameters = array(
-      'alt' => array('type' => 'string', 'location' => 'query'),
-      'fields' => array('type' => 'string', 'location' => 'query'),
-      'trace' => array('type' => 'string', 'location' => 'query'),
-      'userIp' => array('type' => 'string', 'location' => 'query'),
-      'quotaUser' => array('type' => 'string', 'location' => 'query'),
-      'data' => array('type' => 'string', 'location' => 'body'),
-      'mimeType' => array('type' => 'string', 'location' => 'header'),
-      'uploadType' => array('type' => 'string', 'location' => 'query'),
-      'mediaUpload' => array('type' => 'complex', 'location' => 'query'),
-      'prettyPrint' => array('type' => 'string', 'location' => 'query'),
-  );
+  private $stackParameters = [
+      'alt' => ['type' => 'string', 'location' => 'query'],
+      'fields' => ['type' => 'string', 'location' => 'query'],
+      'trace' => ['type' => 'string', 'location' => 'query'],
+      'userIp' => ['type' => 'string', 'location' => 'query'],
+      'quotaUser' => ['type' => 'string', 'location' => 'query'],
+      'data' => ['type' => 'string', 'location' => 'body'],
+      'mimeType' => ['type' => 'string', 'location' => 'header'],
+      'uploadType' => ['type' => 'string', 'location' => 'query'],
+      'mediaUpload' => ['type' => 'complex', 'location' => 'query'],
+      'prettyPrint' => ['type' => 'string', 'location' => 'query'],
+  ];
 
   /** @var string $rootUrl */
   private $rootUrl;
@@ -47,28 +47,24 @@ class Google_Service_Resource
   /** @var Google_Client $client */
   private $client;
 
-  /** @var string $serviceName */
-  private $serviceName;
-
   /** @var string $servicePath */
   private $servicePath;
-
-  /** @var string $resourceName */
-  private $resourceName;
 
   /** @var array $methods */
   private $methods;
 
-  public function __construct($service, $serviceName, $resourceName, $resource)
+  /**
+   * @param string $serviceName
+   * @param string $resourceName
+   */
+  public function __construct($service, private $serviceName, private $resourceName, $resource)
   {
     $this->rootUrl = $service->rootUrl;
     $this->client = $service->getClient();
     $this->servicePath = $service->servicePath;
-    $this->serviceName = $serviceName;
-    $this->resourceName = $resourceName;
     $this->methods = is_array($resource) && isset($resource['methods']) ?
         $resource['methods'] :
-        array($resourceName => $resource);
+        [$this->resourceName => $resource];
   }
 
   /**
@@ -84,11 +80,11 @@ class Google_Service_Resource
     if (! isset($this->methods[$name])) {
       $this->client->getLogger()->error(
           'Service method unknown',
-          array(
+          [
               'service' => $this->serviceName,
               'resource' => $this->resourceName,
               'method' => $name
-          )
+          ]
       );
 
       throw new Google_Exception(
@@ -129,9 +125,7 @@ class Google_Service_Resource
       $parameters = array_merge($parameters, $optParams);
     }
 
-    if (!isset($method['parameters'])) {
-      $method['parameters'] = array();
-    }
+    $method['parameters'] ??= [];
 
     $method['parameters'] = array_merge(
         $this->stackParameters,
@@ -141,12 +135,12 @@ class Google_Service_Resource
       if ($key != 'postBody' && ! isset($method['parameters'][$key])) {
         $this->client->getLogger()->error(
             'Service parameter unknown',
-            array(
+            [
                 'service' => $this->serviceName,
                 'resource' => $this->resourceName,
                 'method' => $name,
                 'parameter' => $key
-            )
+            ]
         );
         throw new Google_Exception("($name) unknown parameter: '$key'");
       }
@@ -159,12 +153,12 @@ class Google_Service_Resource
       ) {
         $this->client->getLogger()->error(
             'Service parameter missing',
-            array(
+            [
                 'service' => $this->serviceName,
                 'resource' => $this->resourceName,
                 'method' => $name,
                 'parameter' => $paramName
-            )
+            ]
         );
         throw new Google_Exception("($name) missing required param: '$paramName'");
       }
@@ -181,12 +175,12 @@ class Google_Service_Resource
 
     $this->client->getLogger()->info(
         'Service Call',
-        array(
+        [
             'service' => $this->serviceName,
             'resource' => $this->resourceName,
             'method' => $name,
             'arguments' => $parameters,
-        )
+        ]
     );
 
     $url = Google_Http_REST::createRequestUri(
@@ -208,7 +202,7 @@ class Google_Service_Resource
     }
 
     if ($postBody) {
-      $contentTypeHeader = array();
+      $contentTypeHeader = [];
       $contentTypeHeader['content-type'] = 'application/json; charset=UTF-8';
       $httpRequest->setRequestHeaders($contentTypeHeader);
       $httpRequest->setPostBody($postBody);

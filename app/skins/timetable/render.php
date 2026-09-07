@@ -2,21 +2,21 @@
 /** no direct access **/
 defined('MECEXEC') or die();
 
-$has_events = array();
+$has_events = [];
 $settings = $this->main->get_settings();
 $styling = $this->main->get_styling();
 
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 ?>
 <?php if($this->style == 'modern'): ?>
 <div class="mec-timetable-day-events mec-clear mec-weekly-view-dates-events <?php echo $set_dark; ?>">
-    <?php foreach($this->events as $date=>$events): $week = (isset($this->week_of_days[$date]) ? $this->week_of_days[$date] : 0); ?>
+    <?php foreach($this->events as $date=>$events): $week = ($this->week_of_days[$date] ?? 0); ?>
     <?php
         if(!isset($has_events[$week]) and isset($this->weeks[$week]))
         {
@@ -28,10 +28,10 @@ else $set_dark = '';
         <?php foreach($events as $event): ?>
             <?php
                 $location_id = $this->main->get_master_location_id($event);
-                $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                 $organizer_id = $this->main->get_master_organizer_id($event);
-                $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+                $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
                 $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                 $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -51,19 +51,19 @@ else $set_dark = '';
                 <span class="mec-timetable-event-span mec-timetable-event-title">
                     <?php echo $this->display_link($event); ?><?php echo $this->main->get_flags($event).$event_color.$this->main->get_normal_labels($event, $display_label).$this->main->display_cancellation_reason($event, $reason_for_cancellation); ?>
                     <?php echo $this->get_label_captions($event,'mec-fc-style'); ?>
-                    <?php if($this->localtime) echo $this->main->module('local-time.type3', array('event'=>$event)); ?>
+                    <?php if($this->localtime) echo $this->main->module('local-time.type3', ['event'=>$event]); ?>
                 </span>
                 
                 <span class="mec-timetable-event-span mec-timetable-event-location">
                     <i class="mec-sl-location-pin"></i>
                     <?php if(isset($location['name']) and trim($location['name'])): ?>
-                    <span><?php echo (isset($location['name']) ? $location['name'] : ''); ?></span>
+                    <span><?php echo ($location['name'] ?? ''); ?></span>
                     <?php endif; ?>
                 </span>
                 <span class="mec-timetable-event-span mec-timetable-event-organizer">
                     <i class="mec-sl-user"></i>
                     <?php if(isset($organizer['name']) and trim($organizer['name'])): ?>
-                    <span><?php echo (isset($organizer['name']) ? $organizer['name'] : ''); ?></span>
+                    <span><?php echo ($organizer['name'] ?? ''); ?></span>
                     <?php endif; ?>
                 </span>
             </article>
@@ -87,10 +87,10 @@ else $set_dark = '';
         <?php foreach($events as $event): ?>
         <?php
             $location_id = $this->main->get_master_location_id($event);
-            $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+            $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
             $organizer_id = $this->main->get_master_organizer_id($event);
-            $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+            $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
             $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
             $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -115,16 +115,16 @@ else $set_dark = '';
                 <div class="mec-event-loction">
                     <i class="mec-sl-location-pin"></i>
                     <?php if(isset($location['name']) and trim($location['name'])): ?>
-                        <span><?php echo (isset($location['name']) ? $location['name'] : ''); ?></span>
+                        <span><?php echo ($location['name'] ?? ''); ?></span>
                     <?php endif; ?>
                 </div>
                 <div class="mec-event-organizer">
                     <i class="mec-sl-user"></i>
                     <?php if(isset($organizer['name']) and trim($organizer['name'])): ?>
-                        <span><?php echo (isset($organizer['name']) ? $organizer['name'] : ''); ?></span>
+                        <span><?php echo ($organizer['name'] ?? ''); ?></span>
                     <?php endif; ?>
                 </div>
-                <?php if($this->localtime) echo $this->main->module('local-time.type1', array('event'=>$event)); ?>
+                <?php if($this->localtime) echo $this->main->module('local-time.type1', ['event'=>$event]); ?>
                 <?php echo $this->booking_button($event); ?>
             </div>
         </article>

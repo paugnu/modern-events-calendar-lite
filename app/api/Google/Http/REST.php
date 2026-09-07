@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -39,8 +39,8 @@ class Google_Http_REST
     $runner = new Google_Task_Runner(
         $client,
         sprintf('%s %s', $req->getRequestMethod(), $req->getUrl()),
-        array(get_class(), 'doExecute'),
-        array($client, $req)
+        self::doExecute(...),
+        [$client, $req]
     );
 
     return $runner->run();
@@ -70,7 +70,7 @@ class Google_Http_REST
    * @param Google_Client $client
    * @return mixed|null
    */
-  public static function decodeHttpResponse($response, Google_Client $client = null)
+  public static function decodeHttpResponse($response, ?Google_Client $client = null)
   {
     $code = $response->getResponseHttpCode();
     $body = $response->getResponseBody();
@@ -99,7 +99,7 @@ class Google_Http_REST
       if ($client) {
         $client->getLogger()->error(
             $err,
-            array('code' => $code, 'errors' => $errors)
+            ['code' => $code, 'errors' => $errors]
         );
 
         $map = $client->getClassConfig(
@@ -145,8 +145,8 @@ class Google_Http_REST
   public static function createRequestUri($servicePath, $restPath, $params)
   {
     $requestUrl = $servicePath . $restPath;
-    $uriTemplateVars = array();
-    $queryVars = array();
+    $uriTemplateVars = [];
+    $queryVars = [];
     foreach ($params as $paramName => $paramSpec) {
       if ($paramSpec['type'] == 'boolean') {
         $paramSpec['value'] = ($paramSpec['value']) ? 'true' : 'false';

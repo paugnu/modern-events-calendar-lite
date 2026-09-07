@@ -83,7 +83,7 @@ class Payout extends ApiResource
     public function cancel($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/cancel';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;
@@ -100,7 +100,7 @@ class Payout extends ApiResource
     public function reverse($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/reverse';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

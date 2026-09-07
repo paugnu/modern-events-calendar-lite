@@ -5,9 +5,9 @@ defined('MECEXEC') or die();
 $styling = $this->main->get_styling();
 $event_colorskin = (isset($styling['mec_colorskin']) || isset($styling['color'])) ? 'colorskin-custom' : '';
 $settings = $this->main->get_settings();
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 ?>
 <div class="mec-wrap <?php echo $event_colorskin; ?>">
     <div class="mec-event-masonry">
@@ -16,10 +16,10 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
         foreach($date as $event):
 
             $location_id = $this->main->get_master_location_id($event);
-            $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+            $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
             $organizer_id = $this->main->get_master_organizer_id($event);
-            $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+            $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
             $event_color = isset($event->data->meta['mec_color']) ? '<span class="event-color" style="background: #'.$event->data->meta['mec_color'].'"></span>' : '';
 
@@ -102,7 +102,7 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
                                         <div class="mec-event-month"><?php echo $this->main->dateify($event, $this->date_format_2); ?></div>
                                     <?php endif; ?>
                                     <div class="mec-event-detail"><?php echo $start_time.(trim($end_time) ? ' - '.$end_time : ''); ?></div>
-                                    <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                                    <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                                 </div>
 
                                 <?php if(isset($location['name']) and trim($location['name'])): ?>
@@ -110,8 +110,8 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
                                     <div class="mec-event-location">
                                         <i class="mec-sl-location-pin mec-color"></i>
                                         <div class="mec-event-location-det">
-                                            <h6 class="mec-location"><?php echo (isset($location['name']) ? $location['name'] : ''); ?></h6>
-                                            <address class="mec-events-address"><span class="mec-address"><?php echo (isset($location['address']) ? $location['address'] : ''); ?></span></address>
+                                            <h6 class="mec-location"><?php echo ($location['name'] ?? ''); ?></h6>
+                                            <address class="mec-events-address"><span class="mec-address"><?php echo ($location['address'] ?? ''); ?></span></address>
                                         </div>
                                     </div>
                                 </div>

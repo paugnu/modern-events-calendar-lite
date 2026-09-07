@@ -59,7 +59,7 @@ class SubscriptionItem extends ApiResource
     public function usageRecordSummaries($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/usage_record_summaries';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
+        [$response, $opts] = $this->_request('get', $url, $params, $opts);
         $obj = \Stripe\Util\Util::convertToStripeObject($response, $opts);
         $obj->setLastResponse($response);
 

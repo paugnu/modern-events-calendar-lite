@@ -3,7 +3,7 @@ class mecBeaverBuilderShortcode extends FLBuilderModule {
 
     public function __construct()
     {
-        parent::__construct(array(
+        parent::__construct([
             'name'            => __( 'Modern Events Calendar (MEC)', 'modern-events-calendar-lite' ),
             'description'     => __( 'MEC Shortcodes', 'modern-events-calendar-lite' ),
             'category'        => __( 'Basic', 'modern-events-calendar-lite' ),
@@ -13,27 +13,27 @@ class mecBeaverBuilderShortcode extends FLBuilderModule {
             'editor_export'   => true, // Defaults to true and can be omitted.
             'enabled'         => true, // Defaults to true and can be omitted.
             'partial_refresh' => false, // Defaults to false and can be omitted.
-        ));
+        ]);
     }
 }
 
-$calendar_posts = get_posts(array('post_type'=>'mec_calendars', 'posts_per_page'=>'-1'));
-$calendars = array();
+$calendar_posts = get_posts(['post_type'=>'mec_calendars', 'posts_per_page'=>'-1']);
+$calendars = [];
 foreach($calendar_posts as $calendar_post) $calendars[$calendar_post->ID] = $calendar_post->post_title;
-FLBuilder::register_module( 'mecBeaverBuilderShortcode', array(
-    'my-tab-1'      => array(
+FLBuilder::register_module( 'mecBeaverBuilderShortcode', [
+    'my-tab-1'      => [
         'title'         => __( 'Content', 'modern-events-calendar-lite' ),
-        'sections'      => array(
-            'my-section-1'  => array(
+        'sections'      => [
+            'my-section-1'  => [
                 'title'         => __( 'Select Shortcode', 'modern-events-calendar-lite' ),
-                'fields'        => array(
-                    'mec_shortcode' => array(
+                'fields'        => [
+                    'mec_shortcode' => [
 						'type'    => 'select',
 						'label'   => __( 'Select Shortcode', 'modern-events-calendar-lite' ),
 						'options' => $calendars,
-					),
-                )
-            )
-        )
-    )
-) );
+					],
+                ]
+            ]
+        ]
+    ]
+] );

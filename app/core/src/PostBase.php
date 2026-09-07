@@ -31,9 +31,9 @@ abstract class PostBase {
 			$data = get_post( $data );
 		}elseif( is_numeric( $data ) && !$load_post ){
 
-			$data = array(
+			$data = [
 				'ID' => $data,
-			);
+			];
 		}
 
 		if ( is_a( $data, '\WP_Post' ) ) {
@@ -45,7 +45,7 @@ abstract class PostBase {
 		}
 
 		$this->data = $data;
-		$this->ID   = isset($this->data['ID']) ? $this->data['ID'] : 0;
+		$this->ID   = $this->data['ID'] ?? 0;
 	}
 
 	/**
@@ -61,7 +61,7 @@ abstract class PostBase {
 	 */
 	public function get_title() {
 
-		return isset($this->data['title']) ? $this->data['title'] : get_the_title($this->ID);
+		return $this->data['title'] ?? get_the_title($this->ID);
 	}
 
 	/**
@@ -72,7 +72,7 @@ abstract class PostBase {
 	 */
 	public function get_data( $key, $default = null ) {
 
-		$v = isset( $this->data[ $key ] ) ? $this->data[ $key ] : $default;
+		$v = $this->data[ $key ] ?? $default;
 
 		return apply_filters( 'mec_' . $this->type . '_get_data', $v, $key, $this->data, $default );
 	}

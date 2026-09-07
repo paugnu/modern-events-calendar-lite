@@ -23,9 +23,9 @@ class QtFileLoaderTest extends TestCase
         $resource = __DIR__.'/../fixtures/resources.ts';
         $catalogue = $loader->load($resource, 'en', 'resources');
 
-        $this->assertEquals(array('foo' => 'bar'), $catalogue->all('resources'));
+        $this->assertEquals(['foo' => 'bar'], $catalogue->all('resources'));
         $this->assertEquals('en', $catalogue->getLocale());
-        $this->assertEquals(array(new FileResource($resource)), $catalogue->getResources());
+        $this->assertEquals([new FileResource($resource)], $catalogue->getResources());
     }
 
     /**
@@ -64,10 +64,10 @@ class QtFileLoaderTest extends TestCase
         $resource = __DIR__.'/../fixtures/empty.xlf';
 
         if (method_exists($this, 'expectException')) {
-            $this->expectException('Symfony\Component\Translation\Exception\InvalidResourceException');
+            $this->expectException(\Symfony\Component\Translation\Exception\InvalidResourceException::class);
             $this->expectExceptionMessage(sprintf('Unable to load "%s".', $resource));
         } else {
-            $this->setExpectedException('Symfony\Component\Translation\Exception\InvalidResourceException', sprintf('Unable to load "%s".', $resource));
+            $this->setExpectedException(\Symfony\Component\Translation\Exception\InvalidResourceException::class, sprintf('Unable to load "%s".', $resource));
         }
 
         $loader->load($resource, 'en', 'domain1');

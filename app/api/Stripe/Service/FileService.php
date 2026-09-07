@@ -53,9 +53,7 @@ class FileService extends \Stripe\Service\AbstractService
     public function create($params = null, $opts = null)
     {
         $opts = \Stripe\Util\RequestOptions::parse($opts);
-        if (!isset($opts->apiBase)) {
-            $opts->apiBase = $this->getClient()->getFilesBase();
-        }
+        $opts->apiBase ??= $this->getClient()->getFilesBase();
 
         // Manually flatten params, otherwise curl's multipart encoder will
         // choke on nested null|arrays.

@@ -22,25 +22,25 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 class Google_IO_Stream extends Google_IO_Abstract
 {
   const TIMEOUT = "timeout";
   const ZLIB = "compress.zlib://";
-  private $options = array();
+  private $options = [];
   private $trappedErrorNumber;
   private $trappedErrorString;
 
-  private static $DEFAULT_HTTP_CONTEXT = array(
+  private static $DEFAULT_HTTP_CONTEXT = [
     "follow_location" => 0,
     "ignore_errors" => 1,
-  );
+  ];
 
-  private static $DEFAULT_SSL_CONTEXT = array(
+  private static $DEFAULT_SSL_CONTEXT = [
     "verify_peer" => true,
-  );
+  ];
 
   public function __construct(Google_Client $client)
   {
@@ -66,7 +66,7 @@ class Google_IO_Stream extends Google_IO_Abstract
     $default_options = stream_context_get_options(stream_context_get_default());
 
     $requestHttpContext = array_key_exists('http', $default_options) ?
-        $default_options['http'] : array();
+        $default_options['http'] : [];
 
     if ($request->getPostBody()) {
       $requestHttpContext["content"] = $request->getPostBody();
@@ -85,13 +85,13 @@ class Google_IO_Stream extends Google_IO_Abstract
     $requestHttpContext["user_agent"] = $request->getUserAgent();
 
     $requestSslContext = array_key_exists('ssl', $default_options) ?
-        $default_options['ssl'] : array();
+        $default_options['ssl'] : [];
 
     if (!$this->client->isAppEngine() && !array_key_exists("cafile", $requestSslContext)) {
-      $requestSslContext["cafile"] = dirname(__FILE__) . '/cacerts.pem';
+      $requestSslContext["cafile"] = __DIR__ . '/cacerts.pem';
     }
 
-    $options = array(
+    $options = [
         "http" => array_merge(
             self::$DEFAULT_HTTP_CONTEXT,
             $requestHttpContext
@@ -100,7 +100,7 @@ class Google_IO_Stream extends Google_IO_Abstract
             self::$DEFAULT_SSL_CONTEXT,
             $requestSslContext
         )
-    );
+    ];
 
     $context = stream_context_create($options);
 
@@ -112,12 +112,12 @@ class Google_IO_Stream extends Google_IO_Abstract
 
     $this->client->getLogger()->debug(
         'Stream request',
-        array(
+        [
             'url' => $url,
             'method' => $request->getRequestMethod(),
             'headers' => $requestHeaders,
             'body' => $request->getPostBody()
-        )
+        ]
     );
 
     // We are trapping any thrown errors in this method only and
@@ -126,7 +126,7 @@ class Google_IO_Stream extends Google_IO_Abstract
     $this->trappedErrorString = null;
 
     // START - error trap.
-    set_error_handler(array($this, 'trapError'));
+    set_error_handler($this->trapError(...));
     $fh = fopen($url, 'r', false, $context);
     restore_error_handler();
     // END - error trap.
@@ -168,14 +168,14 @@ class Google_IO_Stream extends Google_IO_Abstract
 
     $this->client->getLogger()->debug(
         'Stream response',
-        array(
+        [
             'code' => $respHttpCode,
             'headers' => $responseHeaders,
             'body' => $response_data,
-        )
+        ]
     );
 
-    return array($response_data, $responseHeaders, $respHttpCode);
+    return [$response_data, $responseHeaders, $respHttpCode];
   }
 
   /**

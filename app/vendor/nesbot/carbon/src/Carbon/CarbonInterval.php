@@ -73,7 +73,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * @method CarbonInterval seconds($seconds = 1) Set the seconds portion of the current interval.
  * @method CarbonInterval second($seconds = 1) Alias for seconds().
  */
-class CarbonInterval extends DateInterval
+class CarbonInterval extends DateInterval implements \Stringable
 {
     /**
      * Interval spec period designators
@@ -109,7 +109,7 @@ class CarbonInterval extends DateInterval
      *
      * @var array
      */
-    protected static $macros = array();
+    protected static $macros = [];
 
     /**
      * Before PHP 5.4.20/5.5.4 instead of FALSE days will be set to -99999 when the interval instance
@@ -126,13 +126,13 @@ class CarbonInterval extends DateInterval
      */
     public static function getCascadeFactors()
     {
-        return static::$cascadeFactors ?: array(
-            'minutes' => array(Carbon::SECONDS_PER_MINUTE, 'seconds'),
-            'hours' => array(Carbon::MINUTES_PER_HOUR, 'minutes'),
-            'dayz' => array(Carbon::HOURS_PER_DAY, 'hours'),
-            'months' => array(Carbon::DAYS_PER_WEEK * Carbon::WEEKS_PER_MONTH, 'dayz'),
-            'years' => array(Carbon::MONTHS_PER_YEAR, 'months'),
-        );
+        return static::$cascadeFactors ?: [
+            'minutes' => [Carbon::SECONDS_PER_MINUTE, 'seconds'],
+            'hours' => [Carbon::MINUTES_PER_HOUR, 'minutes'],
+            'dayz' => [Carbon::HOURS_PER_DAY, 'hours'],
+            'months' => [Carbon::DAYS_PER_WEEK * Carbon::WEEKS_PER_MONTH, 'dayz'],
+            'years' => [Carbon::MONTHS_PER_YEAR, 'months'],
+        ];
     }
 
     private static function standardizeUnit($unit)
@@ -145,11 +145,11 @@ class CarbonInterval extends DateInterval
     private static function getFlipCascadeFactors()
     {
         if (!self::$flipCascadeFactors) {
-            self::$flipCascadeFactors = array();
+            self::$flipCascadeFactors = [];
             foreach (static::getCascadeFactors() as $to => $tuple) {
-                list($factor, $from) = $tuple;
+                [$factor, $from] = $tuple;
 
-                self::$flipCascadeFactors[self::standardizeUnit($from)] = array(self::standardizeUnit($to), $factor);
+                self::$flipCascadeFactors[self::standardizeUnit($from)] = [self::standardizeUnit($to), $factor];
             }
         }
 
@@ -238,7 +238,7 @@ class CarbonInterval extends DateInterval
         $target = self::standardizeUnit($target);
         $factors = static::getFlipCascadeFactors();
         if (isset($factors[$source])) {
-            list($to, $factor) = $factors[$source];
+            [$to, $factor] = $factors[$source];
             if ($to === $target) {
                 return $factor;
             }
@@ -369,7 +369,7 @@ class CarbonInterval extends DateInterval
 
         if (static::hasMacro($name)) {
             return call_user_func_array(
-                array(new static(0), $name), $args
+                [new static(0), $name], $args
             );
         }
     }
@@ -417,7 +417,7 @@ class CarbonInterval extends DateInterval
         $pattern = '/(\d+(?:\.\d+)?)\h*([^\d\h]*)/i';
         preg_match_all($pattern, $intervalDefinition, $parts, PREG_SET_ORDER);
         while ($match = array_shift($parts)) {
-            list($part, $value, $unit) = $match;
+            [$part, $value, $unit] = $match;
             $intValue = intval($value);
             $fraction = floatval($value) - $intValue;
             switch (strtolower($unit)) {
@@ -438,7 +438,7 @@ class CarbonInterval extends DateInterval
                 case 'w':
                     $weeks += $intValue;
                     if ($fraction) {
-                        $parts[] = array(null, $fraction * static::getDaysPerWeek(), 'd');
+                        $parts[] = [null, $fraction * static::getDaysPerWeek(), 'd'];
                     }
                     break;
 
@@ -447,7 +447,7 @@ class CarbonInterval extends DateInterval
                 case 'd':
                     $days += $intValue;
                     if ($fraction) {
-                        $parts[] = array(null, $fraction * static::getHoursPerDay(), 'h');
+                        $parts[] = [null, $fraction * static::getHoursPerDay(), 'h'];
                     }
                     break;
 
@@ -456,7 +456,7 @@ class CarbonInterval extends DateInterval
                 case 'h':
                     $hours += $intValue;
                     if ($fraction) {
-                        $parts[] = array(null, $fraction * static::getMinutesPerHours(), 'm');
+                        $parts[] = [null, $fraction * static::getMinutesPerHours(), 'm'];
                     }
                     break;
 
@@ -521,7 +521,7 @@ class CarbonInterval extends DateInterval
         if (is_string($var)) {
             $var = trim($var);
 
-            if (substr($var, 0, 1) === 'P') {
+            if (str_starts_with($var, 'P')) {
                 return new static($var);
             }
 
@@ -604,39 +604,21 @@ class CarbonInterval extends DateInterval
      */
     public function __get($name)
     {
-        if (substr($name, 0, 5) === 'total') {
+        if (str_starts_with($name, 'total')) {
             return $this->total(substr($name, 5));
         }
 
-        switch ($name) {
-            case 'years':
-                return $this->y;
-
-            case 'months':
-                return $this->m;
-
-            case 'dayz':
-                return $this->d;
-
-            case 'hours':
-                return $this->h;
-
-            case 'minutes':
-                return $this->i;
-
-            case 'seconds':
-                return $this->s;
-
-            case 'weeks':
-                return (int) floor($this->d / static::getDaysPerWeek());
-
-            case 'daysExcludeWeeks':
-            case 'dayzExcludeWeeks':
-                return $this->d % static::getDaysPerWeek();
-
-            default:
-                throw new InvalidArgumentException(sprintf("Unknown getter '%s'", $name));
-        }
+        return match ($name) {
+            'years' => $this->y,
+            'months' => $this->m,
+            'dayz' => $this->d,
+            'hours' => $this->h,
+            'minutes' => $this->i,
+            'seconds' => $this->s,
+            'weeks' => (int) floor($this->d / static::getDaysPerWeek()),
+            'daysExcludeWeeks', 'dayzExcludeWeeks' => $this->d % static::getDaysPerWeek(),
+            default => throw new InvalidArgumentException(sprintf("Unknown getter '%s'", $name)),
+        };
     }
 
     /**
@@ -726,8 +708,6 @@ class CarbonInterval extends DateInterval
         );
 
         foreach ($methods as $method) {
-            $method->setAccessible(true);
-
             static::macro($method->name, $method->invoke($mixin));
         }
     }
@@ -772,7 +752,7 @@ class CarbonInterval extends DateInterval
         }
 
         if ($macro instanceof Closure && method_exists($macro, 'bindTo')) {
-            $macro = $macro->bindTo($this, get_class($this));
+            $macro = $macro->bindTo($this, static::class);
         }
 
         return call_user_func_array($macro, $parameters);
@@ -847,21 +827,21 @@ class CarbonInterval extends DateInterval
      */
     public function forHumans($short = false)
     {
-        $periods = array(
-            'year' => array('y', $this->years),
-            'month' => array('m', $this->months),
-            'week' => array('w', $this->weeks),
-            'day' => array('d', $this->daysExcludeWeeks),
-            'hour' => array('h', $this->hours),
-            'minute' => array('min', $this->minutes),
-            'second' => array('s', $this->seconds),
-        );
+        $periods = [
+            'year' => ['y', $this->years],
+            'month' => ['m', $this->months],
+            'week' => ['w', $this->weeks],
+            'day' => ['d', $this->daysExcludeWeeks],
+            'hour' => ['h', $this->hours],
+            'minute' => ['min', $this->minutes],
+            'second' => ['s', $this->seconds],
+        ];
 
-        $parts = array();
+        $parts = [];
         foreach ($periods as $unit => $options) {
-            list($shortUnit, $count) = $options;
+            [$shortUnit, $count] = $options;
             if ($count > 0) {
-                $parts[] = static::translator()->transChoice($short ? $shortUnit : $unit, $count, array(':count' => $count));
+                $parts[] = static::translator()->transChoice($short ? $shortUnit : $unit, $count, [':count' => $count]);
             }
         }
 
@@ -873,7 +853,7 @@ class CarbonInterval extends DateInterval
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->forHumans();
     }
@@ -886,7 +866,7 @@ class CarbonInterval extends DateInterval
     public function toPeriod()
     {
         return CarbonPeriod::createFromArray(
-            array_merge(array($this), func_get_args())
+            array_merge([$this], func_get_args())
         );
     }
 
@@ -960,17 +940,17 @@ class CarbonInterval extends DateInterval
      */
     public static function getDateIntervalSpec(DateInterval $interval)
     {
-        $date = array_filter(array(
+        $date = array_filter([
             static::PERIOD_YEARS => $interval->y,
             static::PERIOD_MONTHS => $interval->m,
             static::PERIOD_DAYS => $interval->d,
-        ));
+        ]);
 
-        $time = array_filter(array(
+        $time = array_filter([
             static::PERIOD_HOURS => $interval->h,
             static::PERIOD_MINUTES => $interval->i,
             static::PERIOD_SECONDS => $interval->s,
-        ));
+        ]);
 
         $specString = static::PERIOD_PREFIX;
 
@@ -1042,7 +1022,7 @@ class CarbonInterval extends DateInterval
     public function cascade()
     {
         foreach (static::getFlipCascadeFactors() as $source => $cascade) {
-            list($target, $factor) = $cascade;
+            [$target, $factor] = $cascade;
 
             if ($source === 'dayz' && $target === 'weeks') {
                 continue;
@@ -1069,9 +1049,9 @@ class CarbonInterval extends DateInterval
     {
         $realUnit = $unit = strtolower($unit);
 
-        if (in_array($unit, array('days', 'weeks'))) {
+        if (in_array($unit, ['days', 'weeks'])) {
             $realUnit = 'dayz';
-        } elseif (!in_array($unit, array('seconds', 'minutes', 'hours', 'dayz', 'months', 'years'))) {
+        } elseif (!in_array($unit, ['seconds', 'minutes', 'hours', 'dayz', 'months', 'years'])) {
             throw new InvalidArgumentException("Unknown unit '$unit'.");
         }
 
@@ -1080,7 +1060,7 @@ class CarbonInterval extends DateInterval
         $unitFound = false;
 
         foreach (static::getFlipCascadeFactors() as $source => $cascade) {
-            list($target, $factor) = $cascade;
+            [$target, $factor] = $cascade;
 
             if ($source === $realUnit) {
                 $unitFound = true;

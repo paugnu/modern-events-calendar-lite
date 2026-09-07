@@ -11,7 +11,7 @@ function mec_stripe_api_php_client_autoload($className)
     
     // Drop first Stripe
     $classPath = array_slice($classPath, 1);
-    $filePath = dirname(__FILE__) . DS . implode(DS, $classPath) . '.php';
+    $filePath = __DIR__ . DS . implode(DS, $classPath) . '.php';
     
     if(file_exists($filePath))
     {

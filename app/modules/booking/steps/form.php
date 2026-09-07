@@ -21,11 +21,11 @@ unset($fees[':i:']);
 $WC_status = (isset($this->settings['wc_status']) and $this->settings['wc_status'] and class_exists('WooCommerce')) ? true : false;
 if($WC_status)
 {
-    $ticket_variations = array();
-    $fees = array();
+    $ticket_variations = [];
+    $fees = [];
 }
 
-$event_tickets = isset($event->data->tickets) ? $event->data->tickets : array();
+$event_tickets = $event->data->tickets ?? [];
 
 $total_ticket_prices = 0;
 $check_free_tickets_booking = apply_filters('check_free_tickets_booking', 1);
@@ -59,20 +59,20 @@ foreach($reg_fields as $field)
 
 if(!$mec_name)
 {
-    $reg_fields[] = array(
+    $reg_fields[] = [
         'mandatory' => '0',
         'type'      => 'name',
         'label'     => esc_html__('Name', 'modern-events-calendar-lite'),
-    );
+    ];
 }
 
 if(!$mec_email)
 {
-    $reg_fields[] = array(
+    $reg_fields[] = [
         'mandatory' => '0',
         'type'      => 'mec_email',
         'label'     => esc_html__('Email', 'modern-events-calendar-lite'),
-    );
+    ];
 }
 
 ?>
@@ -159,8 +159,8 @@ if(!$mec_email)
 
                     <?php /** Paragraph **/ elseif ($bfixed_field['type'] == 'p') : ?>
                         <p><?php
-                            $paragraph = isset($bfixed_field['paragraph']) ? $bfixed_field['paragraph'] : '';
-                            $content = isset($bfixed_field['content']) ? $bfixed_field['content'] : $paragraph;
+                            $paragraph = $bfixed_field['paragraph'] ?? '';
+                            $content = $bfixed_field['content'] ?? $paragraph;
                             echo do_shortcode(stripslashes($content)); ?></p>
                     <?php endif; ?>
                 </li>
@@ -203,18 +203,18 @@ if(!$mec_email)
                             <?php if (isset($reg_field['label']) and $reg_field['type'] != 'agreement' &&  $reg_field['type'] != 'name' && $reg_field['type'] != 'mec_email') : ?><label for="mec_book_reg_field_reg<?php echo $j . '_' . $reg_field_id; ?>"><?php _e($reg_field['label'], 'modern-events-calendar-lite'); ?><?php echo ((isset($reg_field['mandatory']) and $reg_field['mandatory']) ? '<span class="wbmec-mandatory">*</span>' : ''); ?></label><?php endif; ?>
 
                             <?php /** Name **/ if ($reg_field['type'] == 'name') : ?>
-                                <?php $reg_field['label'] = ($reg_field['label']) ? $reg_field['label'] : 'Name'; ?>
+                                <?php $reg_field['label'] = $reg_field['label'] ?: 'Name'; ?>
                                 <label for="mec_book_reg_field_name<?php echo $reg_field_id; ?>"><?php _e($reg_field['label'], 'modern-events-calendar-lite'); ?><span class="wbmec-mandatory">*</span></label>
-                                <input id="mec_book_reg_field_name<?php echo $reg_field_id; ?>" type="text" name="book[tickets][<?php echo $j; ?>][name]" value="<?php echo trim((isset($current_user->user_firstname) ? $current_user->user_firstname : '') . ' ' . (isset($current_user->user_lastname) ? $current_user->user_lastname : '')); ?>" placeholder="<?php if (isset($reg_field['placeholder']) and $reg_field['placeholder']) {
+                                <input id="mec_book_reg_field_name<?php echo $reg_field_id; ?>" type="text" name="book[tickets][<?php echo $j; ?>][name]" value="<?php echo trim(($current_user->user_firstname ?? '') . ' ' . ($current_user->user_lastname ?? '')); ?>" placeholder="<?php if (isset($reg_field['placeholder']) and $reg_field['placeholder']) {
                                     _e($reg_field['placeholder'], 'modern-events-calendar-lite');
                                 } else {
                                     _e($reg_field['label'], 'modern-events-calendar-lite');
                                 }; ?>" required <?php echo ((isset($current_user->user_firstname) and trim($current_user->user_firstname) and ($lock_prefilled == 1 or ($lock_prefilled == 2 and $j == 1))) ? 'readonly' : ''); ?> />
 
                             <?php /** MEC Email **/ elseif ($reg_field['type'] == 'mec_email') : ?>
-                                <?php $reg_field['label'] = ($reg_field['label']) ? $reg_field['label'] : 'Email'; ?>
+                                <?php $reg_field['label'] = $reg_field['label'] ?: 'Email'; ?>
                                 <label for="mec_book_reg_field_email<?php echo $reg_field_id; ?>"><?php _e($reg_field['label'], 'modern-events-calendar-lite'); ?><span class="wbmec-mandatory">*</span></label>
-                                <input id="mec_book_reg_field_email<?php echo $reg_field_id; ?>" type="email" name="book[tickets][<?php echo $j; ?>][email]" value="<?php echo isset($current_user->user_email) ? $current_user->user_email : ''; ?>" placeholder="<?php _e('Email', 'modern-events-calendar-lite'); ?>" required <?php echo ((isset($current_user->user_email) and trim($current_user->user_email) and ($lock_prefilled == 1 or ($lock_prefilled == 2 and $j == 1))) ? 'readonly' : ''); ?> />
+                                <input id="mec_book_reg_field_email<?php echo $reg_field_id; ?>" type="email" name="book[tickets][<?php echo $j; ?>][email]" value="<?php echo $current_user->user_email ?? ''; ?>" placeholder="<?php _e('Email', 'modern-events-calendar-lite'); ?>" required <?php echo ((isset($current_user->user_email) and trim($current_user->user_email) and ($lock_prefilled == 1 or ($lock_prefilled == 2 and $j == 1))) ? 'readonly' : ''); ?> />
 
                             <?php /** Text **/ elseif ($reg_field['type'] == 'text') : ?>
                                 <input id="mec_book_reg_field_reg<?php echo $j . '_' . $reg_field_id; ?>" type="text" name="book[tickets][<?php echo $j; ?>][reg][<?php echo $reg_field_id; ?>]" value="<?php echo esc_attr($this->main->get_from_mapped_field($reg_field)); ?>" placeholder="<?php if (isset($reg_field['placeholder']) and $reg_field['placeholder']) {
@@ -278,7 +278,7 @@ if(!$mec_email)
                                 <?php endforeach; ?>
 
                             <?php /** Checkbox **/ elseif ($reg_field['type'] == 'checkbox') : ?>
-                                <?php $c_values = array_map('trim', explode(',', $this->main->get_from_mapped_field($reg_field))); foreach ($reg_field['options'] as $reg_field_option) : ?>
+                                <?php $c_values = array_map(trim(...), explode(',', $this->main->get_from_mapped_field($reg_field))); foreach ($reg_field['options'] as $reg_field_option) : ?>
                                     <label for="mec_book_reg_field_reg<?php echo $j . '_' . $reg_field_id . '_' . strtolower(str_replace(' ', '_', $reg_field_option['label'])); ?>">
                                         <input type="checkbox" id="mec_book_reg_field_reg<?php echo $j . '_' . $reg_field_id . '_' . strtolower(str_replace(' ', '_', $reg_field_option['label'])); ?>" name="book[tickets][<?php echo $j; ?>][reg][<?php echo $reg_field_id; ?>][]" value="<?php _e($reg_field_option['label'], 'modern-events-calendar-lite'); ?>" <?php echo (($c_values and is_array($c_values) and in_array(__($reg_field_option['label'], 'modern-events-calendar-lite'), $c_values)) ? 'checked="checked"' : ''); ?> />
                                         <?php _e($reg_field_option['label'], 'modern-events-calendar-lite'); ?>
@@ -295,8 +295,8 @@ if(!$mec_email)
                             <?php /** Paragraph **/ elseif ($reg_field['type'] == 'p') : ?>
                                 <p>
                                 <?php
-                                    $paragraph = isset($reg_field['paragraph']) ? $reg_field['paragraph'] : '';
-                                    $content = isset($reg_field['content']) ? $reg_field['content'] : $paragraph;
+                                    $paragraph = $reg_field['paragraph'] ?? '';
+                                    $content = $reg_field['content'] ?? $paragraph;
                                     echo do_shortcode(stripslashes($content));
                                 ?>
                                 </p>

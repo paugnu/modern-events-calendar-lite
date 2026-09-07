@@ -37,8 +37,8 @@ class MEC_feature_colors extends MEC_base
      */
     public function init()
     {
-        $this->factory->action('add_meta_boxes', array($this, 'register_meta_boxes'));
-        $this->factory->action('save_post', array($this, 'save_event'), 3);
+        $this->factory->action('add_meta_boxes', [$this, 'register_meta_boxes']);
+        $this->factory->action('save_post', [$this, 'save_event'], 3);
     }
     
     /**
@@ -47,7 +47,7 @@ class MEC_feature_colors extends MEC_base
      */
     public function register_meta_boxes()
     {
-        add_meta_box('mec_metabox_color', __('Event Color', 'modern-events-calendar-lite'), array($this, 'meta_box_colors'), $this->main->get_main_post_type(), 'side');
+        add_meta_box('mec_metabox_color', __('Event Color', 'modern-events-calendar-lite'), $this->meta_box_colors(...), $this->main->get_main_post_type(), 'side');
     }
 
     public function mec_hex2rgb($hex)
@@ -66,7 +66,7 @@ class MEC_feature_colors extends MEC_base
             $b = hexdec(substr($hex,4,2));
         }
 
-        return array($r, $g, $b);
+        return [$r, $g, $b];
      }
     
     /**
@@ -114,7 +114,7 @@ class MEC_feature_colors extends MEC_base
         if(defined('DOING_AUTOSAVE') and DOING_AUTOSAVE) return;
 
         // Get Modern Events Calendar Data
-        $_mec = isset($_POST['mec']) ? $_POST['mec'] : array();
+        $_mec = $_POST['mec'] ?? [];
         
         $color = isset($_mec['color']) ? trim(sanitize_text_field($_mec['color']), '# ') : '';
         update_post_meta($post_id, 'mec_color', $color);

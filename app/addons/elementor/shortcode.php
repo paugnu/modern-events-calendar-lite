@@ -55,7 +55,7 @@ class MEC_addon_elementor_shortcode extends \Elementor\Widget_Base
 	 */
 	public function get_categories()
     {
-		return array('general');
+		return ['general'];
 	}
 
 	/**
@@ -66,28 +66,28 @@ class MEC_addon_elementor_shortcode extends \Elementor\Widget_Base
 	 */
 	protected function _register_controls()
     {
-        $calendar_posts = get_posts(array('post_type'=>'mec_calendars', 'posts_per_page'=>'-1'));
+        $calendar_posts = get_posts(['post_type'=>'mec_calendars', 'posts_per_page'=>'-1']);
         
-        $calendars = array();
+        $calendars = [];
         foreach($calendar_posts as $calendar_post) $calendars[$calendar_post->ID] = $calendar_post->post_title;
 
         // Content Tab
 		$this->start_controls_section(
 			'content_section',
-			array(
+			[
 				'label' => __('General', 'modern-events-calendar-lite'),
 				'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
-            )
+            ]
 		);
 
 		// Select Type Section
 		$this->add_control(
 			'type',
-			array(
+			[
 				'label' => __('Select Type', 'modern-events-calendar-lite'),
 				'type' => \Elementor\Controls_Manager::SELECT,
 				'options' => $calendars,
-            )
+            ]
 		);
 		
 		$this->end_controls_section();

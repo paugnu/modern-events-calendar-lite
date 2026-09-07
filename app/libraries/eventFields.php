@@ -31,13 +31,13 @@ class MEC_eventFields extends MEC_base
     {
         if(!isset($this->settings['display_event_fields_backend']) or (isset($this->settings['display_event_fields_backend']) and $this->settings['display_event_fields_backend'] != 1)) return;
 
-        $post = (isset($args['post']) ? $args['post'] : NULL);
-        $id = (isset($args['id']) ? $args['id'] : 'mec-event-data');
-        $class = (isset($args['class']) ? $args['class'] : 'mec-meta-box-fields mec-event-tab-content');
-        $data = (isset($args['data']) ? $args['data'] : array());
-        $name_prefix = (isset($args['name_prefix']) ? $args['name_prefix'] : 'mec');
-        $id_prefix = (isset($args['id_prefix']) ? $args['id_prefix'] : 'mec_event_fields_');
-        $mandatory_status = (isset($args['mandatory_status']) ? $args['mandatory_status'] : true);
+        $post = ($args['post'] ?? NULL);
+        $id = ($args['id'] ?? 'mec-event-data');
+        $class = ($args['class'] ?? 'mec-meta-box-fields mec-event-tab-content');
+        $data = ($args['data'] ?? []);
+        $name_prefix = ($args['name_prefix'] ?? 'mec');
+        $id_prefix = ($args['id_prefix'] ?? 'mec_event_fields_');
+        $mandatory_status = ($args['mandatory_status'] ?? true);
 
         $event_fields = $this->main->get_event_fields();
         ?>
@@ -50,7 +50,7 @@ class MEC_eventFields extends MEC_base
                     <div class="mec-col-2">
                         <?php
                         $event_field_name = isset($event_field['label']) ? strtolower(str_replace([' ',',',':','"',"'"], '_', $event_field['label'])) : '';
-                        $value = isset($data[$j]) ? $data[$j] : NULL;
+                        $value = $data[$j] ?? NULL;
                         ?>
                         <?php if(isset($event_field['label'])): ?><label for="<?php echo esc_attr($id_prefix); ?><?php echo $j; ?>"><?php _e(stripslashes($event_field['label']), 'modern-events-calendar-lite'); ?><?php echo (($mandatory_status and isset($event_field['mandatory']) and $event_field['mandatory']) ? '<span class="wbmec-mandatory">*</span>' : ''); ?></label><?php endif; ?>
                     </div>

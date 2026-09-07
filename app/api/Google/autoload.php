@@ -26,7 +26,7 @@ function mec_google_api_php_client_autoload($className)
     
     // Drop 'Google', and maximum class file path depth in this project is 3.
     $classPath = array_slice($classPath, 1, 2);
-    $filePath = dirname(__FILE__) . DS . implode(DS, $classPath) . '.php';
+    $filePath = __DIR__ . DS . implode(DS, $classPath) . '.php';
     
     if(file_exists($filePath))
     {
@@ -34,4 +34,4 @@ function mec_google_api_php_client_autoload($className)
     }
 }
 
-spl_autoload_register('mec_google_api_php_client_autoload');
+spl_autoload_register(mec_google_api_php_client_autoload(...));

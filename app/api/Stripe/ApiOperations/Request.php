@@ -39,7 +39,7 @@ trait Request
     protected function _request($method, $url, $params = [], $options = null)
     {
         $opts = $this->_opts->merge($options);
-        list($resp, $options) = static::_staticRequest($method, $url, $params, $opts);
+        [$resp, $options] = static::_staticRequest($method, $url, $params, $opts);
         $this->setLastResponse($resp);
 
         return [$resp->json, $options];
@@ -58,9 +58,9 @@ trait Request
     protected static function _staticRequest($method, $url, $params, $options)
     {
         $opts = \Stripe\Util\RequestOptions::parse($options);
-        $baseUrl = isset($opts->apiBase) ? $opts->apiBase : static::baseUrl();
+        $baseUrl = $opts->apiBase ?? static::baseUrl();
         $requestor = new \Stripe\ApiRequestor($opts->apiKey, $baseUrl);
-        list($response, $opts->apiKey) = $requestor->request($method, $url, $params, $opts->headers);
+        [$response, $opts->apiKey] = $requestor->request($method, $url, $params, $opts->headers);
         $opts->discardNonPersistentHeaders();
 
         return [$response, $opts];

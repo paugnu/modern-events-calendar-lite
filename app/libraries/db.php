@@ -152,7 +152,7 @@ class MEC_db extends MEC_base
         $query = "SHOW COLUMNS FROM `#__".$table."`";
         $results = $this->q($query, "select");
 
-        $columns = array();
+        $columns = [];
         foreach($results as $key=>$result) $columns[] = $result->Field;
 
         if(trim($column) and in_array($column, $columns)) return true;
@@ -197,7 +197,7 @@ class MEC_db extends MEC_base
 
         if(is_array($parameter))
         {
-            $return_data = array();
+            $return_data = [];
             foreach($parameter as $key=>$value)
             {
                 $return_data[$key] = $this->escape($value);
