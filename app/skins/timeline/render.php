@@ -5,11 +5,11 @@ defined('MECEXEC') or die();
 $current_month_divider = $this->request->getVar('current_month_divider', 0);
 $settings = $this->main->get_settings();
 $styling = $this->main->get_styling();
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 $event_colorskin = (isset($styling['mec_colorskin']) || isset($styling['color'])) ? 'colorskin-custom' : '';
-$sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
+$sed_method = $this->skin_options['sed_method'] ?? '0';
 ?>
 <div class="mec-events-timeline-wrap mec-wrap <?php echo $event_colorskin; ?>">
 <?php foreach($this->events as $date=>$events): ?>
@@ -23,10 +23,10 @@ $sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['se
             foreach($events as $event)
             {
                 $location_id = $this->main->get_master_location_id($event);
-                $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                 $organizer_id = $this->main->get_master_organizer_id($event);
-                $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+                $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
                 $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                 $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -69,13 +69,13 @@ $sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['se
                                     <?php if(!empty($location['address'])): ?>
                                         <div class="mec-timeline-event-details">
                                             <div class="mec-timeline-event-location mec-color">
-                                                <address class="mec-timeline-event-address"><i class="mec-sl-location-pin"></i><span><?php echo (isset($location['address']) ? $location['address'] : ''); ?></span></address>
+                                                <address class="mec-timeline-event-address"><i class="mec-sl-location-pin"></i><span><?php echo ($location['address'] ?? ''); ?></span></address>
                                             </div>
                                         </div>
                                         <?php if($this->localtime): ?>
                                         <div class="mec-timeline-event-details">
                                             <div class="mec-timeline-event-local-time mec-color">
-                                                <?php echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                                                <?php echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                                             </div>
                                         </div>
                                         <?php endif; ?>

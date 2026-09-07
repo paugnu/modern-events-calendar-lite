@@ -4,11 +4,8 @@ namespace MEC\Tickets;
 
 class Ticket{
 
-    public $data;
-
-    public function __construct($data){
-
-        $this->data = $data;
+    public function __construct(public $data)
+    {
     }
 
     /**     
@@ -18,7 +15,7 @@ class Ticket{
      */
     public function get_data($key,$default = null){
         
-        $v = isset($this->data[$key]) ? $this->data[$key] : $default;
+        $v = $this->data[$key] ?? $default;
 
         return apply_filters('mec_ticket_get_data',$v,$key,$this->data,$default);
     }
@@ -29,11 +26,11 @@ class Ticket{
      */
     private function _get_time($type){
         
-        return array(
+        return [
             'h' => isset($this->data['ticket_'.$type.'_time_hour']) ? sprintf('%02d',$this->data['ticket_'.$type.'_time_hour']) : '',
             'm' => isset($this->data['ticket_'.$type.'_time_minute']) ? sprintf('%02d',$this->data['ticket_'.$type.'_time_minute']) : '',
-            'ampm' => isset($this->data['ticket_'.$type.'_time_ampm']) ? $this->data['ticket_'.$type.'_time_ampm'] : '',
-        );
+            'ampm' => $this->data['ticket_'.$type.'_time_ampm'] ?? '',
+        ];
     }
 
     /**
@@ -52,16 +49,10 @@ class Ticket{
         $start = date($format,strtotime($start_time));
         $end = date($format,strtotime($end_time));
 
-        switch($type){
-            case 'start':
-                return $start_time;
-                break;
-            case 'end':
-                return $end_time;
-                break;
-            default:
-                return "$start_time $end_time";
-                break;
-        }
+        return match ($type) {
+            'start' => $start_time,
+            'end' => $end_time,
+            default => "$start_time $end_time",
+        };
     }
 }

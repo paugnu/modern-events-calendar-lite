@@ -6,7 +6,7 @@ $notifications = $this->main->get_notifications();
 $settings = $this->main->get_settings();
 
 // Fix Notices
-if(!isset($notifications['event_finished'])) $notifications['event_finished'] = array();
+$notifications['event_finished'] ??= [];
 
 // Additional Organizers
 $additional_organizers = (isset($settings['additional_organizers']) and $settings['additional_organizers']);
@@ -64,7 +64,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['booking_notification']['receiver_users']) ? $notifications['booking_notification']['receiver_users'] : array();
+                                            $users = $notifications['booking_notification']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'booking_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -85,7 +85,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['booking_notification']['receiver_roles']) ? $notifications['booking_notification']['receiver_roles'] : array();
+                                            $roles = $notifications['booking_notification']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'booking_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -104,7 +104,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_booking_notification_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][booking_notification][recipients]" id="mec_notifications_booking_notification_recipients" value="<?php echo (isset($notifications['booking_notification']['recipients']) ? $notifications['booking_notification']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][booking_notification][recipients]" id="mec_notifications_booking_notification_recipients" value="<?php echo ($notifications['booking_notification']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -132,7 +132,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
 
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_booking_notification_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['booking_notification']) ? stripslashes($notifications['booking_notification']['content']) : ''), 'mec_notifications_booking_notification_content', array('textarea_name'=>'mec[notifications][booking_notification][content]')); ?>
+                                    <?php wp_editor((isset($notifications['booking_notification']) ? stripslashes($notifications['booking_notification']['content']) : ''), 'mec_notifications_booking_notification_content', ['textarea_name'=>'mec[notifications][booking_notification][content]']); ?>
                                 </div>
 
                                 <?php
@@ -230,7 +230,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-col-9">
                                     <?php
-                                        $users = isset($notifications['email_verification']['receiver_users']) ? $notifications['email_verification']['receiver_users'] : array();
+                                        $users = $notifications['email_verification']['receiver_users'] ?? [];
                                         echo $this->main->get_users_dropdown($users, 'email_verification');
                                     ?>
                                     <span class="mec-tooltip">
@@ -251,7 +251,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-col-9">
                                     <?php
-                                        $roles = isset($notifications['email_verification']['receiver_roles']) ? $notifications['email_verification']['receiver_roles'] : array();
+                                        $roles = $notifications['email_verification']['receiver_roles'] ?? [];
                                         echo $this->main->get_roles_dropdown($roles, 'email_verification');
                                     ?>
                                     <span class="mec-tooltip">
@@ -270,7 +270,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     <label for="mec_notifications_email_verification_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                 </div>
                                 <div class="mec-col-9">
-                                <input type="text" name="mec[notifications][email_verification][recipients]" id="mec_notifications_email_verification_recipients" value="<?php echo (isset($notifications['email_verification']['recipients']) ? $notifications['email_verification']['recipients'] : ''); ?>" />
+                                <input type="text" name="mec[notifications][email_verification][recipients]" id="mec_notifications_email_verification_recipients" value="<?php echo ($notifications['email_verification']['recipients'] ?? ''); ?>" />
                                     <span class="mec-tooltip">
                                         <div class="box left">
                                             <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -282,7 +282,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                             </div>
                             <div class="mec-form-row">
                                 <label for="mec_notifications_email_verification_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                <?php wp_editor((isset($notifications['email_verification']) ? stripslashes($notifications['email_verification']['content']) : ''), 'mec_notifications_email_verification_content', array('textarea_name'=>'mec[notifications][email_verification][content]')); ?>
+                                <?php wp_editor((isset($notifications['email_verification']) ? stripslashes($notifications['email_verification']['content']) : ''), 'mec_notifications_email_verification_content', ['textarea_name'=>'mec[notifications][email_verification][content]']); ?>
                             </div>
 
                             <?php
@@ -387,7 +387,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $users = isset($notifications['booking_confirmation']['receiver_users']) ? $notifications['booking_confirmation']['receiver_users'] : array();
+                                        $users = $notifications['booking_confirmation']['receiver_users'] ?? [];
                                         echo $this->main->get_users_dropdown($users, 'booking_confirmation');
                                         ?>
                                         <span class="mec-tooltip">
@@ -408,7 +408,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $roles = isset($notifications['booking_confirmation']['receiver_roles']) ? $notifications['booking_confirmation']['receiver_roles'] : array();
+                                        $roles = $notifications['booking_confirmation']['receiver_roles'] ?? [];
                                         echo $this->main->get_roles_dropdown($roles, 'booking_confirmation');
                                         ?>
                                         <span class="mec-tooltip">
@@ -427,7 +427,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_booking_confirmation_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][booking_confirmation][recipients]" id="mec_notifications_booking_confirmation_recipients" value="<?php echo (isset($notifications['booking_confirmation']['recipients']) ? $notifications['booking_confirmation']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][booking_confirmation][recipients]" id="mec_notifications_booking_confirmation_recipients" value="<?php echo ($notifications['booking_confirmation']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -446,7 +446,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_booking_confirmation_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['booking_confirmation']) ? stripslashes($notifications['booking_confirmation']['content']) : ''), 'mec_notifications_booking_confirmation_content', array('textarea_name'=>'mec[notifications][booking_confirmation][content]')); ?>
+                                    <?php wp_editor((isset($notifications['booking_confirmation']) ? stripslashes($notifications['booking_confirmation']['content']) : ''), 'mec_notifications_booking_confirmation_content', ['textarea_name'=>'mec[notifications][booking_confirmation][content]']); ?>
                                 </div>
 
                                 <?php
@@ -554,7 +554,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $users = isset($notifications['booking_rejection']['receiver_users']) ? $notifications['booking_rejection']['receiver_users'] : array();
+                                        $users = $notifications['booking_rejection']['receiver_users'] ?? [];
                                         echo $this->main->get_users_dropdown($users, 'booking_rejection');
                                         ?>
                                         <span class="mec-tooltip">
@@ -575,7 +575,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $roles = isset($notifications['booking_rejection']['receiver_roles']) ? $notifications['booking_rejection']['receiver_roles'] : array();
+                                        $roles = $notifications['booking_rejection']['receiver_roles'] ?? [];
                                         echo $this->main->get_roles_dropdown($roles, 'booking_rejection');
                                         ?>
                                         <span class="mec-tooltip">
@@ -594,7 +594,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_booking_rejection_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][booking_rejection][recipients]" id="mec_notifications_booking_rejection_recipients" value="<?php echo (isset($notifications['booking_rejection']['recipients']) ? $notifications['booking_rejection']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][booking_rejection][recipients]" id="mec_notifications_booking_rejection_recipients" value="<?php echo ($notifications['booking_rejection']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -636,7 +636,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
 
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_booking_rejection_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['booking_rejection']) ? stripslashes($notifications['booking_rejection']['content']) : ''), 'mec_notifications_booking_rejection_content', array('textarea_name'=>'mec[notifications][booking_rejection][content]')); ?>
+                                    <?php wp_editor((isset($notifications['booking_rejection']) ? stripslashes($notifications['booking_rejection']['content']) : ''), 'mec_notifications_booking_rejection_content', ['textarea_name'=>'mec[notifications][booking_rejection][content]']); ?>
                                 </div>
 
                                 <?php
@@ -742,7 +742,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['cancellation_notification']['receiver_users']) ? $notifications['cancellation_notification']['receiver_users'] : array();
+                                            $users = $notifications['cancellation_notification']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'cancellation_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -763,7 +763,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['cancellation_notification']['receiver_roles']) ? $notifications['cancellation_notification']['receiver_roles'] : array();
+                                            $roles = $notifications['cancellation_notification']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'cancellation_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -782,7 +782,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_cancellation_notification_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][cancellation_notification][recipients]" id="mec_notifications_cancellation_notification_recipients" value="<?php echo (isset($notifications['cancellation_notification']['recipients']) ? $notifications['cancellation_notification']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][cancellation_notification][recipients]" id="mec_notifications_cancellation_notification_recipients" value="<?php echo ($notifications['cancellation_notification']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -823,7 +823,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_cancellation_notification_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['cancellation_notification']) ? stripslashes($notifications['cancellation_notification']['content']) : ''), 'mec_notifications_cancellation_notification_content', array('textarea_name'=>'mec[notifications][cancellation_notification][content]')); ?>
+                                    <?php wp_editor((isset($notifications['cancellation_notification']) ? stripslashes($notifications['cancellation_notification']['content']) : ''), 'mec_notifications_cancellation_notification_content', ['textarea_name'=>'mec[notifications][cancellation_notification][content]']); ?>
                                 </div>
 
                                 <?php
@@ -915,7 +915,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['admin_notification']['receiver_users']) ? $notifications['admin_notification']['receiver_users'] : array();
+                                            $users = $notifications['admin_notification']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'admin_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -936,7 +936,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['admin_notification']['receiver_roles']) ? $notifications['admin_notification']['receiver_roles'] : array();
+                                            $roles = $notifications['admin_notification']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'admin_notification');
                                         ?>
                                         <span class="mec-tooltip">
@@ -955,7 +955,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_admin_notification_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][admin_notification][recipients]" id="mec_notifications_admin_notification_recipients" value="<?php echo (isset($notifications['admin_notification']['recipients']) ? $notifications['admin_notification']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][admin_notification][recipients]" id="mec_notifications_admin_notification_recipients" value="<?php echo ($notifications['admin_notification']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -990,7 +990,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
 
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_admin_notification_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['admin_notification']) ? stripslashes($notifications['admin_notification']['content']) : ''), 'mec_notifications_admin_notification_content', array('textarea_name'=>'mec[notifications][admin_notification][content]')); ?>
+                                    <?php wp_editor((isset($notifications['admin_notification']) ? stripslashes($notifications['admin_notification']['content']) : ''), 'mec_notifications_admin_notification_content', ['textarea_name'=>'mec[notifications][admin_notification][content]']); ?>
                                 </div>
 
                                 <?php
@@ -1085,7 +1085,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $users = isset($notifications['event_soldout']['receiver_users']) ? $notifications['event_soldout']['receiver_users'] : array();
+                                        $users = $notifications['event_soldout']['receiver_users'] ?? [];
                                         echo $this->main->get_users_dropdown($users, 'event_soldout');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1106,7 +1106,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $roles = isset($notifications['event_soldout']['receiver_roles']) ? $notifications['event_soldout']['receiver_roles'] : array();
+                                        $roles = $notifications['event_soldout']['receiver_roles'] ?? [];
                                         echo $this->main->get_roles_dropdown($roles, 'event_soldout');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1125,7 +1125,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_event_soldout_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][event_soldout][recipients]" id="mec_notifications_event_soldout_recipients" value="<?php echo (isset($notifications['event_soldout']['recipients']) ? $notifications['event_soldout']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][event_soldout][recipients]" id="mec_notifications_event_soldout_recipients" value="<?php echo ($notifications['event_soldout']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -1160,7 +1160,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
 
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_event_soldout_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['event_soldout']) ? stripslashes($notifications['event_soldout']['content']) : ''), 'mec_notifications_event_soldout_content', array('textarea_name'=>'mec[notifications][event_soldout][content]')); ?>
+                                    <?php wp_editor((isset($notifications['event_soldout']) ? stripslashes($notifications['event_soldout']['content']) : ''), 'mec_notifications_event_soldout_content', ['textarea_name'=>'mec[notifications][event_soldout][content]']); ?>
                                 </div>
 
                                 <?php
@@ -1245,7 +1245,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['booking_reminder']['receiver_users']) ? $notifications['booking_reminder']['receiver_users'] : array();
+                                            $users = $notifications['booking_reminder']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'booking_reminder');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1266,7 +1266,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['booking_reminder']['receiver_roles']) ? $notifications['booking_reminder']['receiver_roles'] : array();
+                                            $roles = $notifications['booking_reminder']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'booking_reminder');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1312,7 +1312,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_booking_reminder_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['booking_reminder']) ? stripslashes($notifications['booking_reminder']['content']) : ''), 'mec_notifications_booking_reminder_content', array('textarea_name'=>'mec[notifications][booking_reminder][content]')); ?>
+                                    <?php wp_editor((isset($notifications['booking_reminder']) ? stripslashes($notifications['booking_reminder']['content']) : ''), 'mec_notifications_booking_reminder_content', ['textarea_name'=>'mec[notifications][booking_reminder][content]']); ?>
                                 </div>
 
                                 <?php
@@ -1424,7 +1424,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['new_event']['receiver_users']) ? $notifications['new_event']['receiver_users'] : array();
+                                            $users = $notifications['new_event']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'new_event');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1445,7 +1445,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['new_event']['receiver_roles']) ? $notifications['new_event']['receiver_roles'] : array();
+                                            $roles = $notifications['new_event']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'new_event');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1464,7 +1464,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_new_event_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][new_event][recipients]" id="mec_notifications_new_event_recipients" value="<?php echo (isset($notifications['new_event']['recipients']) ? $notifications['new_event']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][new_event][recipients]" id="mec_notifications_new_event_recipients" value="<?php echo ($notifications['new_event']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -1476,7 +1476,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_new_event_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['new_event']) ? stripslashes($notifications['new_event']['content']) : ''), 'mec_notifications_new_event_content', array('textarea_name'=>'mec[notifications][new_event][content]')); ?>
+                                    <?php wp_editor((isset($notifications['new_event']) ? stripslashes($notifications['new_event']['content']) : ''), 'mec_notifications_new_event_content', ['textarea_name'=>'mec[notifications][new_event][content]']); ?>
                                 </div>
 
                                 <?php
@@ -1541,7 +1541,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $users = isset($notifications['user_event_publishing']['receiver_users']) ? $notifications['user_event_publishing']['receiver_users'] : array();
+                                            $users = $notifications['user_event_publishing']['receiver_users'] ?? [];
                                             echo $this->main->get_users_dropdown($users, 'user_event_publishing');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1562,7 +1562,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                            $roles = isset($notifications['user_event_publishing']['receiver_roles']) ? $notifications['user_event_publishing']['receiver_roles'] : array();
+                                            $roles = $notifications['user_event_publishing']['receiver_roles'] ?? [];
                                             echo $this->main->get_roles_dropdown($roles, 'user_event_publishing');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1581,7 +1581,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_user_event_publishing_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][user_event_publishing][recipients]" id="mec_notifications_user_event_publishing_recipients" value="<?php echo (isset($notifications['user_event_publishing']['recipients']) ? $notifications['user_event_publishing']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][user_event_publishing][recipients]" id="mec_notifications_user_event_publishing_recipients" value="<?php echo ($notifications['user_event_publishing']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -1593,7 +1593,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_user_event_publishing_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor((isset($notifications['user_event_publishing']) ? stripslashes($notifications['user_event_publishing']['content']) : ''), 'mec_notifications_user_event_publishing_content', array('textarea_name'=>'mec[notifications][user_event_publishing][content]')); ?>
+                                    <?php wp_editor((isset($notifications['user_event_publishing']) ? stripslashes($notifications['user_event_publishing']['content']) : ''), 'mec_notifications_user_event_publishing_content', ['textarea_name'=>'mec[notifications][user_event_publishing][content]']); ?>
                                 </div>
                                 <?php
                                     $section = 'user_event_publishing';
@@ -1663,7 +1663,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $users = isset($notifications['event_finished']['receiver_users']) ? $notifications['event_finished']['receiver_users'] : array();
+                                        $users = $notifications['event_finished']['receiver_users'] ?? [];
                                         echo $this->main->get_users_dropdown($users, 'event_finished');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1684,7 +1684,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                     </div>
                                     <div class="mec-col-9">
                                         <?php
-                                        $roles = isset($notifications['event_finished']['receiver_roles']) ? $notifications['event_finished']['receiver_roles'] : array();
+                                        $roles = $notifications['event_finished']['receiver_roles'] ?? [];
                                         echo $this->main->get_roles_dropdown($roles, 'event_finished');
                                         ?>
                                         <span class="mec-tooltip">
@@ -1703,7 +1703,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                         <label for="mec_notifications_event_finished_recipients"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></label>
                                     </div>
                                     <div class="mec-col-9">
-                                        <input type="text" name="mec[notifications][event_finished][recipients]" id="mec_notifications_event_finished_recipients" value="<?php echo (isset($notifications['event_finished']['recipients']) ? $notifications['event_finished']['recipients'] : ''); ?>" />
+                                        <input type="text" name="mec[notifications][event_finished][recipients]" id="mec_notifications_event_finished_recipients" value="<?php echo ($notifications['event_finished']['recipients'] ?? ''); ?>" />
                                         <span class="mec-tooltip">
                                             <div class="box left">
                                                 <h5 class="title"><?php _e('Custom Recipients', 'modern-events-calendar-lite'); ?></h5>
@@ -1730,7 +1730,7 @@ $additional_organizers = (isset($settings['additional_organizers']) and $setting
                                 </div>
                                 <div class="mec-form-row">
                                     <label for="mec_notifications_user_event_publishing_content"><?php _e('Email Content', 'modern-events-calendar-lite'); ?></label>
-                                    <?php wp_editor(((isset($notifications['event_finished']) and isset($notifications['event_finished']['content'])) ? stripslashes($notifications['event_finished']['content']) : ''), 'mec_notifications_event_finished_content', array('textarea_name'=>'mec[notifications][event_finished][content]')); ?>
+                                    <?php wp_editor(((isset($notifications['event_finished']) and isset($notifications['event_finished']['content'])) ? stripslashes($notifications['event_finished']['content']) : ''), 'mec_notifications_event_finished_content', ['textarea_name'=>'mec[notifications][event_finished][content]']); ?>
                                 </div>
                                 <?php
                                     $section = 'event_finished';
@@ -1845,7 +1845,7 @@ jQuery("#mec_notifications_form").on('submit', function(event)
     event.preventDefault();
 
     <?php
-        $notifications = array(
+        $notifications = [
             "booking_notification",
             "email_verification",
             "booking_confirmation",
@@ -1856,9 +1856,9 @@ jQuery("#mec_notifications_form").on('submit', function(event)
             "new_event",
             "user_event_publishing",
             "event_soldout",
-        );
+        ];
 
-        $content_type = apply_filters('mec_settings_notifications_js_content_types',array(""));
+        $content_type = apply_filters('mec_settings_notifications_js_content_types',[""]);
 
         $notifications = apply_filters('mec_settings_notifications_js_notifications',$notifications);
     ?>

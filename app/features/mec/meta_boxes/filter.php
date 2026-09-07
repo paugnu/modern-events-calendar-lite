@@ -8,7 +8,7 @@ defined('MECEXEC') or die();
  */
 class MEC_tax_walker extends Walker_Category_Checklist
 {
-    public function start_el(&$output, $category, $depth = 0, $args = array(), $id = 0)
+    public function start_el(&$output, $category, $depth = 0, $args = [], $id = 0)
     {
 		if(empty($args['taxonomy'])) $taxonomy = 'category';
         else $taxonomy = $args['taxonomy'];
@@ -16,10 +16,10 @@ class MEC_tax_walker extends Walker_Category_Checklist
 		if($taxonomy == 'category') $name = 'post_category';
 		else $name = 'mec_tax_input['.$taxonomy.']';
 
-		$args['popular_cats'] = empty($args['popular_cats']) ? array() : $args['popular_cats'];
+		$args['popular_cats'] = empty($args['popular_cats']) ? [] : $args['popular_cats'];
 		$class = in_array($category->term_id, $args['popular_cats']) ? ' class="popular-category"' : '';
 
-		$args['selected_cats'] = empty($args['selected_cats']) ? array() : $args['selected_cats'];
+		$args['selected_cats'] = empty($args['selected_cats']) ? [] : $args['selected_cats'];
 
 		if(!empty($args['list_only']))
         {
@@ -83,14 +83,14 @@ $MEC_tax_walker = new MEC_tax_walker();
                     <select name="mec_tax_input[mec_category][]" multiple="multiple">
                     <?php
                         $selected_categories = explode(',', get_post_meta($post->ID, 'category', true));
-                        wp_terms_checklist(0, array(
+                        wp_terms_checklist(0, [
                             'descendants_and_self'=>0,
                             'taxonomy'=>'mec_category',
                             'selected_cats'=>$selected_categories,
                             'popular_cats'=>false,
                             'checked_ontop'=>false,
                             'walker'=>$MEC_tax_walker
-                        ));
+                        ]);
                     ?>
                     </select>
                 </div>
@@ -101,14 +101,14 @@ $MEC_tax_walker = new MEC_tax_walker();
                     <select name="mec_tax_input[mec_location][]" multiple="multiple">
                     <?php
                         $selected_locations = explode(',', get_post_meta($post->ID, 'location', true));
-                        wp_terms_checklist(0, array(
+                        wp_terms_checklist(0, [
                             'descendants_and_self'=>0,
                             'taxonomy'=>'mec_location',
                             'selected_cats'=>$selected_locations,
                             'popular_cats'=>false,
                             'checked_ontop'=>false,
                             'walker'=>$MEC_tax_walker,
-                        ));
+                        ]);
                     ?>
                     </select>
                 </div>
@@ -119,14 +119,14 @@ $MEC_tax_walker = new MEC_tax_walker();
                     <select name="mec_tax_input[mec_organizer][]" multiple="multiple">
                     <?php
                         $selected_organizers = explode(',', get_post_meta($post->ID, 'organizer', true));
-                        wp_terms_checklist(0, array(
+                        wp_terms_checklist(0, [
                             'descendants_and_self'=>0,
                             'taxonomy'=>'mec_organizer',
                             'selected_cats'=>$selected_organizers,
                             'popular_cats'=>false,
                             'checked_ontop'=>false,
                             'walker'=>$MEC_tax_walker
-                        ));
+                        ]);
                     ?>
                     </select>
                 </div>
@@ -137,14 +137,14 @@ $MEC_tax_walker = new MEC_tax_walker();
                     <select name="mec_tax_input[mec_label][]" multiple="multiple">
                     <?php
                         $selected_labels = explode(',', get_post_meta($post->ID, 'label', true));
-                        wp_terms_checklist(0, array(
+                        wp_terms_checklist(0, [
                             'descendants_and_self'=>0,
                             'taxonomy'=>'mec_label',
                             'selected_cats'=>$selected_labels,
                             'popular_cats'=>false,
                             'checked_ontop'=>false,
                             'walker'=>$MEC_tax_walker
-                        ));
+                        ]);
                     ?>
                     </select>
                 </div>
@@ -160,13 +160,13 @@ $MEC_tax_walker = new MEC_tax_walker();
                     <select name="mec_tax_input[mec_author][]" multiple="multiple">
                     <?php
                         $selected_authors = explode(',', get_post_meta($post->ID, 'author', true));
-                        $authors = get_users(array(
-                            'role__not_in'=>array('subscriber', 'contributor'),
+                        $authors = get_users([
+                            'role__not_in'=>['subscriber', 'contributor'],
                             'orderby'=>'post_count',
                             'order'=>'DESC',
                             'number'=>'-1',
-                            'fields'=>array('ID', 'display_name')
-                        ));
+                            'fields'=>['ID', 'display_name']
+                        ]);
                         
                         foreach($authors as $author)
                         {

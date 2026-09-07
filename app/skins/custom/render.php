@@ -65,7 +65,7 @@ if($this->style == 'colorful')
 	</div>
 </div>
 <?php
-$map_eventss = array();
+$map_eventss = [];
 if(isset($map_events) && !empty($map_events))
 {
     foreach($map_events as $key => $value)
@@ -87,8 +87,8 @@ if(isset($map_eventss) and !empty($map_eventss))
         jQuery("#mec_googlemap_canvas'.$this->id.'").mecGoogleMaps(
         {
             id: "'.$this->id.'",
-            atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
-            zoom: '.(isset($settings['google_maps_zoomlevel']) ? $settings['google_maps_zoomlevel'] : 14).',
+            atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
+            zoom: '.($settings['google_maps_zoomlevel'] ?? 14).',
             icon: "'.apply_filters('mec_marker_icon', $this->main->asset('img/m-04.png')).'",
             styles: '.((isset($settings['google_maps_style']) and trim($settings['google_maps_style']) != '') ? $this->main->get_googlemap_style($settings['google_maps_style']) : "''").',
             markers: jsonPush,

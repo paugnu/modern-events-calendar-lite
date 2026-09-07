@@ -23,10 +23,10 @@ class Locations extends Singleton {
     public function get_locations($query){
         $term_id = $this->ID;
         if(!$term_id){
-            return array();
+            return [];
         }
 
-        return array(
+        return [
             'id'=>$term_id,
             'name'=>$term->name,
             'address'=> get_term_meta( $term_id, 'address', true),
@@ -34,6 +34,6 @@ class Locations extends Singleton {
             'longitude'=>get_term_meta($term_id, 'longitude', true),
             'url'=>get_term_meta($term_id, 'url', true),
             'thumbnail'=>get_term_meta($term_id, 'thumbnail', true)
-        );
+        ];
     }
 }

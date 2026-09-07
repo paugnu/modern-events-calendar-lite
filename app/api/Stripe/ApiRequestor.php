@@ -8,11 +8,6 @@ namespace Stripe;
 class ApiRequestor
 {
     /**
-     * @var null|string
-     */
-    private $_apiKey;
-
-    /**
      * @var string
      */
     private $_apiBase;
@@ -32,12 +27,11 @@ class ApiRequestor
     /**
      * ApiRequestor constructor.
      *
-     * @param null|string $apiKey
+     * @param null|string $_apiKey
      * @param null|string $apiBase
      */
-    public function __construct($apiKey = null, $apiBase = null)
+    public function __construct(private $_apiKey = null, $apiBase = null)
     {
-        $this->_apiKey = $apiKey;
         if (!$apiBase) {
             $apiBase = Stripe::$apiBase;
         }
@@ -115,7 +109,7 @@ class ApiRequestor
     {
         $params = $params ?: [];
         $headers = $headers ?: [];
-        list($rbody, $rcode, $rheaders, $myApiKey) =
+        [$rbody, $rcode, $rheaders, $myApiKey] =
         $this->_requestRaw($method, $url, $params, $headers);
         $json = $this->_interpretResponse($rbody, $rcode, $rheaders);
         $resp = new ApiResponse($rbody, $rcode, $rheaders, $json);
@@ -167,11 +161,11 @@ class ApiRequestor
      */
     private static function _specificAPIError($rbody, $rcode, $rheaders, $resp, $errorData)
     {
-        $msg = isset($errorData['message']) ? $errorData['message'] : null;
-        $param = isset($errorData['param']) ? $errorData['param'] : null;
-        $code = isset($errorData['code']) ? $errorData['code'] : null;
-        $type = isset($errorData['type']) ? $errorData['type'] : null;
-        $declineCode = isset($errorData['decline_code']) ? $errorData['decline_code'] : null;
+        $msg = $errorData['message'] ?? null;
+        $param = $errorData['param'] ?? null;
+        $code = $errorData['code'] ?? null;
+        $type = $errorData['type'] ?? null;
+        $declineCode = $errorData['decline_code'] ?? null;
 
         switch ($rcode) {
             case 400:
@@ -218,30 +212,17 @@ class ApiRequestor
      */
     private static function _specificOAuthError($rbody, $rcode, $rheaders, $resp, $errorCode)
     {
-        $description = isset($resp['error_description']) ? $resp['error_description'] : $errorCode;
+        $description = $resp['error_description'] ?? $errorCode;
 
-        switch ($errorCode) {
-            case 'invalid_client':
-                return Exception\OAuth\InvalidClientException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            case 'invalid_grant':
-                return Exception\OAuth\InvalidGrantException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            case 'invalid_request':
-                return Exception\OAuth\InvalidRequestException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            case 'invalid_scope':
-                return Exception\OAuth\InvalidScopeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            case 'unsupported_grant_type':
-                return Exception\OAuth\UnsupportedGrantTypeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            case 'unsupported_response_type':
-                return Exception\OAuth\UnsupportedResponseTypeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-
-            default:
-                return Exception\OAuth\UnknownOAuthErrorException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode);
-        }
+        return match ($errorCode) {
+            'invalid_client' => Exception\OAuth\InvalidClientException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            'invalid_grant' => Exception\OAuth\InvalidGrantException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            'invalid_request' => Exception\OAuth\InvalidRequestException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            'invalid_scope' => Exception\OAuth\InvalidScopeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            'unsupported_grant_type' => Exception\OAuth\UnsupportedGrantTypeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            'unsupported_response_type' => Exception\OAuth\UnsupportedResponseTypeException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+            default => Exception\OAuth\UnknownOAuthErrorException::factory($description, $rcode, $rbody, $resp, $rheaders, $errorCode),
+        };
     }
 
     /**
@@ -280,13 +261,7 @@ class ApiRequestor
     private static function _isDisabled($disableFunctionsOutput, $functionName)
     {
         $disabledFunctions = \explode(',', $disableFunctionsOutput);
-        foreach ($disabledFunctions as $disabledFunction) {
-            if (\trim($disabledFunction) === $functionName) {
-                return true;
-            }
-        }
-
-        return false;
+        return array_any($disabledFunctions, fn($disabledFunction) => \trim($disabledFunction) === $functionName);
     }
 
     /**
@@ -366,9 +341,7 @@ class ApiRequestor
         if ($params && \is_array($params)) {
             $optionKeysInParams = \array_filter(
                 static::$OPTIONS_KEYS,
-                function ($key) use ($params) {
-                    return \array_key_exists($key, $params);
-                }
+                fn($key) => \array_key_exists($key, $params)
             );
             if (\count($optionKeysInParams) > 0) {
                 $message = \sprintf('Options found in $params: %s. Options should '
@@ -380,7 +353,7 @@ class ApiRequestor
 
         $absUrl = $this->_apiBase . $url;
         $params = self::_encodeObjects($params);
-        $defaultHeaders = $this->_defaultHeaders($myApiKey, $clientUAInfo);
+        $defaultHeaders = self::_defaultHeaders($myApiKey, $clientUAInfo);
         if (Stripe::$apiVersion) {
             $defaultHeaders['Stripe-Version'] = Stripe::$apiVersion;
         }
@@ -418,7 +391,7 @@ class ApiRequestor
 
         $requestStartMs = Util\Util::currentTimeMillis();
 
-        list($rbody, $rcode, $rheaders) = $this->httpClient()->request(
+        [$rbody, $rcode, $rheaders] = $this->httpClient()->request(
             $method,
             $absUrl,
             $rawHeaders,

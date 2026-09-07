@@ -38,7 +38,7 @@ class MEC_feature_update extends MEC_base
         if(!get_option('mec_installed', 0)) return;
 
         // Run the Update Function
-        $this->factory->action('wp_loaded', array($this, 'update'));
+        $this->factory->action('wp_loaded', $this->update(...));
     }
 
     public function update()
@@ -116,12 +116,12 @@ class MEC_feature_update extends MEC_base
     public function version103()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
         
         // Merge new options with previous options
-        $current['notifications']['new_event'] = array
-        (
+        $current['notifications']['new_event'] = 
+        [
             'status'=>'1',
             'subject'=>'A new event is added.',
             'recipients'=>'',
@@ -132,7 +132,7 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
         
         // Update it only if options already exists.
         if(get_option('mec_options') !== false)
@@ -168,12 +168,12 @@ class MEC_feature_update extends MEC_base
     public function version220()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
 
         // Merge new options with previous options
-        $current['notifications']['booking_reminder'] = array
-        (
+        $current['notifications']['booking_reminder'] = 
+        [
             'status'=>'0',
             'subject'=>'Booking Reminder',
             'recipients'=>'',
@@ -185,7 +185,7 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
 
         // Update it only if options already exists.
         if(get_option('mec_options') !== false)
@@ -275,12 +275,12 @@ class MEC_feature_update extends MEC_base
     public function version430()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
 
         // Merge new options with previous options
-        $current['notifications']['cancellation_notification'] = array
-        (
+        $current['notifications']['cancellation_notification'] = 
+        [
             'status'=>'0',
             'subject'=>'Your booking is canceled.',
             'recipients'=>'',
@@ -293,7 +293,7 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
 
         // Update it only if options already exists.
         if(get_option('mec_options') !== false)
@@ -311,12 +311,12 @@ class MEC_feature_update extends MEC_base
     public function version461()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
 
         // Merge new options with previous options
-        $current['notifications']['user_event_publishing'] = array
-        (
+        $current['notifications']['user_event_publishing'] = 
+        [
             'status'=>'0',
             'subject'=>'Your event gets published!',
             'recipients'=>'',
@@ -328,7 +328,7 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
 
         // Update it only if options already exists.
         if(get_option('mec_options') !== false)
@@ -341,10 +341,10 @@ class MEC_feature_update extends MEC_base
     public function version490()
     {
         // Get Booking Posts
-        $bookings = get_posts(array(
+        $bookings = get_posts([
             'post_type'  => 'mec-books',
             'numberposts'  => '-1',
-        ));
+        ]);
 
         foreach($bookings as $id => $booking)
         {
@@ -363,10 +363,10 @@ class MEC_feature_update extends MEC_base
     public function version551()
     {
         // Get Booking Posts
-        $bookings = get_posts(array(
+        $bookings = get_posts([
             'post_type'  => 'mec-books',
             'numberposts'  => '-1',
-        ));
+        ]);
 
         foreach($bookings as $id => $booking)
         {
@@ -381,7 +381,7 @@ class MEC_feature_update extends MEC_base
             $mec_date = get_post_meta($booking->ID, 'mec_date', true);
             if(is_array($mec_date) and isset($mec_date['start']) and isset($mec_date['start']['date'])) $mec_date = $mec_date['start']['date'].':'.$mec_date['end']['date'];
 
-            list($start_date, $end_date) = explode(':', $mec_date);
+            [$start_date, $end_date] = explode(':', $mec_date);
             if(is_numeric($start_date) or is_numeric($end_date)) continue;
 
             $start_datetime = $start_date.' '.$start_time;
@@ -394,19 +394,19 @@ class MEC_feature_update extends MEC_base
             $gmt_date = get_gmt_from_date($post_date);
 
             // Update Booking Date
-            wp_update_post(array(
+            wp_update_post([
                 'ID' => $booking->ID,
                 'post_date' => $post_date,
                 'post_date_gmt' => $gmt_date,
-            ));
+            ]);
         }
     }
 
     public function version571()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
 
         if(!isset($current['notifications']['booking_reminder'])) return;
         if(isset($current['notifications']['booking_reminder']['hours'])) return;
@@ -490,12 +490,12 @@ class MEC_feature_update extends MEC_base
     public function version5135()
     {
         // Get current MEC options
-        $current = get_option('mec_options', array());
-        if(is_string($current) and trim($current) == '') $current = array();
+        $current = get_option('mec_options', []);
+        if(is_string($current) and trim($current) == '') $current = [];
 
         // Merge new options with previous options
-        $current['notifications']['booking_rejection'] = array
-        (
+        $current['notifications']['booking_rejection'] = 
+        [
             'status'=>'0',
             'subject'=>'Your booking got rejected!',
             'recipients'=>'',
@@ -508,10 +508,10 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
 
-        $current['notifications']['event_soldout'] = array
-        (
+        $current['notifications']['event_soldout'] = 
+        [
             'status'=>'0',
             'subject'=>'Your event is soldout!',
             'recipients'=>'',
@@ -523,7 +523,7 @@ class MEC_feature_update extends MEC_base
 
             Regards,
             %%blog_name%%"
-        );
+        ];
 
         // Update it only if options already exists.
         if(get_option('mec_options') !== false)
@@ -536,7 +536,7 @@ class MEC_feature_update extends MEC_base
     public function version5140()
     {
         // List of Capabilities
-        $capabilities = array('mec_bookings', 'mec_add_booking', 'mec_coupons', 'mec_report', 'mec_import_export', 'mec_settings');
+        $capabilities = ['mec_bookings', 'mec_add_booking', 'mec_coupons', 'mec_report', 'mec_import_export', 'mec_settings'];
 
         // Update Capabilities
         $this->update_capabilities($capabilities);
@@ -572,7 +572,7 @@ class MEC_feature_update extends MEC_base
     public function version5170()
     {
         // List of Capabilities
-        $capabilities = array('mec_shortcodes', 'mec_settings');
+        $capabilities = ['mec_shortcodes', 'mec_settings'];
 
         // Update Capabilities
         $this->update_capabilities($capabilities);

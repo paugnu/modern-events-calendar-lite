@@ -6,50 +6,50 @@ namespace Composer\Autoload;
 
 class ComposerStaticInitb7dce439a575ff5721c0c0e7d0a0abac
 {
-    public static $files = array (
+    public static $files =  [
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-    );
+    ];
 
-    public static $prefixLengthsPsr4 = array (
+    public static $prefixLengthsPsr4 =  [
         'S' => 
-        array (
+         [
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Component\\Translation\\' => 30,
-        ),
+        ],
         'M' => 
-        array (
+         [
             'MEC\\' => 4,
-        ),
-    );
+        ],
+    ];
 
-    public static $prefixDirsPsr4 = array (
+    public static $prefixDirsPsr4 =  [
         'Symfony\\Polyfill\\Mbstring\\' => 
-        array (
+         [
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
-        ),
+        ],
         'Symfony\\Component\\Translation\\' => 
-        array (
+         [
             0 => __DIR__ . '/..' . '/symfony/translation',
-        ),
+        ],
         'MEC\\' => 
-        array (
+         [
             0 => __DIR__ . '/../..' . '/core/src',
-        ),
-    );
+        ],
+    ];
 
-    public static $fallbackDirsPsr4 = array (
+    public static $fallbackDirsPsr4 =  [
         0 => __DIR__ . '/..' . '/nesbot/carbon/src',
-    );
+    ];
 
-    public static $prefixesPsr0 = array (
+    public static $prefixesPsr0 =  [
         'I' => 
-        array (
+         [
             'ICal' => 
-            array (
+             [
                 0 => __DIR__ . '/..' . '/johngrogg/ics-parser/src',
-            ),
-        ),
-    );
+            ],
+        ],
+    ];
 
     public static function getInitializer(ClassLoader $loader)
     {

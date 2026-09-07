@@ -45,7 +45,7 @@ class Dispute extends \Stripe\ApiResource
     public function submit($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/submit';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

@@ -19,12 +19,12 @@ echo $this->main->mec_custom_msg('', '');
 // Display Addons Notification
 $get_n_option = get_option('mec_addons_notification_option');
 
-$shortcodes = get_posts(array(
+$shortcodes = get_posts([
     'post_type' => 'mec_calendars',
     'post_status' => 'publish',
     'posts_per_page' => -1,
     'order' => 'DESC'
-));
+]);
 ?>
 <div class="wns-be-container wns-be-container-sticky">
     <div id="wns-be-infobar">
@@ -578,7 +578,7 @@ $shortcodes = get_posts(array(
                             <div class="mec-form-row">
                                 <label class="mec-col-3" for="mec_settings_currency_symptom"><?php _e('Currency Sign', 'modern-events-calendar-lite'); ?></label>
                                 <div class="mec-col-9">
-                                    <input type="text" name="mec[settings][currency_symptom]" id="mec_settings_currency_symptom" value="<?php echo (isset($settings['currency_symptom']) ? $settings['currency_symptom'] : ''); ?>" />
+                                    <input type="text" name="mec[settings][currency_symptom]" id="mec_settings_currency_symptom" value="<?php echo ($settings['currency_symptom'] ?? ''); ?>" />
                                     <span class="mec-tooltip">
                                         <div class="box left">
                                             <h5 class="title"><?php _e('Currency Sign', 'modern-events-calendar-lite'); ?></h5>
@@ -602,13 +602,13 @@ $shortcodes = get_posts(array(
                             <div class="mec-form-row">
                                 <label class="mec-col-3" for="mec_settings_thousand_separator"><?php _e('Thousand Separator', 'modern-events-calendar-lite'); ?></label>
                                 <div class="mec-col-9">
-                                    <input type="text" name="mec[settings][thousand_separator]" id="mec_settings_thousand_separator" value="<?php echo (isset($settings['thousand_separator']) ? $settings['thousand_separator'] : ','); ?>" />
+                                    <input type="text" name="mec[settings][thousand_separator]" id="mec_settings_thousand_separator" value="<?php echo ($settings['thousand_separator'] ?? ','); ?>" />
                                 </div>
                             </div>
                             <div class="mec-form-row">
                                 <label class="mec-col-3" for="mec_settings_decimal_separator"><?php _e('Decimal Separator', 'modern-events-calendar-lite'); ?></label>
                                 <div class="mec-col-9">
-                                    <input type="text" name="mec[settings][decimal_separator]" id="mec_settings_decimal_separator" value="<?php echo (isset($settings['decimal_separator']) ? $settings['decimal_separator'] : '.'); ?>" />
+                                    <input type="text" name="mec[settings][decimal_separator]" id="mec_settings_decimal_separator" value="<?php echo ($settings['decimal_separator'] ?? '.'); ?>" />
                                 </div>
                             </div>
                             <div class="mec-form-row">
@@ -1101,14 +1101,14 @@ $shortcodes = get_posts(array(
                             <br>
                             <h5 class="mec-form-subtitle"><?php _e('Required Fields', 'modern-events-calendar-lite'); ?></h5>
 
-                            <?php foreach(array(
+                            <?php foreach([
                                 'body' => __('Event Description', 'modern-events-calendar-lite'),
                                 'excerpt' => __('Excerpt', 'modern-events-calendar-lite'),
                                 'cost' => __('Cost', 'modern-events-calendar-lite'),
                                 'event_link' => __('Event Link', 'modern-events-calendar-lite'),
                                 'more_info_link' => __('More Info Link', 'modern-events-calendar-lite'),
                                 'category' => __('Category', 'modern-events-calendar-lite'),
-                                'label' => __('Label', 'modern-events-calendar-lite')) as $req_field => $label): ?>
+                                'label' => __('Label', 'modern-events-calendar-lite')] as $req_field => $label): ?>
                             <div class="mec-form-row">
                                 <label>
                                     <input type="hidden" name="mec[settings][fes_required_<?php echo $req_field; ?>]" value="0" />
@@ -1134,7 +1134,7 @@ $shortcodes = get_posts(array(
                             </div>
                             <div class="mec-form-row">
                                 <select name="mec[settings][userevents_shortcode]" id="mec_settings_userevents_shortcode">
-                                    <?php foreach($shortcodes as $shortcode): $skin = get_post_meta($shortcode->ID, 'skin', true); if(!in_array($skin, array('monthly_view', 'daily_view', 'weekly_view', 'list', 'grid', 'agenda'))) continue; ?>
+                                    <?php foreach($shortcodes as $shortcode): $skin = get_post_meta($shortcode->ID, 'skin', true); if(!in_array($skin, ['monthly_view', 'daily_view', 'weekly_view', 'list', 'grid', 'agenda'])) continue; ?>
                                     <option value="<?php echo $shortcode->ID; ?>" <?php echo ((isset($settings['userevents_shortcode']) and $settings['userevents_shortcode'] == $shortcode->ID) ? 'selected="selected"' : ''); ?>><?php echo $shortcode->post_title; ?></option>
                                     <?php endforeach; ?>
                                 </select>
@@ -1348,12 +1348,12 @@ $shortcodes = get_posts(array(
                                     $lists = '';
                                     if ( isset($settings['constantcontact_access_token']) and trim($settings['constantcontact_access_token']) != '' and isset($settings['constantcontact_api_key']) and trim($settings['constantcontact_api_key']) != '' ){
                                         $api_key = $settings['constantcontact_api_key'];
-                                        $lists  = wp_remote_retrieve_body(wp_remote_get("https://api.constantcontact.com/v2/lists?api_key=".$api_key, array(
+                                        $lists  = wp_remote_retrieve_body(wp_remote_get("https://api.constantcontact.com/v2/lists?api_key=".$api_key, [
                                             'body' => null,
                                             'timeout' => '10',
                                             'redirection' => '10',
-                                            'headers' => array('Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $settings['constantcontact_access_token']),
-                                        )));
+                                            'headers' => ['Content-Type' => 'application/json', 'Authorization' => 'Bearer ' . $settings['constantcontact_access_token']],
+                                        ]));
                                     }
                                     
                                     ?>

@@ -62,826 +62,826 @@ class Google_Service_Calendar extends Google_Service
         $this,
         $this->serviceName,
         'acl',
-        array(
-          'methods' => array(
-            'delete' => array(
+        [
+          'methods' => [
+            'delete' => [
               'path' => 'calendars/{calendarId}/acl/{ruleId}',
               'httpMethod' => 'DELETE',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'ruleId' => array(
+                ],
+                'ruleId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'get' => array(
+                ],
+              ],
+            ],'get' => [
               'path' => 'calendars/{calendarId}/acl/{ruleId}',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'ruleId' => array(
+                ],
+                'ruleId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'insert' => array(
+                ],
+              ],
+            ],'insert' => [
               'path' => 'calendars/{calendarId}/acl',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'list' => array(
+                ],
+              ],
+            ],'list' => [
               'path' => 'calendars/{calendarId}/acl',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'maxResults' => array(
+                ],
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'patch' => array(
+                ],
+              ],
+            ],'patch' => [
               'path' => 'calendars/{calendarId}/acl/{ruleId}',
               'httpMethod' => 'PATCH',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'ruleId' => array(
+                ],
+                'ruleId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'update' => array(
+                ],
+              ],
+            ],'update' => [
               'path' => 'calendars/{calendarId}/acl/{ruleId}',
               'httpMethod' => 'PUT',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'ruleId' => array(
+                ],
+                'ruleId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'watch' => array(
+                ],
+              ],
+            ],'watch' => [
               'path' => 'calendars/{calendarId}/acl/watch',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'maxResults' => array(
+                ],
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),
-          )
-        )
+                ],
+              ],
+            ],
+          ]
+        ]
     );
     $this->calendarList = new Google_Service_Calendar_CalendarList_Resource(
         $this,
         $this->serviceName,
         'calendarList',
-        array(
-          'methods' => array(
-            'delete' => array(
+        [
+          'methods' => [
+            'delete' => [
               'path' => 'users/me/calendarList/{calendarId}',
               'httpMethod' => 'DELETE',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'get' => array(
+                ],
+              ],
+            ],'get' => [
               'path' => 'users/me/calendarList/{calendarId}',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'insert' => array(
+                ],
+              ],
+            ],'insert' => [
               'path' => 'users/me/calendarList',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'colorRgbFormat' => array(
+              'parameters' => [
+                'colorRgbFormat' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'list' => array(
+                ],
+              ],
+            ],'list' => [
               'path' => 'users/me/calendarList',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'maxResults' => array(
+              'parameters' => [
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'minAccessRole' => array(
+                ],
+                'minAccessRole' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'showHidden' => array(
+                ],
+                'showHidden' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'patch' => array(
+                ],
+              ],
+            ],'patch' => [
               'path' => 'users/me/calendarList/{calendarId}',
               'httpMethod' => 'PATCH',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'colorRgbFormat' => array(
+                ],
+                'colorRgbFormat' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'update' => array(
+                ],
+              ],
+            ],'update' => [
               'path' => 'users/me/calendarList/{calendarId}',
               'httpMethod' => 'PUT',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'colorRgbFormat' => array(
+                ],
+                'colorRgbFormat' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'watch' => array(
+                ],
+              ],
+            ],'watch' => [
               'path' => 'users/me/calendarList/watch',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'maxResults' => array(
+              'parameters' => [
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'minAccessRole' => array(
+                ],
+                'minAccessRole' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'showHidden' => array(
+                ],
+                'showHidden' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),
-          )
-        )
+                ],
+              ],
+            ],
+          ]
+        ]
     );
     $this->calendars = new Google_Service_Calendar_Calendars_Resource(
         $this,
         $this->serviceName,
         'calendars',
-        array(
-          'methods' => array(
-            'clear' => array(
+        [
+          'methods' => [
+            'clear' => [
               'path' => 'calendars/{calendarId}/clear',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'delete' => array(
+                ],
+              ],
+            ],'delete' => [
               'path' => 'calendars/{calendarId}',
               'httpMethod' => 'DELETE',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'get' => array(
+                ],
+              ],
+            ],'get' => [
               'path' => 'calendars/{calendarId}',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'insert' => array(
+                ],
+              ],
+            ],'insert' => [
               'path' => 'calendars',
               'httpMethod' => 'POST',
-              'parameters' => array(),
-            ),'patch' => array(
+              'parameters' => [],
+            ],'patch' => [
               'path' => 'calendars/{calendarId}',
               'httpMethod' => 'PATCH',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'update' => array(
+                ],
+              ],
+            ],'update' => [
               'path' => 'calendars/{calendarId}',
               'httpMethod' => 'PUT',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),
-          )
-        )
+                ],
+              ],
+            ],
+          ]
+        ]
     );
     $this->channels = new Google_Service_Calendar_Channels_Resource(
         $this,
         $this->serviceName,
         'channels',
-        array(
-          'methods' => array(
-            'stop' => array(
+        [
+          'methods' => [
+            'stop' => [
               'path' => 'channels/stop',
               'httpMethod' => 'POST',
-              'parameters' => array(),
-            ),
-          )
-        )
+              'parameters' => [],
+            ],
+          ]
+        ]
     );
     $this->colors = new Google_Service_Calendar_Colors_Resource(
         $this,
         $this->serviceName,
         'colors',
-        array(
-          'methods' => array(
-            'get' => array(
+        [
+          'methods' => [
+            'get' => [
               'path' => 'colors',
               'httpMethod' => 'GET',
-              'parameters' => array(),
-            ),
-          )
-        )
+              'parameters' => [],
+            ],
+          ]
+        ]
     );
     $this->events = new Google_Service_Calendar_Events_Resource(
         $this,
         $this->serviceName,
         'events',
-        array(
-          'methods' => array(
-            'delete' => array(
+        [
+          'methods' => [
+            'delete' => [
               'path' => 'calendars/{calendarId}/events/{eventId}',
               'httpMethod' => 'DELETE',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'get' => array(
+                ],
+              ],
+            ],'get' => [
               'path' => 'calendars/{calendarId}/events/{eventId}',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'timeZone' => array(
+                ],
+                'timeZone' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'import' => array(
+                ],
+              ],
+            ],'import' => [
               'path' => 'calendars/{calendarId}/events/import',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'supportsAttachments' => array(
+                ],
+                'supportsAttachments' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'insert' => array(
+                ],
+              ],
+            ],'insert' => [
               'path' => 'calendars/{calendarId}/events',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'supportsAttachments' => array(
+                ],
+                'supportsAttachments' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'instances' => array(
+                ],
+              ],
+            ],'instances' => [
               'path' => 'calendars/{calendarId}/events/{eventId}/instances',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'maxResults' => array(
+                ],
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'originalStart' => array(
+                ],
+                'originalStart' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'timeMax' => array(
+                ],
+                'timeMax' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeMin' => array(
+                ],
+                'timeMin' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeZone' => array(
+                ],
+                'timeZone' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'list' => array(
+                ],
+              ],
+            ],'list' => [
               'path' => 'calendars/{calendarId}/events',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'iCalUID' => array(
+                ],
+                'iCalUID' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'maxResults' => array(
+                ],
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'orderBy' => array(
+                ],
+                'orderBy' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'privateExtendedProperty' => array(
+                ],
+                'privateExtendedProperty' => [
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'q' => array(
+                ],
+                'q' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'sharedExtendedProperty' => array(
+                ],
+                'sharedExtendedProperty' => [
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'showHiddenInvitations' => array(
+                ],
+                'showHiddenInvitations' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'singleEvents' => array(
+                ],
+                'singleEvents' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeMax' => array(
+                ],
+                'timeMax' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeMin' => array(
+                ],
+                'timeMin' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeZone' => array(
+                ],
+                'timeZone' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'updatedMin' => array(
+                ],
+                'updatedMin' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'move' => array(
+                ],
+              ],
+            ],'move' => [
               'path' => 'calendars/{calendarId}/events/{eventId}/move',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'destination' => array(
+                ],
+                'destination' => [
                   'location' => 'query',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'patch' => array(
+                ],
+              ],
+            ],'patch' => [
               'path' => 'calendars/{calendarId}/events/{eventId}',
               'httpMethod' => 'PATCH',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'supportsAttachments' => array(
+                ],
+                'supportsAttachments' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'quickAdd' => array(
+                ],
+              ],
+            ],'quickAdd' => [
               'path' => 'calendars/{calendarId}/events/quickAdd',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'text' => array(
+                ],
+                'text' => [
                   'location' => 'query',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'update' => array(
+                ],
+              ],
+            ],'update' => [
               'path' => 'calendars/{calendarId}/events/{eventId}',
               'httpMethod' => 'PUT',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'eventId' => array(
+                ],
+                'eventId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'sendNotifications' => array(
+                ],
+                'sendNotifications' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'supportsAttachments' => array(
+                ],
+                'supportsAttachments' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-              ),
-            ),'watch' => array(
+                ],
+              ],
+            ],'watch' => [
               'path' => 'calendars/{calendarId}/events/watch',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'calendarId' => array(
+              'parameters' => [
+                'calendarId' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-                'alwaysIncludeEmail' => array(
+                ],
+                'alwaysIncludeEmail' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'iCalUID' => array(
+                ],
+                'iCalUID' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'maxAttendees' => array(
+                ],
+                'maxAttendees' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'maxResults' => array(
+                ],
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'orderBy' => array(
+                ],
+                'orderBy' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'privateExtendedProperty' => array(
+                ],
+                'privateExtendedProperty' => [
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'q' => array(
+                ],
+                'q' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'sharedExtendedProperty' => array(
+                ],
+                'sharedExtendedProperty' => [
                   'location' => 'query',
                   'type' => 'string',
                   'repeated' => true,
-                ),
-                'showDeleted' => array(
+                ],
+                'showDeleted' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'showHiddenInvitations' => array(
+                ],
+                'showHiddenInvitations' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'singleEvents' => array(
+                ],
+                'singleEvents' => [
                   'location' => 'query',
                   'type' => 'boolean',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeMax' => array(
+                ],
+                'timeMax' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeMin' => array(
+                ],
+                'timeMin' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'timeZone' => array(
+                ],
+                'timeZone' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'updatedMin' => array(
+                ],
+                'updatedMin' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),
-          )
-        )
+                ],
+              ],
+            ],
+          ]
+        ]
     );
     $this->freebusy = new Google_Service_Calendar_Freebusy_Resource(
         $this,
         $this->serviceName,
         'freebusy',
-        array(
-          'methods' => array(
-            'query' => array(
+        [
+          'methods' => [
+            'query' => [
               'path' => 'freeBusy',
               'httpMethod' => 'POST',
-              'parameters' => array(),
-            ),
-          )
-        )
+              'parameters' => [],
+            ],
+          ]
+        ]
     );
     $this->settings = new Google_Service_Calendar_Settings_Resource(
         $this,
         $this->serviceName,
         'settings',
-        array(
-          'methods' => array(
-            'get' => array(
+        [
+          'methods' => [
+            'get' => [
               'path' => 'users/me/settings/{setting}',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'setting' => array(
+              'parameters' => [
+                'setting' => [
                   'location' => 'path',
                   'type' => 'string',
                   'required' => true,
-                ),
-              ),
-            ),'list' => array(
+                ],
+              ],
+            ],'list' => [
               'path' => 'users/me/settings',
               'httpMethod' => 'GET',
-              'parameters' => array(
-                'maxResults' => array(
+              'parameters' => [
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),'watch' => array(
+                ],
+              ],
+            ],'watch' => [
               'path' => 'users/me/settings/watch',
               'httpMethod' => 'POST',
-              'parameters' => array(
-                'maxResults' => array(
+              'parameters' => [
+                'maxResults' => [
                   'location' => 'query',
                   'type' => 'integer',
-                ),
-                'pageToken' => array(
+                ],
+                'pageToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-                'syncToken' => array(
+                ],
+                'syncToken' => [
                   'location' => 'query',
                   'type' => 'string',
-                ),
-              ),
-            ),
-          )
-        )
+                ],
+              ],
+            ],
+          ]
+        ]
     );
   }
 }
@@ -907,11 +907,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * @param string $ruleId ACL rule identifier.
    * @param array $optParams Optional parameters.
    */
-  public function delete($calendarId, $ruleId, $optParams = array())
+  public function delete($calendarId, $ruleId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'ruleId' => $ruleId);
+    $params = ['calendarId' => $calendarId, 'ruleId' => $ruleId];
     $params = array_merge($params, $optParams);
-    return $this->call('delete', array($params));
+    return $this->call('delete', [$params]);
   }
 
   /**
@@ -924,11 +924,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_AclRule
    */
-  public function get($calendarId, $ruleId, $optParams = array())
+  public function get($calendarId, $ruleId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'ruleId' => $ruleId);
+    $params = ['calendarId' => $calendarId, 'ruleId' => $ruleId];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_AclRule");
+    return $this->call('get', [$params], "Google_Service_Calendar_AclRule");
   }
 
   /**
@@ -941,11 +941,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_AclRule
    */
-  public function insert($calendarId, Google_Service_Calendar_AclRule $postBody, $optParams = array())
+  public function insert($calendarId, Google_Service_Calendar_AclRule $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_Calendar_AclRule");
+    return $this->call('insert', [$params], "Google_Service_Calendar_AclRule");
   }
 
   /**
@@ -975,11 +975,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * Optional. The default is to return all entries.
    * @return Google_Service_Calendar_Acl
    */
-  public function listAcl($calendarId, $optParams = array())
+  public function listAcl($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_Calendar_Acl");
+    return $this->call('list', [$params], "Google_Service_Calendar_Acl");
   }
 
   /**
@@ -994,11 +994,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_AclRule
    */
-  public function patch($calendarId, $ruleId, Google_Service_Calendar_AclRule $postBody, $optParams = array())
+  public function patch($calendarId, $ruleId, Google_Service_Calendar_AclRule $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'ruleId' => $ruleId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'ruleId' => $ruleId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('patch', array($params), "Google_Service_Calendar_AclRule");
+    return $this->call('patch', [$params], "Google_Service_Calendar_AclRule");
   }
 
   /**
@@ -1012,11 +1012,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_AclRule
    */
-  public function update($calendarId, $ruleId, Google_Service_Calendar_AclRule $postBody, $optParams = array())
+  public function update($calendarId, $ruleId, Google_Service_Calendar_AclRule $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'ruleId' => $ruleId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'ruleId' => $ruleId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('update', array($params), "Google_Service_Calendar_AclRule");
+    return $this->call('update', [$params], "Google_Service_Calendar_AclRule");
   }
 
   /**
@@ -1047,11 +1047,11 @@ class Google_Service_Calendar_Acl_Resource extends Google_Service_Resource
    * Optional. The default is to return all entries.
    * @return Google_Service_Calendar_Channel
    */
-  public function watch($calendarId, Google_Service_Calendar_Channel $postBody, $optParams = array())
+  public function watch($calendarId, Google_Service_Calendar_Channel $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('watch', array($params), "Google_Service_Calendar_Channel");
+    return $this->call('watch', [$params], "Google_Service_Calendar_Channel");
   }
 }
 
@@ -1074,11 +1074,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
    */
-  public function delete($calendarId, $optParams = array())
+  public function delete($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('delete', array($params));
+    return $this->call('delete', [$params]);
   }
 
   /**
@@ -1090,11 +1090,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_CalendarListEntry
    */
-  public function get($calendarId, $optParams = array())
+  public function get($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_CalendarListEntry");
+    return $this->call('get', [$params], "Google_Service_Calendar_CalendarListEntry");
   }
 
   /**
@@ -1109,11 +1109,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * automatically. Optional. The default is False.
    * @return Google_Service_Calendar_CalendarListEntry
    */
-  public function insert(Google_Service_Calendar_CalendarListEntry $postBody, $optParams = array())
+  public function insert(Google_Service_Calendar_CalendarListEntry $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_Calendar_CalendarListEntry");
+    return $this->call('insert', [$params], "Google_Service_Calendar_CalendarListEntry");
   }
 
   /**
@@ -1146,11 +1146,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * synchronization. Optional. The default is to return all entries.
    * @return Google_Service_Calendar_CalendarList
    */
-  public function listCalendarList($optParams = array())
+  public function listCalendarList($optParams = [])
   {
-    $params = array();
+    $params = [];
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_Calendar_CalendarList");
+    return $this->call('list', [$params], "Google_Service_Calendar_CalendarList");
   }
 
   /**
@@ -1169,11 +1169,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * automatically. Optional. The default is False.
    * @return Google_Service_Calendar_CalendarListEntry
    */
-  public function patch($calendarId, Google_Service_Calendar_CalendarListEntry $postBody, $optParams = array())
+  public function patch($calendarId, Google_Service_Calendar_CalendarListEntry $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('patch', array($params), "Google_Service_Calendar_CalendarListEntry");
+    return $this->call('patch', [$params], "Google_Service_Calendar_CalendarListEntry");
   }
 
   /**
@@ -1191,11 +1191,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * automatically. Optional. The default is False.
    * @return Google_Service_Calendar_CalendarListEntry
    */
-  public function update($calendarId, Google_Service_Calendar_CalendarListEntry $postBody, $optParams = array())
+  public function update($calendarId, Google_Service_Calendar_CalendarListEntry $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('update', array($params), "Google_Service_Calendar_CalendarListEntry");
+    return $this->call('update', [$params], "Google_Service_Calendar_CalendarListEntry");
   }
 
   /**
@@ -1229,11 +1229,11 @@ class Google_Service_Calendar_CalendarList_Resource extends Google_Service_Resou
    * synchronization. Optional. The default is to return all entries.
    * @return Google_Service_Calendar_Channel
    */
-  public function watch(Google_Service_Calendar_Channel $postBody, $optParams = array())
+  public function watch(Google_Service_Calendar_Channel $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('watch', array($params), "Google_Service_Calendar_Channel");
+    return $this->call('watch', [$params], "Google_Service_Calendar_Channel");
   }
 }
 
@@ -1257,11 +1257,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
    */
-  public function clear($calendarId, $optParams = array())
+  public function clear($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('clear', array($params));
+    return $this->call('clear', [$params]);
   }
 
   /**
@@ -1273,11 +1273,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * the currently logged in user, use the "primary" keyword.
    * @param array $optParams Optional parameters.
    */
-  public function delete($calendarId, $optParams = array())
+  public function delete($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('delete', array($params));
+    return $this->call('delete', [$params]);
   }
 
   /**
@@ -1289,11 +1289,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Calendar
    */
-  public function get($calendarId, $optParams = array())
+  public function get($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_Calendar");
+    return $this->call('get', [$params], "Google_Service_Calendar_Calendar");
   }
 
   /**
@@ -1303,11 +1303,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Calendar
    */
-  public function insert(Google_Service_Calendar_Calendar $postBody, $optParams = array())
+  public function insert(Google_Service_Calendar_Calendar $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_Calendar_Calendar");
+    return $this->call('insert', [$params], "Google_Service_Calendar_Calendar");
   }
 
   /**
@@ -1321,11 +1321,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Calendar
    */
-  public function patch($calendarId, Google_Service_Calendar_Calendar $postBody, $optParams = array())
+  public function patch($calendarId, Google_Service_Calendar_Calendar $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('patch', array($params), "Google_Service_Calendar_Calendar");
+    return $this->call('patch', [$params], "Google_Service_Calendar_Calendar");
   }
 
   /**
@@ -1338,11 +1338,11 @@ class Google_Service_Calendar_Calendars_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Calendar
    */
-  public function update($calendarId, Google_Service_Calendar_Calendar $postBody, $optParams = array())
+  public function update($calendarId, Google_Service_Calendar_Calendar $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('update', array($params), "Google_Service_Calendar_Calendar");
+    return $this->call('update', [$params], "Google_Service_Calendar_Calendar");
   }
 }
 
@@ -1363,11 +1363,11 @@ class Google_Service_Calendar_Channels_Resource extends Google_Service_Resource
    * @param Google_Channel $postBody
    * @param array $optParams Optional parameters.
    */
-  public function stop(Google_Service_Calendar_Channel $postBody, $optParams = array())
+  public function stop(Google_Service_Calendar_Channel $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('stop', array($params));
+    return $this->call('stop', [$params]);
   }
 }
 
@@ -1388,11 +1388,11 @@ class Google_Service_Calendar_Colors_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Colors
    */
-  public function get($optParams = array())
+  public function get($optParams = [])
   {
-    $params = array();
+    $params = [];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_Colors");
+    return $this->call('get', [$params], "Google_Service_Calendar_Colors");
   }
 }
 
@@ -1419,11 +1419,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * @opt_param bool sendNotifications Whether to send notifications about the
    * deletion of the event. Optional. The default is False.
    */
-  public function delete($calendarId, $eventId, $optParams = array())
+  public function delete($calendarId, $eventId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId];
     $params = array_merge($params, $optParams);
-    return $this->call('delete', array($params));
+    return $this->call('delete', [$params]);
   }
 
   /**
@@ -1448,11 +1448,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * default is the time zone of the calendar.
    * @return Google_Service_Calendar_Event
    */
-  public function get($calendarId, $eventId, $optParams = array())
+  public function get($calendarId, $eventId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_Event");
+    return $this->call('get', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1469,11 +1469,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * supports event attachments. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function import($calendarId, Google_Service_Calendar_Event $postBody, $optParams = array())
+  public function import($calendarId, Google_Service_Calendar_Event $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('import', array($params), "Google_Service_Calendar_Event");
+    return $this->call('import', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1494,11 +1494,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * supports event attachments. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function insert($calendarId, Google_Service_Calendar_Event $postBody, $optParams = array())
+  public function insert($calendarId, Google_Service_Calendar_Event $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('insert', array($params), "Google_Service_Calendar_Event");
+    return $this->call('insert', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1540,11 +1540,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * default is the time zone of the calendar.
    * @return Google_Service_Calendar_Events
    */
-  public function instances($calendarId, $eventId, $optParams = array())
+  public function instances($calendarId, $eventId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId];
     $params = array_merge($params, $optParams);
-    return $this->call('instances', array($params), "Google_Service_Calendar_Events");
+    return $this->call('instances', [$params], "Google_Service_Calendar_Events");
   }
 
   /**
@@ -1627,11 +1627,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * The default is not to filter by last modification time.
    * @return Google_Service_Calendar_Events
    */
-  public function listEvents($calendarId, $optParams = array())
+  public function listEvents($calendarId, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId);
+    $params = ['calendarId' => $calendarId];
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_Calendar_Events");
+    return $this->call('list', [$params], "Google_Service_Calendar_Events");
   }
 
   /**
@@ -1649,11 +1649,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * change of the event's organizer. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function move($calendarId, $eventId, $destination, $optParams = array())
+  public function move($calendarId, $eventId, $destination, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId, 'destination' => $destination);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId, 'destination' => $destination];
     $params = array_merge($params, $optParams);
-    return $this->call('move', array($params), "Google_Service_Calendar_Event");
+    return $this->call('move', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1682,11 +1682,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * supports event attachments. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function patch($calendarId, $eventId, Google_Service_Calendar_Event $postBody, $optParams = array())
+  public function patch($calendarId, $eventId, Google_Service_Calendar_Event $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('patch', array($params), "Google_Service_Calendar_Event");
+    return $this->call('patch', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1702,11 +1702,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * creation of the event. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function quickAdd($calendarId, $text, $optParams = array())
+  public function quickAdd($calendarId, $text, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'text' => $text);
+    $params = ['calendarId' => $calendarId, 'text' => $text];
     $params = array_merge($params, $optParams);
-    return $this->call('quickAdd', array($params), "Google_Service_Calendar_Event");
+    return $this->call('quickAdd', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1735,11 +1735,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * supports event attachments. Optional. The default is False.
    * @return Google_Service_Calendar_Event
    */
-  public function update($calendarId, $eventId, Google_Service_Calendar_Event $postBody, $optParams = array())
+  public function update($calendarId, $eventId, Google_Service_Calendar_Event $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'eventId' => $eventId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'eventId' => $eventId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('update', array($params), "Google_Service_Calendar_Event");
+    return $this->call('update', [$params], "Google_Service_Calendar_Event");
   }
 
   /**
@@ -1823,11 +1823,11 @@ class Google_Service_Calendar_Events_Resource extends Google_Service_Resource
    * The default is not to filter by last modification time.
    * @return Google_Service_Calendar_Channel
    */
-  public function watch($calendarId, Google_Service_Calendar_Channel $postBody, $optParams = array())
+  public function watch($calendarId, Google_Service_Calendar_Channel $postBody, $optParams = [])
   {
-    $params = array('calendarId' => $calendarId, 'postBody' => $postBody);
+    $params = ['calendarId' => $calendarId, 'postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('watch', array($params), "Google_Service_Calendar_Channel");
+    return $this->call('watch', [$params], "Google_Service_Calendar_Channel");
   }
 }
 
@@ -1849,11 +1849,11 @@ class Google_Service_Calendar_Freebusy_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_FreeBusyResponse
    */
-  public function query(Google_Service_Calendar_FreeBusyRequest $postBody, $optParams = array())
+  public function query(Google_Service_Calendar_FreeBusyRequest $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('query', array($params), "Google_Service_Calendar_FreeBusyResponse");
+    return $this->call('query', [$params], "Google_Service_Calendar_FreeBusyResponse");
   }
 }
 
@@ -1875,11 +1875,11 @@ class Google_Service_Calendar_Settings_Resource extends Google_Service_Resource
    * @param array $optParams Optional parameters.
    * @return Google_Service_Calendar_Setting
    */
-  public function get($setting, $optParams = array())
+  public function get($setting, $optParams = [])
   {
-    $params = array('setting' => $setting);
+    $params = ['setting' => $setting];
     $params = array_merge($params, $optParams);
-    return $this->call('get', array($params), "Google_Service_Calendar_Setting");
+    return $this->call('get', [$params], "Google_Service_Calendar_Setting");
   }
 
   /**
@@ -1901,11 +1901,11 @@ class Google_Service_Calendar_Settings_Resource extends Google_Service_Resource
    * synchronization. Optional. The default is to return all entries.
    * @return Google_Service_Calendar_Settings
    */
-  public function listSettings($optParams = array())
+  public function listSettings($optParams = [])
   {
-    $params = array();
+    $params = [];
     $params = array_merge($params, $optParams);
-    return $this->call('list', array($params), "Google_Service_Calendar_Settings");
+    return $this->call('list', [$params], "Google_Service_Calendar_Settings");
   }
 
   /**
@@ -1928,11 +1928,11 @@ class Google_Service_Calendar_Settings_Resource extends Google_Service_Resource
    * synchronization. Optional. The default is to return all entries.
    * @return Google_Service_Calendar_Channel
    */
-  public function watch(Google_Service_Calendar_Channel $postBody, $optParams = array())
+  public function watch(Google_Service_Calendar_Channel $postBody, $optParams = [])
   {
-    $params = array('postBody' => $postBody);
+    $params = ['postBody' => $postBody];
     $params = array_merge($params, $optParams);
-    return $this->call('watch', array($params), "Google_Service_Calendar_Channel");
+    return $this->call('watch', [$params], "Google_Service_Calendar_Channel");
   }
 }
 
@@ -1942,8 +1942,8 @@ class Google_Service_Calendar_Settings_Resource extends Google_Service_Resource
 class Google_Service_Calendar_Acl extends Google_Collection
 {
   protected $collection_key = 'items';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $etag;
   protected $itemsType = 'Google_Service_Calendar_AclRule';
   protected $itemsDataType = 'array';
@@ -1996,8 +1996,8 @@ class Google_Service_Calendar_Acl extends Google_Collection
 
 class Google_Service_Calendar_AclRule extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $etag;
   public $id;
   public $kind;
@@ -2050,8 +2050,8 @@ class Google_Service_Calendar_AclRule extends Google_Model
 
 class Google_Service_Calendar_AclRuleScope extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $type;
   public $value;
 
@@ -2076,8 +2076,8 @@ class Google_Service_Calendar_AclRuleScope extends Google_Model
 
 class Google_Service_Calendar_Calendar extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $description;
   public $etag;
   public $id;
@@ -2148,8 +2148,8 @@ class Google_Service_Calendar_Calendar extends Google_Model
 class Google_Service_Calendar_CalendarList extends Google_Collection
 {
   protected $collection_key = 'items';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $etag;
   protected $itemsType = 'Google_Service_Calendar_CalendarListEntry';
   protected $itemsDataType = 'array';
@@ -2203,8 +2203,8 @@ class Google_Service_Calendar_CalendarList extends Google_Collection
 class Google_Service_Calendar_CalendarListEntry extends Google_Collection
 {
   protected $collection_key = 'defaultReminders';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $accessRole;
   public $backgroundColor;
   public $colorId;
@@ -2376,8 +2376,8 @@ class Google_Service_Calendar_CalendarListEntry extends Google_Collection
 class Google_Service_Calendar_CalendarListEntryNotificationSettings extends Google_Collection
 {
   protected $collection_key = 'notifications';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   protected $notificationsType = 'Google_Service_Calendar_CalendarNotification';
   protected $notificationsDataType = 'array';
 
@@ -2394,8 +2394,8 @@ class Google_Service_Calendar_CalendarListEntryNotificationSettings extends Goog
 
 class Google_Service_Calendar_CalendarNotification extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $method;
   public $type;
 
@@ -2420,8 +2420,8 @@ class Google_Service_Calendar_CalendarNotification extends Google_Model
 
 class Google_Service_Calendar_Channel extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $address;
   public $expiration;
   public $id;
@@ -2518,8 +2518,8 @@ class Google_Service_Calendar_Channel extends Google_Model
 
 class Google_Service_Calendar_ColorDefinition extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $background;
   public $foreground;
 
@@ -2544,8 +2544,8 @@ class Google_Service_Calendar_ColorDefinition extends Google_Model
 
 class Google_Service_Calendar_Colors extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   protected $calendarType = 'Google_Service_Calendar_ColorDefinition';
   protected $calendarDataType = 'map';
   protected $eventType = 'Google_Service_Calendar_ColorDefinition';
@@ -2590,8 +2590,8 @@ class Google_Service_Calendar_Colors extends Google_Model
 
 class Google_Service_Calendar_Error extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $domain;
   public $reason;
 
@@ -2617,8 +2617,8 @@ class Google_Service_Calendar_Error extends Google_Model
 class Google_Service_Calendar_Event extends Google_Collection
 {
   protected $collection_key = 'recurrence';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $anyoneCanAddSelf;
   protected $attachmentsType = 'Google_Service_Calendar_EventAttachment';
   protected $attachmentsDataType = 'array';
@@ -2969,8 +2969,8 @@ class Google_Service_Calendar_Event extends Google_Collection
 
 class Google_Service_Calendar_EventAttachment extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $fileId;
   public $fileUrl;
   public $iconLink;
@@ -3022,8 +3022,8 @@ class Google_Service_Calendar_EventAttachment extends Google_Model
 
 class Google_Service_Calendar_EventAttendee extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $additionalGuests;
   public $comment;
   public $displayName;
@@ -3120,8 +3120,8 @@ class Google_Service_Calendar_EventAttendee extends Google_Model
 
 class Google_Service_Calendar_EventCreator extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $displayName;
   public $email;
   public $id;
@@ -3164,8 +3164,8 @@ class Google_Service_Calendar_EventCreator extends Google_Model
 
 class Google_Service_Calendar_EventDateTime extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $date;
   public $dateTime;
   public $timeZone;
@@ -3199,8 +3199,8 @@ class Google_Service_Calendar_EventDateTime extends Google_Model
 
 class Google_Service_Calendar_EventExtendedProperties extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $private;
   public $shared;
 
@@ -3225,8 +3225,8 @@ class Google_Service_Calendar_EventExtendedProperties extends Google_Model
 
 class Google_Service_Calendar_EventGadget extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $display;
   public $height;
   public $iconLink;
@@ -3305,8 +3305,8 @@ class Google_Service_Calendar_EventGadget extends Google_Model
 
 class Google_Service_Calendar_EventOrganizer extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $displayName;
   public $email;
   public $id;
@@ -3349,8 +3349,8 @@ class Google_Service_Calendar_EventOrganizer extends Google_Model
 
 class Google_Service_Calendar_EventReminder extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $method;
   public $minutes;
 
@@ -3376,8 +3376,8 @@ class Google_Service_Calendar_EventReminder extends Google_Model
 class Google_Service_Calendar_EventReminders extends Google_Collection
 {
   protected $collection_key = 'overrides';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   protected $overridesType = 'Google_Service_Calendar_EventReminder';
   protected $overridesDataType = 'array';
   public $useDefault;
@@ -3403,8 +3403,8 @@ class Google_Service_Calendar_EventReminders extends Google_Collection
 
 class Google_Service_Calendar_EventSource extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $title;
   public $url;
 
@@ -3430,8 +3430,8 @@ class Google_Service_Calendar_EventSource extends Google_Model
 class Google_Service_Calendar_Events extends Google_Collection
 {
   protected $collection_key = 'items';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $accessRole;
   protected $defaultRemindersType = 'Google_Service_Calendar_EventReminder';
   protected $defaultRemindersDataType = 'array';
@@ -3540,8 +3540,8 @@ class Google_Service_Calendar_Events extends Google_Collection
 class Google_Service_Calendar_FreeBusyCalendar extends Google_Collection
 {
   protected $collection_key = 'errors';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   protected $busyType = 'Google_Service_Calendar_TimePeriod';
   protected $busyDataType = 'array';
   protected $errorsType = 'Google_Service_Calendar_Error';
@@ -3569,8 +3569,8 @@ class Google_Service_Calendar_FreeBusyCalendar extends Google_Collection
 class Google_Service_Calendar_FreeBusyGroup extends Google_Collection
 {
   protected $collection_key = 'errors';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $calendars;
   protected $errorsType = 'Google_Service_Calendar_Error';
   protected $errorsDataType = 'array';
@@ -3597,8 +3597,8 @@ class Google_Service_Calendar_FreeBusyGroup extends Google_Collection
 class Google_Service_Calendar_FreeBusyRequest extends Google_Collection
 {
   protected $collection_key = 'items';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $calendarExpansionMax;
   public $groupExpansionMax;
   protected $itemsType = 'Google_Service_Calendar_FreeBusyRequestItem';
@@ -3660,8 +3660,8 @@ class Google_Service_Calendar_FreeBusyRequest extends Google_Collection
 
 class Google_Service_Calendar_FreeBusyRequestItem extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $id;
 
 
@@ -3677,8 +3677,8 @@ class Google_Service_Calendar_FreeBusyRequestItem extends Google_Model
 
 class Google_Service_Calendar_FreeBusyResponse extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   protected $calendarsType = 'Google_Service_Calendar_FreeBusyCalendar';
   protected $calendarsDataType = 'map';
   protected $groupsType = 'Google_Service_Calendar_FreeBusyGroup';
@@ -3732,8 +3732,8 @@ class Google_Service_Calendar_FreeBusyResponse extends Google_Model
 
 class Google_Service_Calendar_Setting extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $etag;
   public $id;
   public $kind;
@@ -3777,8 +3777,8 @@ class Google_Service_Calendar_Setting extends Google_Model
 class Google_Service_Calendar_Settings extends Google_Collection
 {
   protected $collection_key = 'items';
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $etag;
   protected $itemsType = 'Google_Service_Calendar_Setting';
   protected $itemsDataType = 'array';
@@ -3831,8 +3831,8 @@ class Google_Service_Calendar_Settings extends Google_Collection
 
 class Google_Service_Calendar_TimePeriod extends Google_Model
 {
-  protected $internal_gapi_mappings = array(
-  );
+  protected $internal_gapi_mappings = [
+  ];
   public $end;
   public $start;
 

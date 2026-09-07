@@ -7,14 +7,14 @@ use MEC\Settings\Settings;
 
 class DisplayFields {
 
-	public static function display_fields( $group_id, $form_type, $fields = null, $j = null, $settings = array(), $data = array() ) {
+	public static function display_fields( $group_id, $form_type, $fields = null, $j = null, $settings = [], $data = [] ) {
 
 		if ( !is_array( $fields ) || empty( $fields ) ) {
 
 			return;
 		}
 
-		$lock_prefilled = isset( $settings['lock_prefilled'] ) ? $settings['lock_prefilled'] : false;
+		$lock_prefilled = $settings['lock_prefilled'] ?? false;
 		?>
 		<!-- Custom fields begin -->
 		<?php
@@ -25,16 +25,16 @@ class DisplayFields {
 				continue;
 			}
 
-			$type = isset( $field['type'] ) ? $field['type'] : false;
+			$type = $field['type'] ?? false;
 			if ( false === $type ) {
 				continue;
 			}
 
-			$j          = !is_null($j) ? $j : $field_id;
+			$j ??= $field_id;
 			$field_id = isset($field['key']) && !empty($field['key']) ? $field['key'] : $field_id;
 			$html_id  = 'mec_field_' . $group_id . '_' . $type . '_' . $j;
 			$required = ( ( isset( $field['required'] ) && $field['required'] ) || ( isset( $field['mandatory'] ) && $field['mandatory'] ) ) ? 'required="required"' : '';
-			$field_label = isset($field['label']) ? $field['label'] : null;
+			$field_label = $field['label'] ?? null;
 
 			$field_name = strtolower( str_replace( [
 					' ',
@@ -79,49 +79,49 @@ class DisplayFields {
 					case 'name':
 						$field_type     = 'text';
 						$field_id       = 'name';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'Name';
+						$field['label'] ??= 'Name';
 						$value      = $current_user->display_name;
 						break;
 					case 'mec_email':
 						$field_type     = 'email';
 						$field_id       = $type;
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'Email';
-						$value          = isset( $current_user->user_email ) ? $current_user->user_email : '';
+						$field['label'] ??= 'Email';
+						$value          = $current_user->user_email ?? '';
 					case 'email':
 						$field_type     = 'email';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'Email';
-						$value          = isset( $current_user->user_email ) ? $current_user->user_email : '';
+						$field['label'] ??= 'Email';
+						$value          = $current_user->user_email ?? '';
 						break;
 					case 'text':
 						$field_type     = 'text';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
+						$field['label'] ??= '';
 						$value          = '';
 						break;
 					case 'date':
 						$field_type     = 'date';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'Date';
+						$field['label'] ??= 'Date';
 						$value          = '';
 						$class          = 'mec-date-picker';
 						$attributes     = ' min="' . esc_attr( date( 'Y-m-d', strtotime( '-100 years' ) ) ) . '" max="' . esc_attr( date( 'Y-m-d', strtotime( '+100 years' ) ) ) . '" onload="mec_add_datepicker()"';
 						break;
 					case 'file':
 						$field_type     = 'file';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'File';
+						$field['label'] ??= 'File';
 						$value          = '';
 						break;
 					case 'tel':
 						$field_type     = 'tel';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : 'Tel';
+						$field['label'] ??= 'Tel';
 						$value          = '';
 						break;
 					case 'textarea':
 						$field_type     = 'textarea';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
+						$field['label'] ??= '';
 						$value          = '';
 						break;
 					case 'select':
 						$field_type     = 'select';
-						$field['label'] = isset( $field['label'] ) ? $field['label'] : '';
+						$field['label'] ??= '';
 						$value          = '';
 						$selected       = '';
 						break;
@@ -139,10 +139,10 @@ class DisplayFields {
 				if( 'fixed' === $form_type || ( 'reg' === $form_type && in_array($field_id,['mec_email','name'],true) ) ){
 
 					$field_id = 'mec_email' === $field_id ? 'email' : $field_id;
-					$value = isset($data[$field_id]) ? $data[$field_id] : $value;
+					$value = $data[$field_id] ?? $value;
 				} else {
 
-					$value = isset($data[$form_type][$field_id]) ? $data[$form_type][$field_id] : $value;
+					$value = $data[$form_type][$field_id] ?? $value;
 				}
 
 				$lock_field = !empty( $value );
@@ -198,7 +198,7 @@ class DisplayFields {
 						$input_html = '<select id="' . $html_id . '" class="' . $class . '" name="'.$field_name.'" placeholder="' . $placeholder . '" ' . $required . '  ' . $lock_field . '  ' . $attributes . ' >';
 						$rd = 0;
 						$selected = $value;
-						$options = isset($field['options']) ? $field['options'] : [];
+						$options = $field['options'] ?? [];
 						foreach ( $options as $field_option ) {
 							$rd++;
 							$option_text  = isset( $field_option['label'] ) ? __( $field_option['label'], 'mec' ) : '';
@@ -211,7 +211,7 @@ class DisplayFields {
 						break;
 					case 'radio':
 					case 'checkbox':
-						$options = isset($field['options']) ? $field['options'] : [];
+						$options = $field['options'] ?? [];
 						foreach ( $options as $field_option ) {
 							$current_value = __( $field_option['label'], 'mec' );
 							$checked = in_array($current_value,(array)$value);
@@ -224,7 +224,7 @@ class DisplayFields {
 						break;
 					case 'agreement':
 
-						$checked = isset( $field['status'] ) ? $field['status'] : 'checked';
+						$checked = $field['status'] ?? 'checked';
 						$input_html = '<label for="' . $html_id . $j . '">'
 							 . '<input type="checkbox" id="' . $html_id . $j . '" name="' . $field_name . '" value="1" ' . checked( $checked, 'checked', false ) . ' onchange="mec_agreement_change(this);"/>'
 							 . ( $required ? '<span class="wbmec-mandatory">*</span>' : '' )

@@ -64,14 +64,14 @@ class PoFileLoader extends FileLoader
     {
         $stream = fopen($resource, 'r');
 
-        $defaults = array(
-            'ids' => array(),
+        $defaults = [
+            'ids' => [],
             'translated' => null,
-        );
+        ];
 
-        $messages = array();
+        $messages = [];
         $item = $defaults;
-        $flags = array();
+        $flags = [];
 
         while ($line = fgets($stream)) {
             $line = trim($line);
@@ -82,29 +82,28 @@ class PoFileLoader extends FileLoader
                     $this->addMessage($messages, $item);
                 }
                 $item = $defaults;
-                $flags = array();
-            } elseif ('#,' === substr($line, 0, 2)) {
-                $flags = array_map('trim', explode(',', substr($line, 2)));
-            } elseif ('msgid "' === substr($line, 0, 7)) {
+                $flags = [];
+            } elseif (str_starts_with($line, '#,')) {
+                $flags = array_map(trim(...), explode(',', substr($line, 2)));
+            } elseif (str_starts_with($line, 'msgid "')) {
                 // We start a new msg so save previous
                 // TODO: this fails when comments or contexts are added
                 $this->addMessage($messages, $item);
                 $item = $defaults;
                 $item['ids']['singular'] = substr($line, 7, -1);
-            } elseif ('msgstr "' === substr($line, 0, 8)) {
+            } elseif (str_starts_with($line, 'msgstr "')) {
                 $item['translated'] = substr($line, 8, -1);
             } elseif ('"' === $line[0]) {
                 $continues = isset($item['translated']) ? 'translated' : 'ids';
 
                 if (is_array($item[$continues])) {
-                    end($item[$continues]);
-                    $item[$continues][key($item[$continues])] .= substr($line, 1, -1);
+                    $item[$continues][array_key_last($item[$continues])] .= substr($line, 1, -1);
                 } else {
                     $item[$continues] .= substr($line, 1, -1);
                 }
-            } elseif ('msgid_plural "' === substr($line, 0, 14)) {
+            } elseif (str_starts_with($line, 'msgid_plural "')) {
                 $item['ids']['plural'] = substr($line, 14, -1);
-            } elseif ('msgstr[' === substr($line, 0, 7)) {
+            } elseif (str_starts_with($line, 'msgstr[')) {
                 $size = strpos($line, ']');
                 $item['translated'][(int) substr($line, 7, 1)] = substr($line, $size + 3, -1);
             }
@@ -132,9 +131,7 @@ class PoFileLoader extends FileLoader
                 $plurals = $item['translated'];
                 // PO are by definition indexed so sort by index.
                 ksort($plurals);
-                // Make sure every index is filled.
-                end($plurals);
-                $count = key($plurals);
+                $count = array_key_last($plurals);
                 // Fill missing spots with '-'.
                 $empties = array_fill(0, $count + 1, '-');
                 $plurals += $empties;

@@ -38,7 +38,7 @@ class IcuResFileLoader implements LoaderInterface
 
         try {
             $rb = new \ResourceBundle($locale, $resource);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $rb = null;
         }
 
@@ -75,7 +75,7 @@ class IcuResFileLoader implements LoaderInterface
      *
      * @return array the flattened ResourceBundle
      */
-    protected function flatten(\ResourceBundle $rb, array &$messages = array(), $path = null)
+    protected function flatten(\ResourceBundle $rb, array &$messages = [], $path = null)
     {
         foreach ($rb as $key => $value) {
             $nodePath = $path ? $path.'.'.$key : $key;

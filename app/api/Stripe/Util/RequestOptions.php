@@ -12,25 +12,13 @@ class RequestOptions
         'Stripe-Version',
     ];
 
-    /** @var array<string, string> */
-    public $headers;
-
-    /** @var null|string */
-    public $apiKey;
-
-    /** @var null|string */
-    public $apiBase;
-
     /**
-     * @param null|string $key
+     * @param null|string $apiKey
      * @param array<string, string> $headers
-     * @param null|string $base
+     * @param null|string $apiBase
      */
-    public function __construct($key = null, $headers = [], $base = null)
+    public function __construct(public $apiKey = null, public $headers = [], public $apiBase = null)
     {
-        $this->apiKey = $key;
-        $this->headers = $headers;
-        $this->apiBase = $base;
     }
 
     /**
@@ -57,12 +45,8 @@ class RequestOptions
     public function merge($options, $strict = false)
     {
         $other_options = self::parse($options, $strict);
-        if (null === $other_options->apiKey) {
-            $other_options->apiKey = $this->apiKey;
-        }
-        if (null === $other_options->apiBase) {
-            $other_options->apiBase = $this->apiBase;
-        }
+        $other_options->apiKey ??= $this->apiKey;
+        $other_options->apiBase ??= $this->apiBase;
         $other_options->headers = \array_merge($this->headers, $other_options->headers);
 
         return $other_options;

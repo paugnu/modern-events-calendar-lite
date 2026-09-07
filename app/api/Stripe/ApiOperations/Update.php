@@ -24,7 +24,7 @@ trait Update
         self::_validateParams($params);
         $url = static::resourceUrl($id);
 
-        list($response, $opts) = static::_staticRequest('post', $url, $params, $opts);
+        [$response, $opts] = static::_staticRequest('post', $url, $params, $opts);
         $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
@@ -43,7 +43,7 @@ trait Update
         $params = $this->serializeParameters();
         if (\count($params) > 0) {
             $url = $this->instanceUrl();
-            list($response, $opts) = $this->_request('post', $url, $params, $opts);
+            [$response, $opts] = $this->_request('post', $url, $params, $opts);
             $this->refreshFrom($response, $opts);
         }
 

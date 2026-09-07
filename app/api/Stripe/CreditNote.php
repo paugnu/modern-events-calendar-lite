@@ -69,7 +69,7 @@ class CreditNote extends ApiResource
     public static function preview($params = null, $opts = null)
     {
         $url = static::classUrl() . '/preview';
-        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        [$response, $opts] = static::_staticRequest('get', $url, $params, $opts);
         $obj = Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
@@ -87,7 +87,7 @@ class CreditNote extends ApiResource
     public function voidCreditNote($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/void';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

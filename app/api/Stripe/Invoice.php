@@ -153,7 +153,7 @@ class Invoice extends ApiResource
     public static function upcoming($params = null, $opts = null)
     {
         $url = static::classUrl() . '/upcoming';
-        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        [$response, $opts] = static::_staticRequest('get', $url, $params, $opts);
         $obj = Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 
@@ -185,7 +185,7 @@ class Invoice extends ApiResource
     public function finalizeInvoice($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/finalize';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;
@@ -202,7 +202,7 @@ class Invoice extends ApiResource
     public function markUncollectible($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/mark_uncollectible';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;
@@ -219,7 +219,7 @@ class Invoice extends ApiResource
     public function pay($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/pay';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;
@@ -236,7 +236,7 @@ class Invoice extends ApiResource
     public function sendInvoice($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/send';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;
@@ -253,7 +253,7 @@ class Invoice extends ApiResource
     public function voidInvoice($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/void';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

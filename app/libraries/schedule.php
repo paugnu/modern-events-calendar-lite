@@ -88,7 +88,7 @@ class MEC_schedule extends MEC_base
 
             $start_hour = isset($date['start']['hour']) ? sprintf("%02d", $date['start']['hour']) : '08';
             $start_minute = isset($date['start']['minutes']) ? sprintf("%02d", $date['start']['minutes']) : '00';
-            $start_ampm = isset($date['start']['ampm']) ? $date['start']['ampm'] : 'AM';
+            $start_ampm = $date['start']['ampm'] ?? 'AM';
 
             if($start_hour == '00')
             {
@@ -101,7 +101,7 @@ class MEC_schedule extends MEC_base
 
             $end_hour = isset($date['end']['hour']) ? sprintf("%02d", $date['end']['hour']) : '06';
             $end_minute = isset($date['end']['minutes']) ? sprintf("%02d", $date['end']['minutes']) : '00';
-            $end_ampm = isset($date['end']['ampm']) ? $date['end']['ampm'] : 'PM';
+            $end_ampm = $date['end']['ampm'] ?? 'PM';
 
             if($end_hour == '00')
             {

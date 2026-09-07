@@ -69,12 +69,10 @@ class Account extends ApiResource
     public static function getSavedNestedResources()
     {
         static $savedNestedResources = null;
-        if (null === $savedNestedResources) {
-            $savedNestedResources = new Util\Set([
-                'external_account',
-                'bank_account',
-            ]);
-        }
+        $savedNestedResources ??= new Util\Set([
+            'external_account',
+            'bank_account',
+        ]);
 
         return $savedNestedResources;
     }
@@ -95,7 +93,7 @@ class Account extends ApiResource
             $entity = $this['legal_entity'];
             if (isset($entity->_values['additional_owners'])) {
                 $owners = $entity['additional_owners'];
-                $entityUpdate = isset($update['legal_entity']) ? $update['legal_entity'] : [];
+                $entityUpdate = $update['legal_entity'] ?? [];
                 $entityUpdate['additional_owners'] = $this->serializeAdditionalOwners($entity, $owners);
                 $update['legal_entity'] = $entityUpdate;
             }
@@ -150,7 +148,7 @@ class Account extends ApiResource
      */
     public static function retrieve($id = null, $opts = null)
     {
-        if (!$opts && \is_string($id) && 'sk_' === \substr($id, 0, 3)) {
+        if (!$opts && \is_string($id) && str_starts_with($id, 'sk_')) {
             $opts = $id;
             $id = null;
         }
@@ -187,7 +185,7 @@ class Account extends ApiResource
     public function persons($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/persons';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
+        [$response, $opts] = $this->_request('get', $url, $params, $opts);
         $obj = Util\Util::convertToStripeObject($response, $opts);
         $obj->setLastResponse($response);
 
@@ -205,7 +203,7 @@ class Account extends ApiResource
     public function reject($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/reject';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

@@ -39,7 +39,7 @@ class Google_Config
    */
   public function __construct($ini_file_location = null)
   {
-    $this->configuration = array(
+    $this->configuration = [
       // The application_name is included in the User-Agent HTTP header.
       'application_name' => '',
 
@@ -54,26 +54,26 @@ class Google_Config
       'base_path' => 'https://www.googleapis.com',
 
       // Definition of class specific values, like file paths and so on.
-      'classes' => array(
-        'Google_IO_Abstract' => array(
+      'classes' => [
+        'Google_IO_Abstract' => [
           'request_timeout_seconds' => 100,
-        ),
-        'Google_IO_Curl' => array(
+        ],
+        'Google_IO_Curl' => [
           'disable_proxy_workaround' => false,
           'options' => null,
-        ),
-        'Google_Logger_Abstract' => array(
+        ],
+        'Google_Logger_Abstract' => [
           'level' => 'debug',
           'log_format' => "[%datetime%] %level%: %message% %context%\n",
           'date_format' => 'd/M/Y:H:i:s O',
           'allow_newlines' => true
-        ),
-        'Google_Logger_File' => array(
+        ],
+        'Google_Logger_File' => [
           'file' => 'php://stdout',
           'mode' => 0640,
           'lock' => false,
-        ),
-        'Google_Http_Request' => array(
+        ],
+        'Google_Http_Request' => [
           // Disable the use of gzip on calls if set to true. Defaults to false.
           'disable_gzip' => self::GZIP_ENABLED,
 
@@ -82,10 +82,10 @@ class Google_Config
           // Please test with this option before enabling gzip for uploads in
           // a production environment.
           'enable_gzip_for_uploads' => self::GZIP_UPLOADS_DISABLED,
-        ),
+        ],
         // If you want to pass in OAuth 2.0 settings, they will need to be
         // structured like this.
-        'Google_Auth_OAuth2' => array(
+        'Google_Auth_OAuth2' => [
           // Keys for OAuth 2.0 access, see the API console at
           // https://developers.google.com/console
           'client_id' => '',
@@ -107,8 +107,8 @@ class Google_Config
           'approval_prompt' => 'auto',
           'federated_signon_certs_url' =>
               'https://www.googleapis.com/oauth2/v1/certs',
-        ),
-        'Google_Task_Runner' => array(
+        ],
+        'Google_Task_Runner' => [
           // Delays are specified in seconds
           'initial_delay' => 1,
           'max_delay' => 60,
@@ -120,30 +120,30 @@ class Google_Config
           'jitter' => .5,
           // Maximum number of retries allowed
           'retries' => 0
-        ),
-        'Google_Service_Exception' => array(
-          'retry_map' => array(
+        ],
+        'Google_Service_Exception' => [
+          'retry_map' => [
             '500' => self::TASK_RETRY_ALWAYS,
             '503' => self::TASK_RETRY_ALWAYS,
             'rateLimitExceeded' => self::TASK_RETRY_ALWAYS,
             'userRateLimitExceeded' => self::TASK_RETRY_ALWAYS
-          )
-        ),
-        'Google_IO_Exception' => array(
-          'retry_map' => !extension_loaded('curl') ? array() : array(
+          ]
+        ],
+        'Google_IO_Exception' => [
+          'retry_map' => !extension_loaded('curl') ? [] : [
             CURLE_COULDNT_RESOLVE_HOST => self::TASK_RETRY_ALWAYS,
             CURLE_COULDNT_CONNECT => self::TASK_RETRY_ALWAYS,
             CURLE_OPERATION_TIMEOUTED => self::TASK_RETRY_ALWAYS,
             CURLE_SSL_CONNECT_ERROR => self::TASK_RETRY_ALWAYS,
             CURLE_GOT_NOTHING => self::TASK_RETRY_ALWAYS
-          )
-        ),
+          ]
+        ],
         // Set a default directory for the file cache.
-        'Google_Cache_File' => array(
+        'Google_Cache_File' => [
           'directory' => sys_get_temp_dir() . '/Google_Client'
-        )
-      ),
-    );
+        ]
+      ],
+    ];
     if ($ini_file_location) {
       $ini = parse_ini_file($ini_file_location, true);
       if (is_array($ini) && count($ini)) {
@@ -167,9 +167,7 @@ class Google_Config
   public function setClassConfig($class, $config, $value = null)
   {
     if (!is_array($config)) {
-      if (!isset($this->configuration['classes'][$class])) {
-        $this->configuration['classes'][$class] = array();
-      }
+      $this->configuration['classes'][$class] ??= [];
       $this->configuration['classes'][$class][$config] = $value;
     } else {
       $this->configuration['classes'][$class] = $config;
@@ -448,9 +446,7 @@ class Google_Config
    */
   private function setAuthConfig($key, $value)
   {
-    if (!isset($this->configuration['classes'][$this->getAuthClass()])) {
-      $this->configuration['classes'][$this->getAuthClass()] = array();
-    }
+    $this->configuration['classes'][$this->getAuthClass()] ??= [];
     $this->configuration['classes'][$this->getAuthClass()][$key] = $value;
   }
 }

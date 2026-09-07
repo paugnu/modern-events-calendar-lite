@@ -17,12 +17,12 @@ class MEC_skins extends MEC_base
     /**
      * @var array
      */
-    public $atts = array();
+    public $atts = [];
 
     /**
      * @var array
      */
-    public $args = array();
+    public $args = [];
 
     /**
      * @var int
@@ -173,7 +173,7 @@ class MEC_skins extends MEC_base
     public function load()
     {
         // MEC add filters
-        $this->factory->filter('posts_join', array($this, 'join'), 10, 2);
+        $this->factory->filter('posts_join', $this->join(...), 10, 2);
 
         $skins = $this->main->get_skins();
         foreach($skins as $skin=>$skin_name)
@@ -274,7 +274,7 @@ class MEC_skins extends MEC_base
      */
     public function output()
     {
-        if(!$this->main->getPRO() and in_array($this->skin, array('agenda', 'yearly_view', 'timetable', 'masonry', 'map', 'available_spot')))
+        if(!$this->main->getPRO() and in_array($this->skin, ['agenda', 'yearly_view', 'timetable', 'masonry', 'map', 'available_spot']))
         {
             return '';
         }
@@ -306,86 +306,86 @@ class MEC_skins extends MEC_base
      */
     public function tax_query()
     {
-        $tax_query = array('relation'=>'AND');
+        $tax_query = ['relation'=>'AND'];
 
         // Add event label to filter
         if(isset($this->atts['label']) and trim($this->atts['label'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_label',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['label'], ', '))
-            );
+            ];
         }
 
         // Add event category to filter
         if(isset($this->atts['category']) and trim($this->atts['category'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_category',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['category'], ', '))
-            );
+            ];
         }
 
         // Add event location to filter
         if(isset($this->atts['location']) and trim($this->atts['location'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_location',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['location'], ', '))
-            );
+            ];
         }
 
         // Add event address to filter
         if(isset($this->atts['address']) and trim($this->atts['address'], ', ') != '')
         {
             $get_locations_id = $this->get_locations_id($this->atts['address']);
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_location',
                 'field'=>'term_id',
                 'terms'=>$get_locations_id,
-            );
+            ];
         }
 
         // Add event organizer to filter
         if(isset($this->atts['organizer']) and trim($this->atts['organizer'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_organizer',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['organizer'], ', '))
-            );
+            ];
         }
 
         // Add event speaker to filter
         if(isset($this->atts['speaker']) and trim($this->atts['speaker'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_speaker',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['speaker'], ', '))
-            );
+            ];
         }
 
         //Event types
         if(isset($this->atts['event_type']) and trim($this->atts['event_type'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_event_type',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['event_type'], ', '))
-            );
+            ];
         }
 
         if(isset($this->atts['event_type_2']) and trim($this->atts['event_type_2'], ', ') != '')
         {
-            $tax_query[] = array(
+            $tax_query[] = [
                 'taxonomy'=>'mec_event_type_2',
                 'field'=>'term_id',
                 'terms'=>explode(',', trim($this->atts['event_type_2'], ', '))
-            );
+            ];
         }
 
         // Add event tags to filter
@@ -393,19 +393,19 @@ class MEC_skins extends MEC_base
         {
             if(is_numeric($this->atts['tag']))
             {
-                $tax_query[] = array(
+                $tax_query[] = [
                     'taxonomy'=>'mec_tag',
                     'field'=>'term_id',
                     'terms'=>explode(',', trim($this->atts['tag'], ', '))
-                );
+                ];
             }
             else
             {
-                $tax_query[] = array(
+                $tax_query[] = [
                     'taxonomy'=>'mec_tag',
                     'field'=>'name',
                     'terms'=>explode(',', trim($this->atts['tag'], ', '))
-                );
+                ];
             }
         }
 
@@ -421,29 +421,29 @@ class MEC_skins extends MEC_base
      */
     public function meta_query()
     {
-        $meta_query = array();
+        $meta_query = [];
         $meta_query['relation'] = 'AND';
 
         // Event Min Cost
         if(isset($this->atts['cost-min']) and trim($this->atts['cost-min']) != '')
         {
-            $meta_query[] = array(
+            $meta_query[] = [
                 'key'     => 'mec_cost',
                 'value'   => $this->atts['cost-min'],
                 'type'    => 'numeric',
                 'compare' => '>=',
-            );
+            ];
         }
 
         // Event Max Cost
         if(isset($this->atts['cost-max']) and trim($this->atts['cost-max']) != '')
         {
-            $meta_query[] = array(
+            $meta_query[] = [
                 'key'     => 'mec_cost',
                 'value'   => $this->atts['cost-max'],
                 'type'    => 'numeric',
                 'compare' => '<=',
-            );
+            ];
         }
 
         return apply_filters('mec_map_meta_query', $meta_query, $this->atts);
@@ -506,7 +506,7 @@ class MEC_skins extends MEC_base
      */
     public function setToday($today = NULL)
     {
-        if(is_null($today)) $today = date('Y-m-d');
+        $today ??= date('Y-m-d');
 
         $this->args['mec-today'] = $today;
         $this->args['mec-now'] = strtotime($this->args['mec-today']);
@@ -577,7 +577,7 @@ class MEC_skins extends MEC_base
         }
         elseif($this->show_ongoing_events)
         {
-            if(in_array($this->skin, array('list', 'grid')) && !(strpos($this->style, 'fluent') === false))
+            if(in_array($this->skin, ['list', 'grid']) && !(!str_contains($this->style, 'fluent')))
             {
                 $now = current_time('timestamp', 0);
                 if($this->skin_options['start_date_type'] != 'today')
@@ -630,7 +630,7 @@ class MEC_skins extends MEC_base
             if(!trim($local_timezone)) $local_timezone = $this->main->get_timezone();
         }
 
-        $dates = array();
+        $dates = [];
         foreach($mec_dates as $mec_date)
         {
             $s = strtotime($mec_date->dstart);
@@ -653,7 +653,7 @@ class MEC_skins extends MEC_base
             // Skip Events Based on Local End Time Search
             if($local_time_end)
             {
-                $local_time_end_datetime = (isset($this->atts['date-range-end']) ? $this->atts['date-range-end'] : $mec_date->dstart).' '.$local_time_end;
+                $local_time_end_datetime = ($this->atts['date-range-end'] ?? $mec_date->dstart).' '.$local_time_end;
 
                 // End Time is Earlier than Start Time so Add 1 Day to the End Date
                 if($local_time_start_datetime and strtotime($local_time_end_datetime) <= strtotime($local_time_start_datetime)) $local_time_end_datetime = date('Y-m-d', strtotime('+1 Day', strtotime($mec_date->dend))).' '.$local_time_end;
@@ -682,14 +682,14 @@ class MEC_skins extends MEC_base
                 if($this->hide_time_method == 'end' and $now >= $mec_date->tend) continue;
             }
 
-            if(($this->multiple_days_method == 'first_day' or ($this->multiple_days_method == 'first_day_listgrid' and in_array($this->skin, array('list', 'grid', 'slider', 'carousel', 'agenda', 'tile')))))
+            if(($this->multiple_days_method == 'first_day' or ($this->multiple_days_method == 'first_day_listgrid' and in_array($this->skin, ['list', 'grid', 'slider', 'carousel', 'agenda', 'tile']))))
             {
                 // Hide Shown Events on AJAX
                 if(defined('DOING_AJAX') and DOING_AJAX and $s != $e and $s < strtotime($start) and !$this->show_only_expired_events) continue;
 
                 $d = date('Y-m-d', $s);
 
-                if(!isset($dates[$d])) $dates[$d] = array();
+                $dates[$d] ??= [];
                 $dates[$d][] = $mec_date->post_id;
             }
             else
@@ -702,7 +702,7 @@ class MEC_skins extends MEC_base
                     if((!$this->show_only_expired_events and $seconds_start <= $s and $s <= $seconds_end) or ($this->show_only_expired_events and $seconds_start >= $s and $s >= $seconds_end))
                     {
                         $d = date('Y-m-d', $s);
-                        if(!isset($dates[$d])) $dates[$d] = array();
+                        $dates[$d] ??= [];
 
                         // Check for exclude events
                         if($exclude)
@@ -722,7 +722,7 @@ class MEC_skins extends MEC_base
                             }
                             else $days = '';
 
-                            if(strpos($days, $d) === false)
+                            if(!str_contains($days, $d))
                             {
                                 $midnight = $s+(3600*$midnight_hour);
                                 if($days_long == '1' and $midnight >= $mec_date->tend) break;
@@ -748,9 +748,9 @@ class MEC_skins extends MEC_base
         $first_event = $this->db->select("SELECT `post_id`, `tstart` FROM `#__mec_dates` WHERE `tstart` >= {$now} AND `tstart` <= {$seconds_end} ORDER BY `tstart` ASC");
 
         // Force to Show Only Once Occurrence Based on Shortcode Options
-        $shortcode_one_occurrence = (isset($this->atts['show_only_one_occurrence']) ? $this->atts['show_only_one_occurrence'] : 0);
+        $shortcode_one_occurrence = ($this->atts['show_only_one_occurrence'] ?? 0);
 
-        $did_one_occurrence = array();
+        $did_one_occurrence = [];
         foreach($dates as $date => $event_ids)
         {
             if(!is_array($event_ids) or (is_array($event_ids) and !count($event_ids))) continue;
@@ -786,7 +786,7 @@ class MEC_skins extends MEC_base
         if($this->show_only_expired_events)
         {
             $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-            $start = ((isset($this->sf) || $this->request->getVar('sf', array())) and $apply_sf_date) ? date('Y-m-t', strtotime($this->start_date)) : $this->start_date;
+            $start = ((isset($this->sf) || $this->request->getVar('sf', [])) and $apply_sf_date) ? date('Y-m-t', strtotime($this->start_date)) : $this->start_date;
 
             $end = date('Y-m-01', strtotime('-15 Years', strtotime($start)));
 
@@ -813,7 +813,7 @@ class MEC_skins extends MEC_base
 
         $i = 0;
         $found = 0;
-        $events = array();
+        $events = [];
 
         foreach($dates as $date=>$IDs)
         {
@@ -845,10 +845,10 @@ class MEC_skins extends MEC_base
             $query = new WP_Query($this->args);
             if($query->have_posts())
             {
-                if(!isset($events[$date])) $events[$date] = array();
+                $events[$date] ??= [];
 
                 // Day Events
-                $d = array();
+                $d = [];
 
                 // The Loop
                 while($query->have_posts())
@@ -856,7 +856,7 @@ class MEC_skins extends MEC_base
                     $query->the_post();
                     $ID = get_the_ID();
 
-                    $ID_count = isset($IDs_count[$ID]) ? $IDs_count[$ID] : 1;
+                    $ID_count = $IDs_count[$ID] ?? 1;
                     for($i = 1; $i <= $ID_count; $i++)
                     {
                         $rendered = $this->render->data($ID);
@@ -865,25 +865,25 @@ class MEC_skins extends MEC_base
                         $data->ID = $ID;
                         $data->data = $rendered;
 
-                        $data->date = array
-                        (
-                            'start'=>array('date'=>$date),
-                            'end'=>array('date'=>$this->main->get_end_date($date, $rendered))
-                        );
+                        $data->date = 
+                        [
+                            'start'=>['date'=>$date],
+                            'end'=>['date'=>$this->main->get_end_date($date, $rendered)]
+                        ];
 
                         $event_data = $this->render->after_render($data, $this, $i);
-                        $date_times = array(
-                            'start'=>array(
+                        $date_times = [
+                            'start'=>[
                                 'date'=> $event_data->date['start']['date'],
                                 'time' => $event_data->data->time['start'],
                                 'timestamp' => $event_data->data->time['start_timestamp'],
-                            ),
-                            'end'=>array(
+                            ],
+                            'end'=>[
                                 'date'=> $event_data->date['end']['date'],
                                 'time' => $event_data->data->time['end'],
                                 'timestamp' => $event_data->data->time['end_timestamp'],
-                            )
-                        );
+                            ]
+                        ];
 
                         $primary_key = $event_data->data->time['start_timestamp'];
 
@@ -902,7 +902,7 @@ class MEC_skins extends MEC_base
                         // Next Offset
                         $this->next_offset = ($query->post_count-($query->current_post+1)) >= 0 ? ($query->current_post+1)+$this->offset : 0;
 
-                        usort($d, array($this, 'sort_day_events'));
+                        usort($d, $this->sort_day_events(...));
                         $events[$date] = $d;
 
                         // Restore original Post Data
@@ -912,7 +912,7 @@ class MEC_skins extends MEC_base
                     }
                 }
 
-                usort($d, array($this, 'sort_day_events'));
+                usort($d, $this->sort_day_events(...));
                 $events[$date] = $d;
             }
 
@@ -958,7 +958,7 @@ class MEC_skins extends MEC_base
      * @param string $style
      * @return string
      */
-    public function draw_monthly_calendar($year, $month, $events = array(), $style = 'calendar')
+    public function draw_monthly_calendar($year, $month, $events = [], $style = 'calendar')
     {
         $calendar_path = $this->get_calendar_path($style);
 
@@ -1002,12 +1002,12 @@ class MEC_skins extends MEC_base
 
         $display_style = $fields = $end_div = '';
         $first_row = 'not-started';
-        $display_form = array();
+        $display_form = [];
 
         foreach($this->sf_options as $field=>$options)
         {
-            $display_form[] = (isset($options['type']) ? $options['type'] : NULL);
-            $fields_array = array('category', 'location', 'organizer', 'speaker', 'tag', 'label');
+            $display_form[] = ($options['type'] ?? NULL);
+            $fields_array = ['category', 'location', 'organizer', 'speaker', 'tag', 'label'];
             $fields_array = apply_filters('mec_filter_fields_search_array', $fields_array);
 
             if(in_array($field, $fields_array) and $first_row == 'not-started')
@@ -1057,7 +1057,7 @@ class MEC_skins extends MEC_base
      */
     public function sf_search_field($field, $options , $display_label = null)
     {
-        $type = isset($options['type']) ? $options['type'] : '';
+        $type = $options['type'] ?? '';
 
         // Field is disabled
         if(!trim($type)) return '';
@@ -1080,8 +1080,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .= '<label for="mec_sf_category_'.$this->id.'">'.$label.': </label>' : null;
 
                 $output .='<i class="mec-sl-folder"></i>';
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_category',
                     'name'=>' ',
@@ -1090,35 +1090,35 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['category']) ? $this->atts['category'] : ''),
+                    'selected'=>($this->atts['category'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
-            elseif($type == 'checkboxes' and wp_count_terms(array('taxonomy' => 'mec_category')))
+            elseif($type == 'checkboxes' and wp_count_terms(['taxonomy' => 'mec_category']))
             {
                 $output .= '<div class="mec-checkboxes-search">';
                 $display_label == 1 ? $output .='<label for="mec_sf_category_'.$this->id.'">'.$label.': </label>' : null;
                 $output .='<i class="mec-sl-folder"></i>';
 
-                $selected = ((isset($this->atts['category']) and trim($this->atts['category'])) ? explode(',', trim($this->atts['category'], ', ')) : array());
+                $selected = ((isset($this->atts['category']) and trim($this->atts['category'])) ? explode(',', trim($this->atts['category'], ', ')) : []);
 
                 $output .= '<div class="mec-searchbar-category-wrap">';
                 $output .= '<div id="mec_sf_category_'.$this->id.'">';
-                $output .= wp_terms_checklist(0, array
-                (
+                $output .= wp_terms_checklist(0, 
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_category',
                     'selected_cats'=>$selected,
                     'checked_ontop'=>false,
-                    'walker'=>(new MEC_walker(array(
+                    'walker'=>(new MEC_walker([
                         'include'=>$selected,
                         'id' => $this->id,
-                    ))),
-                ));
+                    ])),
+                ]);
 
                 $output .= '</div>';
                 $output .= '</div>';
@@ -1135,8 +1135,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .='<label for="mec_sf_location_'.$this->id.'">'.$label.': </label>' : null;
 
                 $output .= '<i class="mec-sl-location-pin"></i>';
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_location',
                     'name'=>' ',
@@ -1145,11 +1145,11 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['location']) ? $this->atts['location'] : ''),
+                    'selected'=>($this->atts['location'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
@@ -1164,8 +1164,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .='<label for="mec_sf_organizer_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-user"></i>';
 
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_organizer',
                     'name'=>' ',
@@ -1174,11 +1174,11 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['organizer']) ? $this->atts['organizer'] : ''),
+                    'selected'=>($this->atts['organizer'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
@@ -1193,8 +1193,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .='<label for="mec_sf_speaker_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-microphone"></i>';
 
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_speaker',
                     'name'=>' ',
@@ -1203,11 +1203,11 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['speaker']) ? $this->atts['speaker'] : ''),
+                    'selected'=>($this->atts['speaker'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
@@ -1222,8 +1222,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .='<label for="mec_sf_tag_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-tag"></i>';
 
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>apply_filters('mec_taxonomy_tag', ''),
                     'name'=>' ',
@@ -1231,11 +1231,11 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['tag']) ? $this->atts['tag'] : ''),
+                    'selected'=>($this->atts['tag'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
@@ -1250,8 +1250,8 @@ class MEC_skins extends MEC_base
                 $display_label == 1 ? $output .='<label for="mec_sf_label_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-pin"></i>';
 
-                $output .= wp_dropdown_categories(array
-                (
+                $output .= wp_dropdown_categories(
+                [
                     'echo'=>false,
                     'taxonomy'=>'mec_label',
                     'name'=>' ',
@@ -1260,11 +1260,11 @@ class MEC_skins extends MEC_base
                     'hierarchical'=>true,
                     'show_option_none'=>$label,
                     'option_none_value'=>'',
-                    'selected'=>(isset($this->atts['label']) ? $this->atts['label'] : ''),
+                    'selected'=>($this->atts['label'] ?? ''),
                     'orderby'=>'name',
                     'order'=>'ASC',
                     'show_count'=>0,
-                ));
+                ]);
 
                 $output .= '</div>';
             }
@@ -1277,7 +1277,7 @@ class MEC_skins extends MEC_base
                 $time = isset($this->start_date) ? strtotime($this->start_date) : '';
                 $now = current_time('timestamp', 0);
 
-                $skins = array('list', 'grid', 'agenda', 'map');
+                $skins = ['list', 'grid', 'agenda', 'map'];
                 if(isset($this->skin_options['default_view']) and $this->skin_options['default_view'] == 'list') array_push($skins, 'full_calendar');
 
                 $item = __('Select', 'modern-events-calendar-lite');
@@ -1328,7 +1328,7 @@ class MEC_skins extends MEC_base
             }
             elseif($type == 'date-range-picker')
             {
-                $min_date = (isset($this->start_date) ? $this->start_date : NULL);
+                $min_date = ($this->start_date ?? NULL);
 
                 $output .= '<div class="mec-date-search">';
                 $display_label == 1 ? $output .='<label for="mec_sf_date_start_'.$this->id.'">'.$label.': </label>' : null;
@@ -1362,12 +1362,12 @@ class MEC_skins extends MEC_base
             $label = __('Text', 'modern-events-calendar-lite');
             if($type == 'text_input')
             {
-                $placeholder = (isset($options['placeholder']) ? $options['placeholder'] : '');
+                $placeholder = ($options['placeholder'] ?? '');
 
                 $output .= '<div class="mec-text-input-search">';
                 $display_label == 1 ? $output .='<label for="mec_sf_s_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-magnifier"></i>
-                    <input type="search" value="'.(isset($this->atts['s']) ? $this->atts['s'] : '').'" id="mec_sf_s_'.$this->id.'" placeholder="'.esc_attr($placeholder).'" />
+                    <input type="search" value="'.($this->atts['s'] ?? '').'" id="mec_sf_s_'.$this->id.'" placeholder="'.esc_attr($placeholder).'" />
                 </div>';
             }
         }
@@ -1376,12 +1376,12 @@ class MEC_skins extends MEC_base
             $label = __('Address', 'modern-events-calendar-lite');
             if($type == 'address_input')
             {
-                $placeholder = (isset($options['placeholder']) ? $options['placeholder'] : '');
+                $placeholder = ($options['placeholder'] ?? '');
 
                 $output .= '<div class="mec-text-address-search">';
                 $display_label == 1 ? $output .='<label for="mec_sf_address_s_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-map"></i>
-                    <input type="search" value="'.(isset($this->atts['address']) ? $this->atts['address'] : '').'" id="mec_sf_address_s_'.$this->id.'" placeholder="'.esc_attr($placeholder).'" />
+                    <input type="search" value="'.($this->atts['address'] ?? '').'" id="mec_sf_address_s_'.$this->id.'" placeholder="'.esc_attr($placeholder).'" />
                 </div>';
             }
         }
@@ -1393,8 +1393,8 @@ class MEC_skins extends MEC_base
                 $output .= '<div class="mec-minmax-event-cost">';
                 $display_label == 1 ? $output .='<label for="mec_sf_event_cost_min_'.$this->id.'">'.$label.': </label>' : null;
                 $output .= '<i class="mec-sl-credit-card"></i>
-                    <input type="number" min="0" step="0.01" value="'.(isset($this->atts['event-cost-min']) ? $this->atts['event-cost-min'] : '').'" id="mec_sf_event_cost_min_'.$this->id.'" class="mec-minmax-price" placeholder="'.esc_attr__('Min Price', 'modern-events-calendar-lite').'" />
-                    <input type="number" min="0" step="0.01" value="'.(isset($this->atts['event-cost-max']) ? $this->atts['event-cost-max'] : '').'" id="mec_sf_event_cost_max_'.$this->id.'" class="mec-minmax-price" placeholder="'.esc_attr__('Max Price', 'modern-events-calendar-lite').'" />
+                    <input type="number" min="0" step="0.01" value="'.($this->atts['event-cost-min'] ?? '').'" id="mec_sf_event_cost_min_'.$this->id.'" class="mec-minmax-price" placeholder="'.esc_attr__('Min Price', 'modern-events-calendar-lite').'" />
+                    <input type="number" min="0" step="0.01" value="'.($this->atts['event-cost-max'] ?? '').'" id="mec_sf_event_cost_max_'.$this->id.'" class="mec-minmax-price" placeholder="'.esc_attr__('Max Price', 'modern-events-calendar-lite').'" />
                 </div>';
             }
         }
@@ -1402,7 +1402,7 @@ class MEC_skins extends MEC_base
         return apply_filters('mec_search_fields_to_box', $output, $field, $type, $this->atts, $this->id);
     }
 
-    public function sf_apply($atts, $sf = array(), $apply_sf_date = 1)
+    public function sf_apply($atts, $sf = [], $apply_sf_date = 1)
     {
         // Return normal atts if sf is empty
         if(!count($sf)) return $atts;
@@ -1451,7 +1451,7 @@ class MEC_skins extends MEC_base
             // Apply to Start Date
             if(isset($sf['month']) and trim($sf['month']) and isset($sf['year']) and trim($sf['year']))
             {
-                $start_date = $sf['year'].'-'.$sf['month'].'-'.(isset($sf['day']) ? $sf['day'] : '01');
+                $start_date = $sf['year'].'-'.$sf['month'].'-'.($sf['day'] ?? '01');
                 $this->request->setVar('mec_start_date', $start_date);
 
                 $skins = $this->main->get_skins();
@@ -1494,7 +1494,7 @@ class MEC_skins extends MEC_base
      */
     public function get_locations_id($address = '')
     {
-        if(!trim($address)) return array();
+        if(!trim($address)) return [];
 
         $address = str_replace(' ', ',', $address);
         $locations = explode(',', $address);
@@ -1503,10 +1503,7 @@ class MEC_skins extends MEC_base
         foreach($locations as $location) if(trim($location)) $query .= " AND `meta_value` LIKE '%" . trim($location) . "%'";
 
         $locations_id = $this->db->select($query, 'loadAssocList');
-        return array_map(function($value)
-        {
-            return intval($value['term_id']);
-        }, $locations_id);
+        return array_map(fn($value) => intval($value['term_id']), $locations_id);
     }
 
     public function sort_day_events($a, $b)
@@ -1516,18 +1513,14 @@ class MEC_skins extends MEC_base
 
         $a_timestamp = strtotime($a_start_date.' '.$a->data->time['start_raw']);
         $b_timestamp = strtotime($b_start_date.' '.$b->data->time['start_raw']);
-
-        if($a_timestamp == $b_timestamp) return 0;
-        return ($a_timestamp > $b_timestamp) ? +1 : -1;
+        return $a_timestamp <=> $b_timestamp;
     }
 
     public function sort_dates($a, $b)
     {
         $a_timestamp = strtotime($a);
         $b_timestamp = strtotime($b);
-
-        if($a_timestamp == $b_timestamp) return 0;
-        return ($a_timestamp > $b_timestamp) ? +1 : -1;
+        return $a_timestamp <=> $b_timestamp;
     }
 
     public function booking_button($event, $type = 'button')
@@ -1566,7 +1559,7 @@ class MEC_skins extends MEC_base
     public function display_detailed_time($event)
     {
         // Event Date
-        $date = (isset($event->date) ? $event->date : array());
+        $date = ($event->date ?? []);
 
         $to = $date['end']['date'];
         $from = $this->main->get_start_of_multiple_days($event->ID, $to);
@@ -1677,19 +1670,19 @@ class MEC_skins extends MEC_base
     public function display_link($event, $title = NULL, $class = NULL, $attributes = NULL)
     {
         // Event Title
-        if(is_null($title)) $title = $event->data->title;
+        $title ??= $event->data->title;
 
         // Link Class
-        if(is_null($class)) $class = 'mec-color-hover';
+        $class ??= 'mec-color-hover';
 
-        $method = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : false;
+        $method = $this->skin_options['sed_method'] ?? false;
 
         // Link is disabled
-        if($method == 'no' and in_array($class, array('mec-booking-button', 'mec-detail-button', 'mec-booking-button mec-bg-color-hover mec-border-color-hover', 'mec-event-link'))) return '';
+        if($method == 'no' and in_array($class, ['mec-booking-button', 'mec-detail-button', 'mec-booking-button mec-bg-color-hover mec-border-color-hover', 'mec-event-link'])) return '';
         elseif($method == 'no') return $title;
         else
         {
-            $sed_method = (isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '');
+            $sed_method = ($this->skin_options['sed_method'] ?? '');
             switch($sed_method)
             {
                 case '0':
@@ -1702,12 +1695,12 @@ class MEC_skins extends MEC_base
                     break;
             }
 
-            $sed_method = ($sed_method ? $sed_method : '_self');
+            $sed_method = ($sed_method ?: '_self');
         }
 
         $target = (!empty($sed_method) ? 'target="'.$sed_method.'" rel="noopener"' : '');
         $target = apply_filters('mec_event_link_change_target' , $target, $event->data->ID);
-        return '<a '.($class ? 'class="'.$class.'"' : '').' '.($attributes ? $attributes : '').' data-event-id="'.$event->data->ID.'" href="'.$this->main->get_event_date_permalink($event, $event->date['start']['date']).'" '.$target.'>'.$title.'</a>';
+        return '<a '.($class ? 'class="'.$class.'"' : '').' '.($attributes ?: '').' data-event-id="'.$event->data->ID.'" href="'.$this->main->get_event_date_permalink($event, $event->date['start']['date']).'" '.$target.'>'.$title.'</a>';
     }
 
     public function get_end_date()

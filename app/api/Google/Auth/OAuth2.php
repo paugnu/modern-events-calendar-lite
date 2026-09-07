@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -45,20 +45,19 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
   /**
    * @var array The token bundle.
    */
-  private $token = array();
-
-  /**
-   * @var Google_Client the base client
-   */
-  private $client;
+  private $token = [];
 
   /**
    * Instantiates the class, but does not initiate the login flow, leaving it
    * to the discretion of the caller.
    */
-  public function __construct(Google_Client $client)
+  public function __construct(
+      /**
+       * @var Google_Client the base client
+       */
+      private readonly Google_Client $client
+  )
   {
-    $this->client = $client;
   }
 
   /**
@@ -89,12 +88,12 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
       throw new Google_Auth_Exception("Invalid code");
     }
 
-    $arguments = array(
+    $arguments = [
           'code' => $code,
           'grant_type' => 'authorization_code',
           'client_id' => $this->client->getClassConfig($this, 'client_id'),
           'client_secret' => $this->client->getClassConfig($this, 'client_secret')
-    );
+    ];
 
     if ($crossClient !== true) {
         $arguments['redirect_uri'] = $this->client->getClassConfig($this, 'redirect_uri');
@@ -105,7 +104,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
     $request = new Google_Http_Request(
         self::OAUTH2_TOKEN_URI,
         'POST',
-        array(),
+        [],
         $arguments
     );
     $request->disableGzip();
@@ -142,13 +141,13 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
    */
   public function createAuthUrl($scope)
   {
-    $params = array(
+    $params = [
         'response_type' => 'code',
         'redirect_uri' => $this->client->getClassConfig($this, 'redirect_uri'),
         'client_id' => $this->client->getClassConfig($this, 'client_id'),
         'scope' => $scope,
         'access_type' => $this->client->getClassConfig($this, 'access_type'),
-    );
+    ];
 
     // Prefer prompt to approval prompt.
     if ($this->client->getClassConfig($this, 'prompt')) {
@@ -256,7 +255,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
 
     // Add the OAuth2 header to the request
     $request->setRequestHeaders(
-        array('Authorization' => 'Bearer ' . $this->token['access_token'])
+        ['Authorization' => 'Bearer ' . $this->token['access_token']]
     );
 
     return $request;
@@ -270,12 +269,12 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
   public function refreshToken($refreshToken)
   {
     $this->refreshTokenRequest(
-        array(
+        [
           'client_id' => $this->client->getClassConfig($this, 'client_id'),
           'client_secret' => $this->client->getClassConfig($this, 'client_secret'),
           'refresh_token' => $refreshToken,
           'grant_type' => 'refresh_token'
-        )
+        ]
     );
   }
 
@@ -307,11 +306,11 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
 
     $this->client->getLogger()->debug('OAuth2 access token expired');
     $this->refreshTokenRequest(
-        array(
+        [
           'grant_type' => 'assertion',
           'assertion_type' => $assertionCredentials->assertionType,
           'assertion' => $assertionCredentials->generateAssertion(),
-        )
+        ]
     );
 
     if ($cacheKey) {
@@ -336,7 +335,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
     $http = new Google_Http_Request(
         self::OAUTH2_TOKEN_URI,
         'POST',
-        array(),
+        [],
         $params
     );
     $http->disableGzip();
@@ -387,7 +386,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
     $request = new Google_Http_Request(
         self::OAUTH2_REVOKE_URI,
         'POST',
-        array(),
+        [],
         "token=$token"
     );
     $request->disableGzip();
@@ -438,7 +437,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
   public function retrieveCertsFromLocation($url)
   {
     // If we're retrieving a local file, just grab it.
-    if ("http" != substr($url, 0, 4)) {
+    if (!str_starts_with($url, "http")) {
       $file = file_get_contents($url);
       if ($file) {
         return json_decode($file, true);
@@ -493,7 +492,7 @@ class Google_Auth_OAuth2 extends Google_Auth_Abstract
         $id_token,
         $certs,
         $audience,
-        array(self::OAUTH2_ISSUER, self::OAUTH2_ISSUER_HTTPS)
+        [self::OAUTH2_ISSUER, self::OAUTH2_ISSUER_HTTPS]
     );
   }
 

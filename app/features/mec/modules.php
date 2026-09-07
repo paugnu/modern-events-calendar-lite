@@ -175,12 +175,12 @@ $pages = get_pages();
                                 <div class="mec-form-row">
                                     <ul id="mec_export_module_options" class="mec-form-row">
                                         <?php
-                                        $event_options = array('googlecal'=>__('Google Calendar', 'modern-events-calendar-lite'), 'ical'=>__('iCal', 'modern-events-calendar-lite'));
+                                        $event_options = ['googlecal'=>__('Google Calendar', 'modern-events-calendar-lite'), 'ical'=>__('iCal', 'modern-events-calendar-lite')];
                                         foreach($event_options as $event_key=>$event_option): ?>
                                         <li id="mec_sn_<?php echo esc_attr($event_key); ?>" data-id="<?php echo esc_attr($event_key); ?>" class="mec-form-row mec-switcher <?php echo ((isset($settings['sn'][$event_key]) and $settings['sn'][$event_key]) ? 'mec-enabled' : 'mec-disabled'); ?>">
                                             <label class="mec-col-3"><?php echo esc_html($event_option); ?></label>
                                             <div class="mec-col-9">
-                                                <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($event_key); ?>]" value="<?php echo (isset($settings['sn'][$event_key]) ? $settings['sn'][$event_key] : '1'); ?>" />
+                                                <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($event_key); ?>]" value="<?php echo ($settings['sn'][$event_key] ?? '1'); ?>" />
                                                 <label for="mec[settings][sn][<?php echo esc_attr($event_key); ?>]"></label>
                                             </div>
                                         </li>
@@ -287,10 +287,10 @@ $pages = get_pages();
                                                 <label class="mec-col-3"><?php echo esc_html($social['name']); ?></label>
                                                 <div class="mec-col-9">
                                                     <?php if ($social['id'] == 'vk' || $social['id'] == 'tumblr' ||  $social['id'] == 'pinterest' || $social['id'] == 'flipboard' || $social['id'] == 'pocket' || $social['id'] == 'reddit' || $social['id'] == 'whatsapp' || $social['id'] == 'telegram')  : ?>
-                                                    <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]" value="<?php echo (isset($settings['sn'][$social['id']]) ? $settings['sn'][$social['id']] : '0'); ?>" />
+                                                    <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]" value="<?php echo ($settings['sn'][$social['id']] ?? '0'); ?>" />
                                                     <label for="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]"></label>
                                                     <?php else : ?>
-                                                    <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]" value="<?php echo (isset($settings['sn'][$social['id']]) ? $settings['sn'][$social['id']] : '1'); ?>" />
+                                                    <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]" value="<?php echo ($settings['sn'][$social['id']] ?? '1'); ?>" />
                                                     <label for="mec[settings][sn][<?php echo esc_attr($social['id']); ?>]"></label>
                                                     <?php endif; ?>    
                                                 </div>

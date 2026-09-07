@@ -24,10 +24,10 @@ $location_id = $this->get_master_location_id($event);
 if(!$location_id) return;
 
 // Location
-$location = ($location_id ? $this->get_location_data($location_id) : array());
+$location = ($location_id ? $this->get_location_data($location_id) : []);
 
-$lat = isset($location['latitude']) ? $location['latitude'] : 0;
-$lng = isset($location['longitude']) ? $location['longitude'] : 0;
+$lat = $location['latitude'] ?? 0;
+$lng = $location['longitude'] ?? 0;
 
 // Cannot find the geo point
 if(!$lat or !$lng) return;

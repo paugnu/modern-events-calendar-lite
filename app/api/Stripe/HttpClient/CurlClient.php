@@ -37,8 +37,6 @@ class CurlClient implements ClientInterface
         return self::$instance;
     }
 
-    protected $defaultOptions;
-
     /** @var \Stripe\Util\RandomGenerator */
     protected $randomGenerator;
 
@@ -66,9 +64,8 @@ class CurlClient implements ClientInterface
      * @param null|array|callable $defaultOptions
      * @param null|\Stripe\Util\RandomGenerator $randomGenerator
      */
-    public function __construct($defaultOptions = null, $randomGenerator = null)
+    public function __construct(protected $defaultOptions = null, $randomGenerator = null)
     {
-        $this->defaultOptions = $defaultOptions;
         $this->randomGenerator = $randomGenerator ?: new Util\RandomGenerator();
         $this->initUserAgentInfo();
 
@@ -275,7 +272,7 @@ class CurlClient implements ClientInterface
         // potential issues (cf. https://github.com/stripe/stripe-php/issues/1045).
         $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
 
-        list($rbody, $rcode, $rheaders) = $this->executeRequestWithRetries($opts, $absUrl);
+        [$rbody, $rcode, $rheaders] = $this->executeRequestWithRetries($opts, $absUrl);
 
         return [$rbody, $rcode, $rheaders];
     }
@@ -297,10 +294,10 @@ class CurlClient implements ClientInterface
             $rheaders = new Util\CaseInsensitiveArray();
             $headerCallback = function ($curl, $header_line) use (&$rheaders) {
                 // Ignore the HTTP request line (HTTP/1.1 200 OK)
-                if (false === \strpos($header_line, ':')) {
+                if (!str_contains($header_line, ':')) {
                     return \strlen($header_line);
                 }
-                list($key, $value) = \explode(':', \trim($header_line), 2);
+                [$key, $value] = \explode(':', \trim($header_line), 2);
                 $rheaders[\trim($key)] = \trim($value);
 
                 return \strlen($header_line);
@@ -356,30 +353,18 @@ class CurlClient implements ClientInterface
      */
     private function handleCurlError($url, $errno, $message, $numRetries)
     {
-        switch ($errno) {
-            case \CURLE_COULDNT_CONNECT:
-            case \CURLE_COULDNT_RESOLVE_HOST:
-            case \CURLE_OPERATION_TIMEOUTED:
-                $msg = "Could not connect to Stripe ({$url}).  Please check your "
-                 . 'internet connection and try again.  If this problem persists, '
-                 . "you should check Stripe's service status at "
-                 . 'https://twitter.com/stripestatus, or';
-
-                break;
-
-            case \CURLE_SSL_CACERT:
-            case \CURLE_SSL_PEER_CERTIFICATE:
-                $msg = "Could not verify Stripe's SSL certificate.  Please make sure "
-                 . 'that your network is not intercepting certificates.  '
-                 . "(Try going to {$url} in your browser.)  "
-                 . 'If this problem persists,';
-
-                break;
-
-            default:
-                $msg = 'Unexpected error communicating with Stripe.  '
-                 . 'If this problem persists,';
-        }
+        $msg = match ($errno) {
+            \CURLE_COULDNT_CONNECT, \CURLE_COULDNT_RESOLVE_HOST, \CURLE_OPERATION_TIMEOUTED => "Could not connect to Stripe ({$url}).  Please check your "
+             . 'internet connection and try again.  If this problem persists, '
+             . "you should check Stripe's service status at "
+             . 'https://twitter.com/stripestatus, or',
+            \CURLE_SSL_CACERT, \CURLE_SSL_PEER_CERTIFICATE => "Could not verify Stripe's SSL certificate.  Please make sure "
+             . 'that your network is not intercepting certificates.  '
+             . "(Try going to {$url} in your browser.)  "
+             . 'If this problem persists,',
+            default => 'Unexpected error communicating with Stripe.  '
+             . 'If this problem persists,',
+        };
         $msg .= ' let us know at support@stripe.com.';
 
         $msg .= "\n\n(Network error [errno {$errno}]: {$message})";

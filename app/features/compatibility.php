@@ -28,7 +28,7 @@ class MEC_feature_compatibility extends MEC_base
      * To add HTML Classes to MEC template files
      * @var array
      */
-    public $html_class = array();
+    public $html_class = [];
     
     /**
      * Constructor method
@@ -50,17 +50,17 @@ class MEC_feature_compatibility extends MEC_base
     public function init()
     {
         // MEC Filters for changing HTML ID of MEC Pages
-        $this->factory->filter('mec_archive_page_html_id', array($this, 'html_id'));
-        $this->factory->filter('mec_category_page_html_id', array($this, 'html_id'));
-        $this->factory->filter('mec_single_page_html_id', array($this, 'html_id'));
+        $this->factory->filter('mec_archive_page_html_id', [$this, 'html_id']);
+        $this->factory->filter('mec_category_page_html_id', [$this, 'html_id']);
+        $this->factory->filter('mec_single_page_html_id', [$this, 'html_id']);
         
         // MEC Filters for changing HTML class of MEC Pages
-        $this->factory->filter('mec_archive_page_html_class', array($this, 'html_class'));
-        $this->factory->filter('mec_category_page_html_class', array($this, 'html_class'));
-        $this->factory->filter('mec_single_page_html_class', array($this, 'html_class'));
+        $this->factory->filter('mec_archive_page_html_class', [$this, 'html_class']);
+        $this->factory->filter('mec_category_page_html_class', [$this, 'html_class']);
+        $this->factory->filter('mec_single_page_html_class', [$this, 'html_class']);
         
         // Make MEC compatible with themes and child themes
-        $this->factory->action('init', array($this, 'make_it_compatible'));
+        $this->factory->action('init', [$this, 'make_it_compatible']);
     }
     
     /**
@@ -75,7 +75,7 @@ class MEC_feature_compatibility extends MEC_base
         {
             case 'logitrans':
                 
-                $this->html_class = array('wrapper');
+                $this->html_class = ['wrapper'];
                 
                 break;
         }

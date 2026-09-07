@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -83,14 +83,14 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
     if ($ret === false) {
       $this->client->getLogger()->debug(
           'Memcache cache miss',
-          array('key' => $key)
+          ['key' => $key]
       );
       return false;
     }
     if (is_numeric($expiration) && (time() - $ret['time'] > $expiration)) {
       $this->client->getLogger()->debug(
           'Memcache cache miss (expired)',
-          array('key' => $key, 'var' => $ret)
+          ['key' => $key, 'var' => $ret]
       );
       $this->delete($key);
       return false;
@@ -98,7 +98,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
 
     $this->client->getLogger()->debug(
         'Memcache cache hit',
-        array('key' => $key, 'var' => $ret)
+        ['key' => $key, 'var' => $ret]
     );
 
     return $ret['data'];
@@ -115,7 +115,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
     $this->connect();
     // we store it with the cache_time default expiration so objects will at
     // least get cleaned eventually.
-    $data = array('time' => time(), 'data' => $value);
+    $data = ['time' => time(), 'data' => $value];
     $rc = false;
     if ($this->mc) {
       $rc = $this->mc->set($key, $data);
@@ -125,7 +125,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
     if ($rc == false) {
       $this->client->getLogger()->error(
           'Memcache cache set failed',
-          array('key' => $key, 'var' => $data)
+          ['key' => $key, 'var' => $data]
       );
 
       throw new Google_Cache_Exception("Couldn't store data in cache");
@@ -133,7 +133,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
 
     $this->client->getLogger()->debug(
         'Memcache cache set',
-        array('key' => $key, 'var' => $data)
+        ['key' => $key, 'var' => $data]
     );
   }
 
@@ -152,7 +152,7 @@ class Google_Cache_Memcache extends Google_Cache_Abstract
 
     $this->client->getLogger()->debug(
         'Memcache cache delete',
-        array('key' => $key)
+        ['key' => $key]
     );
   }
 

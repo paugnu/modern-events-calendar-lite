@@ -93,7 +93,7 @@ class Person extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function retrieve($_id, $_opts = null)
+    public static function retrieve($_id, $_opts = null): never
     {
         $msg = 'Persons cannot be retrieved without an account ID. Retrieve ' .
                "a person using `Account::retrievePerson('account_id', " .
@@ -109,7 +109,7 @@ class Person extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function update($_id, $_params = null, $_options = null)
+    public static function update($_id, $_params = null, $_options = null): never
     {
         $msg = 'Persons cannot be updated without an account ID. Update ' .
                "a person using `Account::updatePerson('account_id', " .

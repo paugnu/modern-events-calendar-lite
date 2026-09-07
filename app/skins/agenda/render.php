@@ -6,9 +6,9 @@ defined('MECEXEC') or die();
 
 $current_month_divider = $this->request->getVar('current_month_divider', 0);
 $settings = $this->main->get_settings();
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 ?>
 <?php foreach($this->events as $date=>$events): ?>
 
@@ -28,10 +28,10 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
                 foreach($events as $event)
                 {
                     $location_id = $this->main->get_master_location_id($event);
-                    $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                    $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                     $organizer_id = $this->main->get_master_organizer_id($event);
-                    $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+                    $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
                     $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                     $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -59,7 +59,7 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
                             <?php echo $this->get_label_captions($event, 'mec-fc-style'); ?>
                             <?php do_action('mec_shortcode_virtual_badge', $event->data->ID ); ?>
                             <?php echo $this->booking_button($event); ?>
-                            <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                            <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                         </span>
                         <?php echo $this->display_custom_data($event); ?>
                         <?php do_action('mec_agenda_skin_attribute', $organizer, $location); ?>

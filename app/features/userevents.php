@@ -38,7 +38,7 @@ class MEC_feature_userevents extends MEC_base
     public function init()
     {
         // User Events Shortcode
-        $this->factory->shortcode('MEC_userevents', array($this, 'output'));
+        $this->factory->shortcode('MEC_userevents', [$this, 'output']);
     }
 
     /**
@@ -46,10 +46,10 @@ class MEC_feature_userevents extends MEC_base
      * @param array $atts
      * @return string
      */
-    public function output($atts = array())
+    public function output($atts = [])
     {
         // Force to array
-        if(!is_array($atts)) $atts = array();
+        if(!is_array($atts)) $atts = [];
 
         // Show login/register message if user is not logged in and guest submission is not enabled.
         if(!is_user_logged_in())
@@ -70,11 +70,11 @@ class MEC_feature_userevents extends MEC_base
 
         $shortcode_id = (isset($settings['userevents_shortcode']) and trim($settings['userevents_shortcode'])) ? $settings['userevents_shortcode'] : NULL;
 
-        $atts = apply_filters('mec_calendar_atts', $render->parse($shortcode_id, array(
+        $atts = apply_filters('mec_calendar_atts', $render->parse($shortcode_id, [
             'author' => get_current_user_id()
-        )));
+        ]));
 
-        $skin = isset($atts['skin']) ? $atts['skin'] : 'monthly_view';
+        $skin = $atts['skin'] ?? 'monthly_view';
         return $render->skin($skin, $atts);
     }
 }

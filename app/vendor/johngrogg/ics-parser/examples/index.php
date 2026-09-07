@@ -6,14 +6,14 @@ require_once '../vendor/autoload.php';
 use ICal\ICal;
 
 try {
-    $ical = new ICal('ICal.ics', array(
+    $ical = new ICal('ICal.ics', [
         'defaultSpan'                 => 2,     // Default value
         'defaultTimeZone'             => 'UTC',
         'defaultWeekStart'            => 'MO',  // Default value
         'disableCharacterReplacement' => false, // Default value
         'skipRecurrence'              => false, // Default value
         'useTimeZoneWithRRules'       => false, // Default value
-    ));
+    ]);
     // $ical->initFile('ICal.ics');
     // $ical->initUrl('https://raw.githubusercontent.com/u01jmg3/ics-parser/master/examples/ICal.ics');
 } catch (\Exception $e) {
@@ -54,11 +54,11 @@ $forceTimeZone = false;
     </ul>
 
     <?php
-        $showExample = array(
+        $showExample = [
             'interval' => true,
             'range'    => true,
             'all'      => true,
-        );
+        ];
     ?>
 
     <?php

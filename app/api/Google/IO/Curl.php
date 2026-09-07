@@ -22,7 +22,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 class Google_IO_Curl extends Google_IO_Abstract
@@ -30,7 +30,7 @@ class Google_IO_Curl extends Google_IO_Abstract
   // cURL hex representation of version 7.30.0
   const NO_QUIRK_VERSION = 0x071E00;
 
-  private $options = array();
+  private $options = [];
 
   /** @var bool $disableProxyWorkaround */
   private $disableProxyWorkaround;
@@ -68,7 +68,7 @@ class Google_IO_Curl extends Google_IO_Abstract
 
     $requestHeaders = $request->getRequestHeaders();
     if ($requestHeaders && is_array($requestHeaders)) {
-      $curlHeaders = array();
+      $curlHeaders = [];
       foreach ($requestHeaders as $k => $v) {
         $curlHeaders[] = "$k: $v";
       }
@@ -103,17 +103,17 @@ class Google_IO_Curl extends Google_IO_Abstract
     }
 
     if (!isset($this->options[CURLOPT_CAINFO])) {
-      curl_setopt($curl, CURLOPT_CAINFO, dirname(__FILE__) . '/cacerts.pem');
+      curl_setopt($curl, CURLOPT_CAINFO, __DIR__ . '/cacerts.pem');
     }
 
     $this->client->getLogger()->debug(
         'cURL request',
-        array(
+        [
             'url' => $request->getUrl(),
             'method' => $request->getRequestMethod(),
             'headers' => $requestHeaders,
             'body' => $request->getPostBody()
-        )
+        ]
     );
 
     $response = curl_exec($curl);
@@ -127,19 +127,19 @@ class Google_IO_Curl extends Google_IO_Abstract
     }
     $headerSize = curl_getinfo($curl, CURLINFO_HEADER_SIZE);
 
-    list($responseHeaders, $responseBody) = $this->parseHttpResponse($response, $headerSize);
+    [$responseHeaders, $responseBody] = $this->parseHttpResponse($response, $headerSize);
     $responseCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
     $this->client->getLogger()->debug(
         'cURL response',
-        array(
+        [
             'code' => $responseCode,
             'headers' => $responseHeaders,
             'body' => $responseBody,
-        )
+        ]
     );
 
-    return array($responseBody, $responseHeaders, $responseCode);
+    return [$responseBody, $responseHeaders, $responseCode];
   }
 
   /**

@@ -12,7 +12,7 @@ wp_enqueue_style('mec-lity-style', $this->main->asset('packages/lity/lity.min.cs
 wp_enqueue_script('mec-lity-script', $this->main->asset('packages/lity/lity.min.js'));
 
 $booking_options = get_post_meta(get_the_ID(), 'mec_booking', true);
-if(!is_array($booking_options)) $booking_options = array();
+if(!is_array($booking_options)) $booking_options = [];
 
 //Compatibility with Rank Math
 $rank_math_options = '';
@@ -22,14 +22,14 @@ if(is_plugin_active('schema-markup-rich-snippets/schema-markup-rich-snippets.php
 $more_info = (isset($event->data->meta['mec_more_info']) and trim($event->data->meta['mec_more_info']) and $event->data->meta['mec_more_info'] != 'http://') ? $event->data->meta['mec_more_info'] : '';
 if(isset($event->date) and isset($event->date['start']) and isset($event->date['start']['timestamp'])) $more_info = MEC_feature_occurrences::param($event->ID, $event->date['start']['timestamp'], 'more_info', $more_info);
 
-$more_info_target = MEC_feature_occurrences::param($event->ID, $event->date['start']['timestamp'], 'more_info_target', (isset($event->data->meta['mec_more_info_target']) ? $event->data->meta['mec_more_info_target'] : '_self'));
+$more_info_target = MEC_feature_occurrences::param($event->ID, $event->date['start']['timestamp'], 'more_info_target', ($event->data->meta['mec_more_info_target'] ?? '_self'));
 $more_info_title = MEC_feature_occurrences::param($event->ID, $event->date['start']['timestamp'], 'more_info_title', ((isset($event->data->meta['mec_more_info_title']) and trim($event->data->meta['mec_more_info_title'])) ? $event->data->meta['mec_more_info_title'] : __('Read More', 'modern-events-calendar-lite')));
 
 $location_id = $this->main->get_master_location_id($event);
-$location = ($location_id ? $this->main->get_location_data($location_id) : array());
+$location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
 $organizer_id = $this->main->get_master_organizer_id($event);
-$organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+$organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 ?>
 <div class="mec-wrap <?php echo $event_colorskin; ?> clearfix <?php echo $this->html_class; ?>" id="mec_skin_<?php echo $this->uniqueid; ?>">
     <?php do_action('mec_top_single_event', get_the_ID()); ?>
@@ -37,7 +37,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
 
         <!-- start breadcrumbs -->
         <?php
-        $breadcrumbs_settings = isset($settings['breadcrumbs']) ? $settings['breadcrumbs'] : '';
+        $breadcrumbs_settings = $settings['breadcrumbs'] ?? '';
         if($breadcrumbs_settings == '1'): $breadcrumbs = new MEC_skin_single(); ?>
             <div class="mec-breadcrumbs mec-breadcrumbs-modern">
                 <?php $breadcrumbs->display_breadcrumb_widget(get_the_ID()); ?>
@@ -52,7 +52,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
             <?php do_action('mec_single_zoom_badge', $event->data); ?>
 
             <?php if($single->found_value('event_orgnizer', $settings) == 'on' || $single->found_value('register_btn', $settings) == 'on'): ?>
-            <div class="mec-event-meta mec-color-before mec-frontbox <?php echo ((!$this->main->can_show_booking_module($event) and in_array($organizer_id, array('0', '1')) and !$more_info) ? 'mec-util-hidden' : ''); ?>">
+            <div class="mec-event-meta mec-color-before mec-frontbox <?php echo ((!$this->main->can_show_booking_module($event) and in_array($organizer_id, ['0', '1']) and !$more_info) ? 'mec-util-hidden' : ''); ?>">
                 <?php
                 // Event Organizer
                 if($organizer_id and count($organizer) and $single->found_value('event_orgnizer', $settings) == 'on')
@@ -60,14 +60,14 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                     ?>
                     <div class="mec-single-event-organizer">
                         <?php if(isset($organizer['thumbnail']) and trim($organizer['thumbnail'])): ?>
-                            <img class="mec-img-organizer" src="<?php echo esc_url($organizer['thumbnail']); ?>" alt="<?php echo (isset($organizer['name']) ? $organizer['name'] : ''); ?>">
+                            <img class="mec-img-organizer" src="<?php echo esc_url($organizer['thumbnail']); ?>" alt="<?php echo ($organizer['name'] ?? ''); ?>">
                         <?php endif; ?>
                         <h3 class="mec-events-single-section-title"><?php echo $this->main->m('taxonomy_organizer', __('Organizer', 'modern-events-calendar-lite')); ?></h3>
                         <dl>
                         <?php if(isset($organizer['thumbnail'])): ?>
                         <dd class="mec-organizer">
                             <i class="mec-sl-home"></i>
-                            <h6><?php echo (isset($organizer['name']) ? $organizer['name'] : ''); ?></h6>
+                            <h6><?php echo ($organizer['name'] ?? ''); ?></h6>
                         </dd>
                         <?php endif;
                         if(isset($organizer['tel']) && !empty($organizer['tel'])): ?>
@@ -88,10 +88,10 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                         <dd class="mec-organizer-url">
                             <i class="mec-sl-sitemap"></i>
                             <h6><?php _e('Website', 'modern-events-calendar-lite'); ?></h6>
-                            <span><a href="<?php echo (strpos($organizer['url'], 'http') === false ? 'http://'.$organizer['url'] : $organizer['url']); ?>" class="mec-color-hover" target="_blank"><?php echo $organizer['url']; ?></a></span>
+                            <span><a href="<?php echo (!str_contains($organizer['url'], 'http') ? 'http://'.$organizer['url'] : $organizer['url']); ?>" class="mec-color-hover" target="_blank"><?php echo $organizer['url']; ?></a></span>
                         </dd>
                         <?php endif;
-                        $organizer_description_setting = isset( $settings['organizer_description'] ) ? $settings['organizer_description'] : ''; $organizer_terms = get_the_terms($event->data, 'mec_organizer'); if($organizer_description_setting == '1' and is_array($organizer_terms) and count($organizer_terms)): foreach($organizer_terms as $organizer_term) { if ($organizer_term->term_id == $organizer['id'] ) {  if(isset($organizer_term->description) && !empty($organizer_term->description)): ?>
+                        $organizer_description_setting = $settings['organizer_description'] ?? ''; $organizer_terms = get_the_terms($event->data, 'mec_organizer'); if($organizer_description_setting == '1' and is_array($organizer_terms) and count($organizer_terms)): foreach($organizer_terms as $organizer_term) { if ($organizer_term->term_id == $organizer['id'] ) {  if(isset($organizer_term->description) && !empty($organizer_term->description)): ?>
                         <dd class="mec-organizer-description">
                             <p><?php echo $organizer_term->description;?></p>
                         </dd>
@@ -121,10 +121,10 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
             <?php endif; ?>
 
             <!-- Speakers Module -->
-            <?php if($single->found_value('event_speakers', $settings) == 'on') echo $this->main->module('speakers.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('event_speakers', $settings) == 'on') echo $this->main->module('speakers.details', ['event'=>$event]); ?>
 
             <!-- Local Time Module -->
-            <?php if($single->found_value('local_time', $settings) == 'on') echo $this->main->module('local-time.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('local_time', $settings) == 'on') echo $this->main->module('local-time.details', ['event'=>$event]); ?>
 
             <?php if($single->found_value('event_location', $settings) == 'on' || $single->found_value('event_categories', $settings) == 'on' || $single->found_value('more_info', $settings) == 'on'): ?>
             <div class="mec-event-meta mec-color-before mec-frontbox <?php if((!count($location) or $single->found_value('event_location', $settings) == '') and (!count($event->data->categories) or $single->found_value('event_categories', $settings) == '') and (!$more_info or $single->found_value('more_info', $settings) == '')) echo 'mec-util-hidden'; ?>">
@@ -136,22 +136,22 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                         ?>
                         <div class="mec-single-event-location">
                             <?php if($location['thumbnail']): ?>
-                            <img class="mec-img-location" src="<?php echo esc_url($location['thumbnail'] ); ?>" alt="<?php echo (isset($location['name']) ? $location['name'] : ''); ?>">
+                            <img class="mec-img-location" src="<?php echo esc_url($location['thumbnail'] ); ?>" alt="<?php echo ($location['name'] ?? ''); ?>">
                             <?php endif; ?>
                             <i class="mec-sl-location-pin"></i>
                             <h3 class="mec-events-single-section-title mec-location"><?php echo $this->main->m('taxonomy_location', __('Location', 'modern-events-calendar-lite')); ?></h3>
                             <dl>
                             <dd class="author fn org"><?php echo $this->get_location_html($location); ?></dd>
-                            <dd class="location"><address class="mec-events-address"><span class="mec-address"><?php echo (isset($location['address']) ? $location['address'] : ''); ?></span></address></dd>
+                            <dd class="location"><address class="mec-events-address"><span class="mec-address"><?php echo ($location['address'] ?? ''); ?></span></address></dd>
 
                             <?php if(isset($location['url']) and trim($location['url'])): ?>
                             <dd class="mec-location-url">
                                 <i class="mec-sl-sitemap"></i>
                                 <h6><?php _e('Website', 'modern-events-calendar-lite'); ?></h6>
-                                <span><a href="<?php echo (strpos($location['url'], 'http') === false ? 'http://'.$location['url'] : $location['url']); ?>" class="mec-color-hover" target="_blank"><?php echo $location['url']; ?></a></span>
+                                <span><a href="<?php echo (!str_contains($location['url'], 'http') ? 'http://'.$location['url'] : $location['url']); ?>" class="mec-color-hover" target="_blank"><?php echo $location['url']; ?></a></span>
                             </dd>
                             <?php endif;
-                            $location_description_setting = isset( $settings['location_description'] ) ? $settings['location_description'] : ''; $location_terms = get_the_terms($event->data, 'mec_location'); if($location_description_setting == '1' and is_array($location_terms) and count($location_terms)): foreach($location_terms as $location_term) { if ($location_term->term_id == $location['id'] ) {  if(isset($location_term->description) && !empty($location_term->description)): ?>
+                            $location_description_setting = $settings['location_description'] ?? ''; $location_terms = get_the_terms($event->data, 'mec_location'); if($location_description_setting == '1' and is_array($location_terms) and count($location_terms)): foreach($location_terms as $location_term) { if ($location_term->term_id == $location['id'] ) {  if(isset($location_term->description) && !empty($location_term->description)): ?>
                             <dd class="mec-location-description">
                                 <p><?php echo $location_term->description;?></p>
                             </dd>
@@ -179,7 +179,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                                 $color_html = '';
                                 if($color) $color_html .= '<span class="mec-event-category-color" style="--background-color: '.esc_attr($color).';background-color: '.esc_attr($color).'">&nbsp;</span>';
 
-                                $icon = (isset($category['icon']) ? $category['icon'] : '');
+                                $icon = ($category['icon'] ?? '');
                                 $icon = isset($icon) && $icon != '' ? '<i class="' . $icon . ' mec-color"></i>' : '<i class="mec-fa-angle-right"></i>';
 
                                 echo '<dl><dd class="mec-events-event-categories"><a href="'.get_term_link($category['id'], 'mec_category').'" class="mec-color-hover" rel="tag">' . $icon . $category['name'] . $color_html . '</a></dd></dl>';
@@ -208,16 +208,16 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
             <?php endif; ?>
 
             <!-- Attendees List Module -->
-            <?php if($single->found_value('attende_module', $settings) == 'on') echo $this->main->module('attendees-list.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('attende_module', $settings) == 'on') echo $this->main->module('attendees-list.details', ['event'=>$event]); ?>
 
             <!-- Next Previous Module -->
-            <?php if($single->found_value('next_module', $settings) == 'on') echo $this->main->module('next-event.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('next_module', $settings) == 'on') echo $this->main->module('next-event.details', ['event'=>$event]); ?>
 
             <!-- Weather Module -->
-            <?php if($single->found_value('weather_module', $settings) == 'on') echo $this->main->module('weather.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('weather_module', $settings) == 'on') echo $this->main->module('weather.details', ['event'=>$event]); ?>
 
             <!-- QRCode Module -->
-            <?php if($single->found_value('qrcode_module', $settings) == 'on') echo $this->main->module('qrcode.details', array('event'=>$event)); ?>
+            <?php if($single->found_value('qrcode_module', $settings) == 'on') echo $this->main->module('qrcode.details', ['event'=>$event]); ?>
 
             <!-- Custom Fields Module -->
             <?php if($single->found_value('custom_fields_module', $settings) == 'on') echo $this->display_data_fields($event, true); ?>
@@ -241,7 +241,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                             <?php if($midnight_event): ?>
                             <dd><abbr class="mec-events-abbr"><?php echo $this->main->dateify($event, $this->date_format1); ?></abbr></dd>
                             <?php else: ?>
-                            <dd><abbr class="mec-events-abbr"><?php echo $this->main->date_label((trim($occurrence) ? array('date'=>$occurrence) : $event->date['start']), (trim($occurrence_end_date) ? array('date'=>$occurrence_end_date) : (isset($event->date['end']) ? $event->date['end'] : NULL)), $this->date_format1); ?></abbr></dd>
+                            <dd><abbr class="mec-events-abbr"><?php echo $this->main->date_label((trim($occurrence) ? ['date'=>$occurrence] : $event->date['start']), (trim($occurrence_end_date) ? ['date'=>$occurrence_end_date] : ($event->date['end'] ?? NULL)), $this->date_format1); ?></abbr></dd>
                             <?php endif; ?>
                             </dl>
                             <?php echo $this->main->holding_status($event); ?>
@@ -250,13 +250,13 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                         <?php
                         if(isset($event->data->meta['mec_hide_time']) and $event->data->meta['mec_hide_time'] == '0')
                         {
-                            $time_comment = isset($event->data->meta['mec_comment']) ? $event->data->meta['mec_comment'] : '';
-                            $allday = isset($event->data->meta['mec_allday']) ? $event->data->meta['mec_allday'] : 0;
+                            $time_comment = $event->data->meta['mec_comment'] ?? '';
+                            $allday = $event->data->meta['mec_allday'] ?? 0;
                             ?>
                             <div class="mec-single-event-time">
                                 <i class="mec-sl-clock " style=""></i>
                                 <h3 class="mec-time"><?php _e('Time', 'modern-events-calendar-lite'); ?></h3>
-                                <i class="mec-time-comment"><?php echo (isset($time_comment) ? $time_comment : ''); ?></i>
+                                <i class="mec-time-comment"><?php echo ($time_comment ?? ''); ?></i>
                                 <dl>
                                 <?php if($allday == '0' and isset($event->data->time) and trim($event->data->time['start'])): ?>
                                 <dd><abbr class="mec-events-abbr"><?php echo $event->data->time['start']; ?><?php echo (trim($event->data->time['end']) ? ' - '.$event->data->time['end'] : ''); ?></abbr></dd>
@@ -321,20 +321,20 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
             <?php $this->display_data_fields($event); ?>
 
             <!-- Links Module -->
-            <?php echo $this->main->module('links.details', array('event'=>$event)); ?>
+            <?php echo $this->main->module('links.details', ['event'=>$event]); ?>
 
             <!-- Google Maps Module -->
             <div class="mec-events-meta-group mec-events-meta-group-gmap">
-                <?php echo $this->main->module('googlemap.details', array('event'=>$this->events)); ?>
+                <?php echo $this->main->module('googlemap.details', ['event'=>$this->events]); ?>
             </div>
 
             <!-- Export Module -->
-            <?php echo $this->main->module('export.details', array('event'=>$event)); ?>
+            <?php echo $this->main->module('export.details', ['event'=>$event]); ?>
 
             <!-- Countdown module -->
             <?php if($this->main->can_show_countdown_module($event)): ?>
             <div class="mec-events-meta-group mec-events-meta-group-countdown">
-                <?php echo $this->main->module('countdown.details', array('event'=>$this->events)); ?>
+                <?php echo $this->main->module('countdown.details', ['event'=>$this->events]); ?>
             </div>
             <?php endif; ?>
 
@@ -343,7 +343,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
 
             <!-- Booking Module -->
             <?php if($this->main->is_sold($event) and count($event->dates) <= 1): ?>
-            <div id="mec-events-meta-group-booking-<?php echo $this->uniqueid; ?>" class="mec-sold-tickets warning-msg"><?php _e('Sold out!', 'modern-events-calendar-lite'); do_action( 'mec_booking_sold_out',$event, null,null,array($event->date) );?> </div>
+            <div id="mec-events-meta-group-booking-<?php echo $this->uniqueid; ?>" class="mec-sold-tickets warning-msg"><?php _e('Sold out!', 'modern-events-calendar-lite'); do_action( 'mec_booking_sold_out',$event, null,null,[$event->date] );?> </div>
             <?php elseif($this->main->can_show_booking_module($event)): ?>
             <?php $data_lity_class = ''; if(isset($settings['single_booking_style']) and $settings['single_booking_style'] == 'modal' ) $data_lity_class = 'lity-hide '; ?>
             <div class="mec-single-event <?php echo $data_lity_class; ?>" id="mec-events-meta-group-booking-box-<?php echo $this->uniqueid; ?>">
@@ -351,7 +351,7 @@ $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : a
                     <?php
                         if(isset($settings['booking_user_login']) and $settings['booking_user_login'] == '1' and !is_user_logged_in()) echo do_shortcode('[MEC_login]');
                         elseif(isset($settings['booking_user_login']) and $settings['booking_user_login'] == '0' and !is_user_logged_in() and isset($booking_options['bookings_limit_for_users']) and $booking_options['bookings_limit_for_users'] == '1') echo do_shortcode('[MEC_login]');
-                        else echo $this->main->module('booking.default', array('event'=>$this->events));
+                        else echo $this->main->module('booking.default', ['event'=>$this->events]);
                     ?>
                 </div>
             </div>

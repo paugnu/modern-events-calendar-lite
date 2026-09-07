@@ -55,12 +55,12 @@ class MEC_feature_feed extends MEC_base
     public function init()
     {
         remove_all_actions('do_feed_rss2');
-        $this->factory->action('do_feed_rss2', array($this, 'rss2'), 10, 1);
+        $this->factory->action('do_feed_rss2', [$this, 'rss2'], 10, 1);
 
         // Include Featured Image
         if(!isset($this->settings['include_image_in_feed']) or (isset($this->settings['include_image_in_feed']) and $this->settings['include_image_in_feed']))
         {
-            add_filter('get_the_excerpt', array($this, 'include_featured_image'), 10, 2);
+            add_filter('get_the_excerpt', $this->include_featured_image(...), 10, 2);
         }
     }
     
@@ -103,14 +103,14 @@ class MEC_feature_feed extends MEC_base
      */
     public function fetch($category = NULL)
     {
-        $args = array(
-            'sk-options'=>array(
-                'list'=>array(
+        $args = [
+            'sk-options'=>[
+                'list'=>[
                     'limit'=>get_option('posts_per_rss', 12),
-                )
-            ),
+                ]
+            ],
             'category'=>$category
-        );
+        ];
 
         $EO = new MEC_skin_list(); // Events Object
         $EO->initialize($args);

@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -31,11 +31,11 @@ class Google_Http_Request
 {
   const GZIP_UA = " (gzip)";
 
-  private $batchHeaders = array(
+  private $batchHeaders = [
     'Content-Type' => 'application/http',
     'Content-Transfer-Encoding' => 'binary',
     'MIME-Version' => '1.0',
-  );
+  ];
 
   protected $queryParams;
   protected $requestMethod;
@@ -58,7 +58,7 @@ class Google_Http_Request
   public function __construct(
       $url,
       $method = 'GET',
-      $headers = array(),
+      $headers = [],
       $postBody = null
   ) {
     $this->setUrl($url);
@@ -91,7 +91,7 @@ class Google_Http_Request
    */
   public function enableGzip()
   {
-    $this->setRequestHeaders(array("Accept-Encoding" => "gzip"));
+    $this->setRequestHeaders(["Accept-Encoding" => "gzip"]);
     $this->canGzip = true;
     $this->setUserAgent($this->userAgent);
   }
@@ -237,9 +237,7 @@ class Google_Http_Request
    */
   public function getResponseHeader($key)
   {
-    return isset($this->responseHeaders[$key])
-        ? $this->responseHeaders[$key]
-        : false;
+    return $this->responseHeaders[$key] ?? false;
   }
 
   /**
@@ -284,9 +282,7 @@ class Google_Http_Request
    */
   public function getRequestHeader($key)
   {
-    return isset($this->requestHeaders[$key])
-        ? $this->requestHeaders[$key]
-        : false;
+    return $this->requestHeaders[$key] ?? false;
   }
 
   /**
@@ -302,9 +298,9 @@ class Google_Http_Request
    */
   public function setUrl($url)
   {
-    if (substr($url, 0, 4) != 'http') {
+    if (!str_starts_with($url, 'http')) {
       // Force the path become relative.
-      if (substr($url, 0, 1) !== '/') {
+      if (!str_starts_with($url, '/')) {
         $url = '/' . $url;
       }
     }
@@ -313,12 +309,12 @@ class Google_Http_Request
       $this->baseComponent = sprintf(
           "%s%s%s",
           isset($parts['scheme']) ? $parts['scheme'] . "://" : '',
-          isset($parts['host']) ? $parts['host'] : '',
+          $parts['host'] ?? '',
           isset($parts['port']) ? ":" . $parts['port'] : ''
       );
     }
-    $this->path = isset($parts['path']) ? $parts['path'] : '';
-    $this->queryParams = array();
+    $this->path = $parts['path'] ?? '';
+    $this->queryParams = [];
     if (isset($parts['query'])) {
       $this->queryParams = $this->parseQuery($parts['query']);
     }
@@ -398,7 +394,7 @@ class Google_Http_Request
 
   public function getParsedCacheControl()
   {
-    $parsed = array();
+    $parsed = [];
     $rawCacheControl = $this->getResponseHeader('cache-control');
     if ($rawCacheControl) {
       $rawCacheControl = str_replace(', ', '&', $rawCacheControl);
@@ -446,14 +442,14 @@ class Google_Http_Request
    */
   private function parseQuery($string)
   {
-    $return = array();
+    $return = [];
     $parts = explode("&", $string);
     foreach ($parts as $part) {
-      list($key, $value) = explode('=', $part, 2);
+      [$key, $value] = explode('=', $part, 2);
       $value = urldecode($value);
       if (isset($return[$key])) {
         if (!is_array($return[$key])) {
-          $return[$key] = array($return[$key]);
+          $return[$key] = [$return[$key]];
         }
         $return[$key][] = $value;
       } else {
@@ -470,7 +466,7 @@ class Google_Http_Request
    */
   private function buildQuery($parts)
   {
-    $return = array();
+    $return = [];
     foreach ($parts as $key => $value) {
       if (is_array($value)) {
         foreach ($value as $v) {
@@ -492,13 +488,13 @@ class Google_Http_Request
   {
     if ($this->getRequestMethod() == "POST" && empty($this->postBody)) {
       $this->setRequestHeaders(
-          array(
+          [
             "content-type" =>
                 "application/x-www-form-urlencoded; charset=UTF-8"
-          )
+          ]
       );
       $this->setPostBody($this->buildQuery($this->queryParams));
-      $this->queryParams = array();
+      $this->queryParams = [];
     }
   }
 }

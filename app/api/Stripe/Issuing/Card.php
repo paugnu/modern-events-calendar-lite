@@ -50,7 +50,7 @@ class Card extends \Stripe\ApiResource
     public function details($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/details';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
+        [$response, $opts] = $this->_request('get', $url, $params, $opts);
         $obj = \Stripe\Util\Util::convertToStripeObject($response, $opts);
         $obj->setLastResponse($response);
 

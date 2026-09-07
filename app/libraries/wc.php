@@ -8,7 +8,7 @@ defined('MECEXEC') or die();
  */
 class MEC_wc extends MEC_base
 {
-    public $ticket_names = array();
+    public $ticket_names = [];
 
     /**
      * Constructor method
@@ -43,10 +43,10 @@ class MEC_wc extends MEC_base
                 else $this->update($product_id, $translated_event_id, $ticket_id);
 
                 // Add to Cart
-                WC()->cart->add_to_cart($product_id, $count, 0, array(), array(
+                WC()->cart->add_to_cart($product_id, $count, 0, [], [
                     'mec_event_id' => $event_id,
                     'mec_date' => $date,
-                ));
+                ]);
 
                 // Add to Ticket Names
                 $this->ticket_names[] = $this->get_ticket_name($product_id);
@@ -57,7 +57,7 @@ class MEC_wc extends MEC_base
         {
             foreach($tickets as $info)
             {
-                $ticket_id = isset($info['id']) ? $info['id'] : '';
+                $ticket_id = $info['id'] ?? '';
                 if(trim($ticket_id) == '') continue;
 
                 $ticket_key = $translated_event_id.':'.$ticket_id;
@@ -71,14 +71,14 @@ class MEC_wc extends MEC_base
                 else $this->update($product_id, $translated_event_id, $ticket_id);
 
                 // Ticket Count
-                $count = isset($info['count']) ? $info['count'] : 1;
+                $count = $info['count'] ?? 1;
 
                 // Add to Cart
-                WC()->cart->add_to_cart($product_id, $count, 0, array(), array(
+                WC()->cart->add_to_cart($product_id, $count, 0, [], [
                     'mec_event_id' => $event_id,
                     'mec_date' => $date,
                     'mec_transaction_id' => $transaction_id,
-                ));
+                ]);
 
                 // Add to Ticket Names
                 $this->ticket_names[] = $this->get_ticket_name($product_id);
@@ -97,21 +97,21 @@ class MEC_wc extends MEC_base
         $settings = $main->get_settings();
 
         // Checkout URL
-        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'checkout') return array('type' => 'url', 'url' => wc_get_checkout_url());
+        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'checkout') return ['type' => 'url', 'url' => wc_get_checkout_url()];
         // Optional Checkout URL
-        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'optional_cart') return array('type' => 'message', 'message' => '<div class="woocommerce-notices-wrapper"><div class="woocommerce-message" role="alert"><a href="'.esc_url(wc_get_cart_url()).'" tabindex="1" class="button wc-forward" target="_parent">'.esc_html__('View cart', 'modern-events-calendar-lite').'</a> '.esc_html(sprintf(_n('“%s” has been added to your cart.', '“%s” have been added to your cart.', count($this->ticket_names), 'modern-events-calendar-lite'), implode(', ', $this->ticket_names))).'</div></div>');
+        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'optional_cart') return ['type' => 'message', 'message' => '<div class="woocommerce-notices-wrapper"><div class="woocommerce-message" role="alert"><a href="'.esc_url(wc_get_cart_url()).'" tabindex="1" class="button wc-forward" target="_parent">'.esc_html__('View cart', 'modern-events-calendar-lite').'</a> '.esc_html(sprintf(_n('“%s” has been added to your cart.', '“%s” have been added to your cart.', count($this->ticket_names), 'modern-events-calendar-lite'), implode(', ', $this->ticket_names))).'</div></div>'];
         // Optional Cart URL
-        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'optional_chckout') return array('type' => 'message', 'message' => '<div class="woocommerce-notices-wrapper"><div class="woocommerce-message" role="alert"><a href="'.esc_url(wc_get_checkout_url()).'" tabindex="1" class="button wc-forward" target="_parent">'.esc_html__('Checkout', 'modern-events-calendar-lite').'</a> '.esc_html(sprintf(_n('“%s” has been added to your cart.', '“%s” have been added to your cart.', count($this->ticket_names), 'modern-events-calendar-lite'), implode(', ', $this->ticket_names))).'</div></div>');
+        if(isset($settings['wc_after_add']) and $settings['wc_after_add'] == 'optional_chckout') return ['type' => 'message', 'message' => '<div class="woocommerce-notices-wrapper"><div class="woocommerce-message" role="alert"><a href="'.esc_url(wc_get_checkout_url()).'" tabindex="1" class="button wc-forward" target="_parent">'.esc_html__('Checkout', 'modern-events-calendar-lite').'</a> '.esc_html(sprintf(_n('“%s” has been added to your cart.', '“%s” have been added to your cart.', count($this->ticket_names), 'modern-events-calendar-lite'), implode(', ', $this->ticket_names))).'</div></div>'];
         // Cart URL
-        else return array('type' => 'url', 'url' => wc_get_cart_url());
+        else return ['type' => 'url', 'url' => wc_get_cart_url()];
     }
 
     public function create($event_id, $ticket_id)
     {
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
-        if(!is_array($tickets)) $tickets = array();
+        if(!is_array($tickets)) $tickets = [];
 
-        $ticket = isset($tickets[$ticket_id]) ? $tickets[$ticket_id] : array();
+        $ticket = $tickets[$ticket_id] ?? [];
 
         $product = new WC_Product();
         $product->set_name(get_the_title($event_id).': '.$ticket['name']);
@@ -133,9 +133,9 @@ class MEC_wc extends MEC_base
     public function update($product_id, $event_id, $ticket_id)
     {
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
-        if(!is_array($tickets)) $tickets = array();
+        if(!is_array($tickets)) $tickets = [];
 
-        $ticket = isset($tickets[$ticket_id]) ? $tickets[$ticket_id] : array();
+        $ticket = $tickets[$ticket_id] ?? [];
 
         $product = new WC_Product($product_id);
         $product->set_name(get_the_title($event_id).': '.$ticket['name']);
@@ -204,7 +204,7 @@ class MEC_wc extends MEC_base
     public function completed($order_id)
     {
         $created_booking_ids = get_post_meta($order_id, 'mec_booking_ids', true);
-        if(!is_array($created_booking_ids)) $created_booking_ids = array();
+        if(!is_array($created_booking_ids)) $created_booking_ids = [];
 
         // It's already done
         if(count($created_booking_ids) == 1 and get_post($created_booking_ids[0])) return false;
@@ -219,7 +219,7 @@ class MEC_wc extends MEC_base
         $order = wc_get_order($order_id);
 
         // MEC Order
-        $mec = array();
+        $mec = [];
 
         $items = $order->get_items();
         foreach($items as $item_id => $item)
@@ -229,18 +229,18 @@ class MEC_wc extends MEC_base
             $transaction_id = wc_get_order_item_meta($item_id, 'mec_transaction_id', true);
 
             if(!trim($event_id) or !trim($date)) continue;
-            if(!isset($mec[$event_id])) $mec[$event_id] = array();
+            $mec[$event_id] ??= [];
 
             $product_id = $item->get_product_id();
 
-            $product_ids = array();
+            $product_ids = [];
             for($i = 1; $i <= $item->get_quantity(); $i++) $product_ids[] = $product_id;
 
-            $mec[$event_id][] = array(
+            $mec[$event_id][] = [
                 'date' => $date,
                 'transaction_id' => $transaction_id,
                 'product_ids' => $product_ids,
-            );
+            ];
         }
 
         if(!count($mec)) return false;
@@ -257,14 +257,14 @@ class MEC_wc extends MEC_base
         $u = $this->getUser();
 
         // Create Bookings
-        $book_ids = array();
+        $book_ids = [];
         foreach($mec as $event_id => $bs)
         {
             foreach($bs as $b)
             {
-                $transaction_id = isset($b['transaction_id']) ? $b['transaction_id'] : 0;
+                $transaction_id = $b['transaction_id'] ?? 0;
 
-                $tickets = array();
+                $tickets = [];
                 if(!$transaction_id)
                 {
                     $date = $b['date'];
@@ -272,32 +272,32 @@ class MEC_wc extends MEC_base
 
                     $event_tickets = get_post_meta($event_id, 'mec_tickets', true);
 
-                    $raw_tickets = array();
+                    $raw_tickets = [];
                     foreach($product_ids as $product_id)
                     {
                         $key = get_post_meta($product_id, 'mec_ticket', true);
                         if(!trim($key)) continue;
 
-                        list($e, $mec_ticket_id) = explode(':', $key);
+                        [$e, $mec_ticket_id] = explode(':', $key);
 
                         if(!isset($raw_tickets[$mec_ticket_id])) $raw_tickets[$mec_ticket_id] = 1;
                         else $raw_tickets[$mec_ticket_id] += 1;
 
-                        $ticket = array();
+                        $ticket = [];
                         $ticket['name'] = $order->get_formatted_billing_full_name();
                         $ticket['email'] = $order->get_billing_email();
                         $ticket['id'] = $mec_ticket_id;
                         $ticket['count'] = 1;
-                        $ticket['reg'] = array();
-                        $ticket['variations'] = array();
+                        $ticket['reg'] = [];
+                        $ticket['variations'] = [];
 
                         $tickets[] = $ticket;
                     }
 
                     // Calculate price of bookings
-                    $price_details = $book->get_price_details($raw_tickets, $event_id, $event_tickets, array(), false);
+                    $price_details = $book->get_price_details($raw_tickets, $event_id, $event_tickets, [], false);
 
-                    $booking = array();
+                    $booking = [];
                     $booking['tickets'] = $tickets;
                     $booking['first_for_all'] = 1;
                     $booking['date'] = $date;
@@ -321,12 +321,12 @@ class MEC_wc extends MEC_base
                 {
                     $wc_discount = $order->get_total_discount();
 
-                    $transaction['price_details']['details'][] = array(
+                    $transaction['price_details']['details'][] = [
                         'amount' => $wc_discount,
                         'description' => __('Discount by WC Coupon', 'modern-events-calendar-lite'),
                         'type' => 'discount',
                         'coupon' => implode(', ', $coupons)
-                    );
+                    ];
 
                     $transaction['discount'] = $wc_discount;
                     $transaction['price'] = $order->get_total();
@@ -336,24 +336,24 @@ class MEC_wc extends MEC_base
                 }
 
                 // Attendees
-                $attendees = isset($transaction['tickets']) ? $transaction['tickets'] : $tickets;
+                $attendees = $transaction['tickets'] ?? $tickets;
 
-                $attention_date = isset($transaction['date']) ? $transaction['date'] : '';
+                $attention_date = $transaction['date'] ?? '';
                 $attention_times = explode(':', $attention_date);
                 $date = date('Y-m-d H:i:s', trim($attention_times[0]));
 
-                $main_attendee = isset($attendees[0]) ? $attendees[0] : array();
-                $name = isset($main_attendee['name']) ? $main_attendee['name'] : '';
+                $main_attendee = $attendees[0] ?? [];
+                $name = $main_attendee['name'] ?? '';
 
                 $ticket_ids = '';
-                $attendees_info = array();
+                $attendees_info = [];
 
                 foreach($attendees as $i => $attendee)
                 {
                     if(!is_numeric($i)) continue;
 
                     $ticket_ids .= $attendee['id'] . ',';
-                    if(!array_key_exists($attendee['email'], $attendees_info)) $attendees_info[$attendee['email']] = array('count' => $attendee['count']);
+                    if(!array_key_exists($attendee['email'], $attendees_info)) $attendees_info[$attendee['email']] = ['count' => $attendee['count']];
                     else $attendees_info[$attendee['email']]['count'] = ($attendees_info[$attendee['email']]['count'] + $attendee['count']);
                 }
 
@@ -362,14 +362,14 @@ class MEC_wc extends MEC_base
 
                 $book_subject = $name.' - '.$u->get($user_id)->user_email;
                 $book_id = $book->add(
-                    array(
+                    [
                         'post_author' => $user_id,
                         'post_type' => $main->get_book_post_type(),
                         'post_title' => $book_subject,
                         'post_date' => $date,
                         'attendees_info' => $attendees_info,
                         'mec_attendees' => $attendees
-                    ),
+                    ],
                     $transaction_id,
                     $ticket_ids
                 );
@@ -397,7 +397,7 @@ class MEC_wc extends MEC_base
         $thankyou_page_id = $main->get_thankyou_page_id($event_id);
         if($thankyou_page_id and !is_admin())
         {
-            $redirect_to = $book->get_thankyou_page($thankyou_page_id, (isset($transaction_id) ? $transaction_id : NULL));
+            $redirect_to = $book->get_thankyou_page($thankyou_page_id, ($transaction_id ?? NULL));
 
             wp_redirect($redirect_to);
             exit;
@@ -409,7 +409,7 @@ class MEC_wc extends MEC_base
     public function cancelled($order_id)
     {
         $booking_ids = get_post_meta($order_id, 'mec_booking_ids', true);
-        if(!is_array($booking_ids)) $booking_ids = array();
+        if(!is_array($booking_ids)) $booking_ids = [];
 
         // No Related Bookings
         if(!count($booking_ids)) return;
@@ -425,12 +425,12 @@ class MEC_wc extends MEC_base
     public function get_ticket_name($product_id)
     {
         $mec_ticket = get_post_meta($product_id, 'mec_ticket', true);
-        list($event_id, $ticket_id) = explode(':', $mec_ticket);
+        [$event_id, $ticket_id] = explode(':', $mec_ticket);
 
         $tickets = get_post_meta($event_id, 'mec_tickets', true);
-        if(!is_array($tickets)) $tickets = array();
+        if(!is_array($tickets)) $tickets = [];
 
-        $ticket = isset($tickets[$ticket_id]) ? $tickets[$ticket_id] : array();
-        return (isset($ticket['name']) ? $ticket['name'] : '');
+        $ticket = $tickets[$ticket_id] ?? [];
+        return ($ticket['name'] ?? '');
     }
 }

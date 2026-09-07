@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -28,15 +28,6 @@ class Google_Http_MediaFileUpload
   const UPLOAD_MEDIA_TYPE = 'media';
   const UPLOAD_MULTIPART_TYPE = 'multipart';
   const UPLOAD_RESUMABLE_TYPE = 'resumable';
-
-  /** @var string $mimeType */
-  private $mimeType;
-
-  /** @var string $data */
-  private $data;
-
-  /** @var bool $resumable */
-  private $resumable;
 
   /** @var int $chunkSize */
   private $chunkSize;
@@ -50,15 +41,6 @@ class Google_Http_MediaFileUpload
   /** @var int $progress */
   private $progress;
 
-  /** @var Google_Client */
-  private $client;
-
-  /** @var Google_Http_Request */
-  private $request;
-
-  /** @var string */
-  private $boundary;
-
   /**
    * Result code from last HTTP call
    * @var int
@@ -71,28 +53,26 @@ class Google_Http_MediaFileUpload
    * @param $resumable bool
    * @param bool $chunkSize File will be uploaded in chunks of this many bytes.
    * only used if resumable=True
+   * @param string $mimeType
+   * @param string $data
+   * @param bool $resumable
+   * @param string $boundary
    */
   public function __construct(
-      Google_Client $client,
-      Google_Http_Request $request,
-      $mimeType,
-      $data,
-      $resumable = false,
+      private readonly Google_Client $client,
+      private readonly Google_Http_Request $request,
+      private $mimeType,
+      private $data,
+      private $resumable = false,
       $chunkSize = false,
-      $boundary = false
+      private $boundary = false
   ) {
-    $this->client = $client;
-    $this->request = $request;
-    $this->mimeType = $mimeType;
-    $this->data = $data;
     $this->size = strlen($this->data);
-    $this->resumable = $resumable;
     if (!$chunkSize) {
       $chunkSize = 256 * 1024;
     }
     $this->chunkSize = $chunkSize;
     $this->progress = 0;
-    $this->boundary = $boundary;
 
     // Process Media Request
     $this->process();
@@ -180,12 +160,12 @@ class Google_Http_MediaFileUpload
       $chunk = substr($this->data, $this->progress, $this->chunkSize);
     }
     $lastBytePos = $this->progress + strlen($chunk) - 1;
-    $headers = array(
+    $headers = [
       'content-range' => "bytes $this->progress-$lastBytePos/$this->size",
       'content-type' => $this->request->getRequestHeader('content-type'),
       'content-length' => $this->chunkSize,
       'expect' => '',
-    );
+    ];
 
     $httpRequest = new Google_Http_Request(
         $this->resumeUri,
@@ -203,10 +183,10 @@ class Google_Http_MediaFileUpload
   public function resume($resumeUri)
   {
      $this->resumeUri = $resumeUri;
-     $headers = array(
+     $headers = [
        'content-range' => "bytes */$this->size",
        'content-length' => 0,
-     );
+     ];
      $httpRequest = new Google_Http_Request(
          $this->resumeUri,
          'PUT',
@@ -230,9 +210,7 @@ class Google_Http_MediaFileUpload
     $uploadType = $this->getUploadType($meta);
     $this->request->setQueryParam('uploadType', $uploadType);
     $this->transformToUploadUrl();
-    $mimeType = $this->mimeType ?
-        $this->mimeType :
-        $this->request->getRequestHeader('content-type');
+    $mimeType = $this->mimeType ?: $this->request->getRequestHeader('content-type');
 
     if (self::UPLOAD_RESUMABLE_TYPE == $uploadType) {
       $contentType = $mimeType;
@@ -242,7 +220,7 @@ class Google_Http_MediaFileUpload
       $postBody = $this->data;
     } else if (self::UPLOAD_MULTIPART_TYPE == $uploadType) {
       // This is a multipart/related upload.
-      $boundary = $this->boundary ? $this->boundary : mt_rand();
+      $boundary = $this->boundary ?: mt_rand();
       $boundary = str_replace('"', '', $boundary);
       $contentType = 'multipart/related; boundary=' . $boundary;
       $related = "--$boundary\r\n";
@@ -294,7 +272,7 @@ class Google_Http_MediaFileUpload
 
   public function getResumeUri()
   {
-    return ( $this->resumeUri !== null ? $this->resumeUri : $this->fetchResumeUri() );
+    return ( $this->resumeUri ?? $this->fetchResumeUri() );
   }
 
   private function fetchResumeUri()
@@ -302,13 +280,13 @@ class Google_Http_MediaFileUpload
     $result = null;
     $body = $this->request->getPostBody();
     if ($body) {
-      $headers = array(
+      $headers = [
         'content-type' => 'application/json; charset=UTF-8',
         'content-length' => Google_Utils::getStrLen($body),
         'x-upload-content-type' => $this->mimeType,
         'x-upload-content-length' => $this->size,
         'expect' => '',
-      );
+      ];
       $this->request->setRequestHeaders($headers);
     }
 

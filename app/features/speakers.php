@@ -37,18 +37,18 @@ class MEC_feature_speakers extends MEC_base
         // Speakers Feature is Disabled
         if(!isset($this->settings['speakers_status']) or (isset($this->settings['speakers_status']) and !$this->settings['speakers_status'])) return;
 
-        $this->factory->action('init', array($this, 'register_taxonomy'), 25);
-        $this->factory->action('mec_speaker_edit_form_fields', array($this, 'edit_form'));
-        $this->factory->action('mec_speaker_add_form_fields', array($this, 'add_form'));
-        $this->factory->action('edited_mec_speaker', array($this, 'save_metadata'));
-        $this->factory->action('created_mec_speaker', array($this, 'save_metadata'));
+        $this->factory->action('init', $this->register_taxonomy(...), 25);
+        $this->factory->action('mec_speaker_edit_form_fields', $this->edit_form(...));
+        $this->factory->action('mec_speaker_add_form_fields', $this->add_form(...));
+        $this->factory->action('edited_mec_speaker', $this->save_metadata(...));
+        $this->factory->action('created_mec_speaker', $this->save_metadata(...));
 
-        $this->factory->action('wp_ajax_speaker_adding', array($this, 'fes_speaker_adding'));
-        $this->factory->action('wp_ajax_nopriv_speaker_adding', array($this, 'fes_speaker_adding'));
-        $this->factory->action('current_screen', array($this, 'show_notics'));
+        $this->factory->action('wp_ajax_speaker_adding', $this->fes_speaker_adding(...));
+        $this->factory->action('wp_ajax_nopriv_speaker_adding', $this->fes_speaker_adding(...));
+        $this->factory->action('current_screen', $this->show_notics(...));
 
-        $this->factory->filter('manage_edit-mec_speaker_columns', array($this, 'filter_columns'));
-        $this->factory->filter('manage_mec_speaker_custom_column', array($this, 'filter_columns_content'), 10, 3);
+        $this->factory->filter('manage_edit-mec_speaker_columns', $this->filter_columns(...));
+        $this->factory->filter('manage_mec_speaker_custom_column', $this->filter_columns_content(...), 10, 3);
     }
     
     /**
@@ -63,9 +63,9 @@ class MEC_feature_speakers extends MEC_base
         register_taxonomy(
             'mec_speaker',
             $this->main->get_main_post_type(),
-            array(
+            [
                 'label'=>$plural_label,
-                'labels'=>array(
+                'labels'=>[
                     'name'=>$plural_label,
                     'singular_name'=>$singular_label,
                     'all_items'=>sprintf(__('All %s', 'modern-events-calendar-lite'), $plural_label),
@@ -78,13 +78,13 @@ class MEC_feature_speakers extends MEC_base
                     'search_items'=>sprintf(__('Search %s', 'modern-events-calendar-lite'), $plural_label),
                     'back_to_items'=>sprintf(__('← Back to %s', 'modern-events-calendar-lite'), $plural_label),
                     'not_found'=>sprintf(__('no %s found.', 'modern-events-calendar-lite'), strtolower($plural_label)),
-                ),
-                'rewrite'=>array('slug'=>'events-speaker'),
+                ],
+                'rewrite'=>['slug'=>'events-speaker'],
                 'public'=>false,
                 'show_ui'=>true,
                 'show_in_rest'=>true,
                 'hierarchical'=>false,
-            )
+            ]
         );
         
         register_taxonomy_for_object_type('mec_speaker', $this->main->get_main_post_type());
@@ -249,11 +249,11 @@ class MEC_feature_speakers extends MEC_base
         $job_title  = isset($_POST['job_title']) ? sanitize_text_field($_POST['job_title']) : '';
         $tel        = isset($_POST['tel']) ? sanitize_text_field($_POST['tel']) : '';
         $email      = isset($_POST['email']) ? sanitize_text_field($_POST['email']) : '';
-        $website   = (isset($_POST['website']) and trim($_POST['website'])) ? (strpos($_POST['website'], 'http') === false ? 'http://'.sanitize_text_field($_POST['website']) : sanitize_text_field($_POST['website'])) : '';
-        $facebook   = (isset($_POST['facebook']) and trim($_POST['facebook'])) ? (strpos($_POST['facebook'], 'http') === false ? 'http://'.sanitize_text_field($_POST['facebook']) : sanitize_text_field($_POST['facebook'])) : '';
-        $twitter    = (isset($_POST['twitter']) and trim($_POST['twitter'])) ? (strpos($_POST['twitter'], 'http') === false ? 'http://'.sanitize_text_field($_POST['twitter']) : sanitize_text_field($_POST['twitter'])) : '';
-        $instagram  = (isset($_POST['instagram']) and trim($_POST['instagram'])) ? (strpos($_POST['instagram'], 'http') === false ? 'http://'.sanitize_text_field($_POST['instagram']) : sanitize_text_field($_POST['instagram'])) : '';
-        $linkedin   = (isset($_POST['linkedin']) and trim($_POST['linkedin'])) ? (strpos($_POST['linkedin'], 'http') === false ? 'http://'.sanitize_text_field($_POST['linkedin']) : sanitize_text_field($_POST['linkedin'])) : '';
+        $website   = (isset($_POST['website']) and trim($_POST['website'])) ? (!str_contains($_POST['website'], 'http') ? 'http://'.sanitize_text_field($_POST['website']) : sanitize_text_field($_POST['website'])) : '';
+        $facebook   = (isset($_POST['facebook']) and trim($_POST['facebook'])) ? (!str_contains($_POST['facebook'], 'http') ? 'http://'.sanitize_text_field($_POST['facebook']) : sanitize_text_field($_POST['facebook'])) : '';
+        $twitter    = (isset($_POST['twitter']) and trim($_POST['twitter'])) ? (!str_contains($_POST['twitter'], 'http') ? 'http://'.sanitize_text_field($_POST['twitter']) : sanitize_text_field($_POST['twitter'])) : '';
+        $instagram  = (isset($_POST['instagram']) and trim($_POST['instagram'])) ? (!str_contains($_POST['instagram'], 'http') ? 'http://'.sanitize_text_field($_POST['instagram']) : sanitize_text_field($_POST['instagram'])) : '';
+        $linkedin   = (isset($_POST['linkedin']) and trim($_POST['linkedin'])) ? (!str_contains($_POST['linkedin'], 'http') ? 'http://'.sanitize_text_field($_POST['linkedin']) : sanitize_text_field($_POST['linkedin'])) : '';
         $thumbnail  = isset($_POST['thumbnail']) ? sanitize_text_field($_POST['thumbnail']) : '';
         
         update_term_meta($term_id, 'job_title', $job_title);
@@ -362,7 +362,7 @@ class MEC_feature_speakers extends MEC_base
         foreach($content as $term) wp_insert_term(trim($term), 'mec_speaker');
 
         $speakers = '';
-        $speaker_terms = get_terms(array('taxonomy'=>'mec_speaker', 'hide_empty'=>false));
+        $speaker_terms = get_terms(['taxonomy'=>'mec_speaker', 'hide_empty'=>false]);
         foreach($speaker_terms as $speaker_term)
         {
             $speakers .= '<label for="mec_fes_speakers'.$speaker_term->term_id.'">

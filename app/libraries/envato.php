@@ -71,11 +71,11 @@ class MEC_envato extends MEC_base
         $this->license_status = get_option( 'mec_license_status');
         
         // Set user purchase code
-        $this->set_purchase_code(isset($this->options['purchase_code']) ? $this->options['purchase_code'] : '');
-        $this->set_product_name(isset($this->options['product_name']) ? $this->options['product_name'] : '');
+        $this->set_purchase_code($this->options['purchase_code'] ?? '');
+        $this->set_product_name($this->options['product_name'] ?? '');
 
         // Plugin Slug
-        list($slice1, $slice2) = explode('/', $this->plugin_slug);
+        [$slice1, $slice2] = explode('/', $this->plugin_slug);
         $this->slug = str_replace('.php', '', $slice2);        
     }
 
@@ -163,10 +163,10 @@ class MEC_envato extends MEC_base
     public function init()
     {
         // updating checking
-        $this->factory->filter('pre_set_site_transient_update_plugins', array($this, 'check_update'));
+        $this->factory->filter('pre_set_site_transient_update_plugins', $this->check_update(...));
 
         // information checking
-        $this->factory->filter('plugins_api', array($this, 'check_info'), 10, 3);
+        $this->factory->filter('plugins_api', $this->check_info(...), 10, 3);
     }
 
     /**
@@ -198,15 +198,15 @@ class MEC_envato extends MEC_base
             $obj->url = $this->itemurl;
             $obj->package = $this->get_update_path();
             $obj->upgrade_notice = '';
-            $obj->icons = array(
+            $obj->icons = [
 		        '1x' => 'https://ps.w.org/modern-events-calendar-lite/assets/icon-128x128.png',
 		        '2x' => 'https://ps.w.org/modern-events-calendar-lite/assets/icon-128x128.png'
-            );
-            $obj->sections = array
-            (
+            ];
+            $obj->sections = 
+            [
                 'description' => 'Modern Events Calendar - Responsive Event Scheduler & Booking For WordPress',
                 'changelog' => 'Modern Events Calendar - Responsive Event Scheduler & Booking For WordPress'
-            );
+            ];
             
             $transient->response[$this->plugin_slug] = $obj;
         }
@@ -299,7 +299,7 @@ class MEC_envato extends MEC_base
 	 */
 	public function getRemote_information()
 	{
-		$request = wp_remote_post('https://api.wordpress.org/plugins/info/1.0/modern-events-calendar-lite.json', array( 'timeout' => 30 ));
+		$request = wp_remote_post('https://api.wordpress.org/plugins/info/1.0/modern-events-calendar-lite.json', [ 'timeout' => 30 ]);
 		if(!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200)
 		{
 			return $request['body'];
@@ -312,24 +312,24 @@ class MEC_envato extends MEC_base
     public function mec_version_in_database() {
         $mec_save_version_date = get_option('mec_save_version_date');
         if (!$mec_save_version_date) {
-            $JSON = wp_remote_retrieve_body(wp_remote_get(self::get_api_url() . '/plugin-api/version', array(
+            $JSON = wp_remote_retrieve_body(wp_remote_get(self::get_api_url() . '/plugin-api/version', [
                 'body' => null,
                 'timeout' => '120',
                 'redirection' => '10',
                 'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
-            )));
+            ]));
             $JSON = json_decode($JSON);
             update_option('mec_save_version_number', $JSON->version);
             update_option('mec_save_version_date', date("Y-m-d"));
             return true;
         } else {
             if ( strtotime(date("Y-m-d")) > strtotime($mec_save_version_date) ) {
-                $JSON = wp_remote_retrieve_body(wp_remote_get(self::get_api_url() . '/plugin-api/version', array(
+                $JSON = wp_remote_retrieve_body(wp_remote_get(self::get_api_url() . '/plugin-api/version', [
                     'body' => null,
                     'timeout' => '120',
                     'redirection' => '10',
                     'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
-                )));
+                ]));
                 $JSON = json_decode($JSON);
                 update_option('mec_save_version_number', $JSON->version);
                 update_option('mec_save_version_date', date("Y-m-d"));
@@ -366,12 +366,12 @@ class MEC_envato extends MEC_base
             return NULL;
         }
 
-        $JSON = wp_remote_retrieve_body(wp_remote_get($verify_url, array(
+        $JSON = wp_remote_retrieve_body(wp_remote_get($verify_url, [
             'body' => null,
             'timeout' => '120',
             'redirection' => '10',
             'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36',
-        )));
+        ]));
         
         if($JSON != '') return json_decode($JSON);
         else return false;

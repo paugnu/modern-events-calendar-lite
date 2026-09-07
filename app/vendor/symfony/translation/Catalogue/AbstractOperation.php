@@ -71,7 +71,7 @@ abstract class AbstractOperation implements OperationInterface
         $this->source = $source;
         $this->target = $target;
         $this->result = new MessageCatalogue($source->getLocale());
-        $this->messages = array();
+        $this->messages = [];
     }
 
     /**
@@ -79,9 +79,7 @@ abstract class AbstractOperation implements OperationInterface
      */
     public function getDomains()
     {
-        if (null === $this->domains) {
-            $this->domains = array_values(array_unique(array_merge($this->source->getDomains(), $this->target->getDomains())));
-        }
+        $this->domains ??= array_values(array_unique(array_merge($this->source->getDomains(), $this->target->getDomains())));
 
         return $this->domains;
     }

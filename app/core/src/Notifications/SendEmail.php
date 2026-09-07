@@ -57,7 +57,7 @@ class SendEmail{
 
         if(!is_null( $key )){
 
-            return isset( $this->notifications_options[$key] ) ? $this->notifications_options[$key] : null;
+            return $this->notifications_options[$key] ?? null;
         }
 
         return $this->notifications_options;
@@ -161,7 +161,7 @@ class SendEmail{
             $this->get_receiver_roles_emails()
         );
 
-        $emails = array_map('trim', $emails);
+        $emails = array_map(trim(...), $emails);
         foreach($emails as $k => $email){
 
             if(empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)){
@@ -175,7 +175,7 @@ class SendEmail{
 
     public function get_target_users_or_emails(){
 
-        $users_or_emails = array();
+        $users_or_emails = [];
 
 
         $allowed_check_settings_for_attendees = $this->allowed_check_settings_for_attendees();
@@ -223,10 +223,10 @@ class SendEmail{
         $author = $this->get_author($object_id);
 
 
-        $first_name = (isset($author->first_name) ? $author->first_name : '');
-        $last_name = (isset($author->last_name) ? $author->last_name : '');
-        $name = (isset($author->first_name) ? trim($author->first_name.' '.(isset($author->last_name) ? $author->last_name : '')) : '');
-        $email = (isset($author->user_email) ? $author->user_email : '');
+        $first_name = ($author->first_name ?? '');
+        $last_name = ($author->last_name ?? '');
+        $name = (isset($author->first_name) ? trim($author->first_name.' '.($author->last_name ?? '')) : '');
+        $email = ($author->user_email ?? '');
 
         /**
          * Get the data from Attendee instead of main author user
@@ -235,9 +235,9 @@ class SendEmail{
             $name = $attendee['name'];
             $attendee_ex_name = explode(' ', $name);
 
-            $first_name = isset($attendee_ex_name[0]) ? $attendee_ex_name[0] : '';
-            $last_name = isset($attendee_ex_name[1]) ? $attendee_ex_name[1] : '';
-            $email = isset($attendee['email']) ? $attendee['email'] : $email;
+            $first_name = $attendee_ex_name[0] ?? '';
+            $last_name = $attendee_ex_name[1] ?? '';
+            $email = $attendee['email'] ?? $email;
         }
 
         // author Data
@@ -245,7 +245,7 @@ class SendEmail{
         $content = str_replace('%%last_name%%', $last_name, $content);
         $content = str_replace('%%name%%', $name, $content);
         $content = str_replace('%%user_email%%', $email, $content);
-        $content = str_replace('%%user_id%%', (isset($author->ID) ? $author->ID : ''), $content);
+        $content = str_replace('%%user_id%%', ($author->ID ?? ''), $content);
 
         return $content;
     }
@@ -269,7 +269,7 @@ class SendEmail{
 
             $timestamps = $this->get_event_times();
         }
-        list($start_timestamp, $end_timestamp) = explode(':', $timestamps);
+        [$start_timestamp, $end_timestamp] = explode(':', $timestamps);
 
         // Event Data
         $organizer_id = get_post_meta($this->event_id, 'mec_organizer_id', true);
@@ -282,7 +282,7 @@ class SendEmail{
         // Data Fields
         $event_fields = \MEC\Base::get_main()->get_event_fields();
         $event_fields_data = get_post_meta($this->event_id, 'mec_fields', true);
-        if(!is_array($event_fields_data)) $event_fields_data = array();
+        if(!is_array($event_fields_data)) $event_fields_data = [];
 
         foreach($event_fields as $f => $event_field){
             if(!is_numeric($f)) {
@@ -290,8 +290,8 @@ class SendEmail{
                 continue;
             }
 
-            $event_field_name = isset($event_field['label']) ? $event_field['label'] : '';
-            $field_value = isset($event_fields_data[$f]) ? $event_fields_data[$f] : NULL;
+            $event_field_name = $event_field['label'] ?? '';
+            $field_value = $event_fields_data[$f] ?? NULL;
             if((!is_array($field_value) and trim($field_value) === '') or (is_array($field_value) and !count($field_value))){
                 $content = str_replace('%%event_field_'.$f.'%%', '', $content);
                 $content = str_replace('%%event_field_'.$f.'_with_name%%', '', $content);
@@ -345,7 +345,7 @@ class SendEmail{
 
         $content = str_replace('%%event_featured_image%%', $featured_image, $content);
 
-        $content = str_replace('%%event_organizer_name%%', (isset($organizer->name) ? $organizer->name : ''), $content);
+        $content = str_replace('%%event_organizer_name%%', ($organizer->name ?? ''), $content);
         $content = str_replace('%%event_organizer_tel%%', get_term_meta($organizer_id, 'tel', true), $content);
         $content = str_replace('%%event_organizer_email%%', get_term_meta($organizer_id, 'email', true), $content);
         $content = str_replace('%%event_organizer_url%%', get_term_meta($organizer_id, 'url', true), $content);
@@ -356,7 +356,7 @@ class SendEmail{
         $additional_organizers_url = '';
 
         $additional_organizers_ids = get_post_meta($this->event_id, 'mec_additional_organizer_ids', true);
-        if(!is_array($additional_organizers_ids)) $additional_organizers_ids = array();
+        if(!is_array($additional_organizers_ids)) $additional_organizers_ids = [];
 
         foreach($additional_organizers_ids as $additional_organizers_id)
         {
@@ -375,18 +375,18 @@ class SendEmail{
         $content = str_replace('%%event_other_organizers_email%%', trim($additional_organizers_email, ', '), $content);
         $content = str_replace('%%event_other_organizers_url%%', trim($additional_organizers_url, ', '), $content);
 
-        $speaker_name = array();
-        foreach($speaker_id as $speaker) $speaker_name[] = isset($speaker->name) ? $speaker->name : null;
+        $speaker_name = [];
+        foreach($speaker_id as $speaker) $speaker_name[] = $speaker->name ?? null;
 
         $content = str_replace('%%event_speaker_name%%', (isset($speaker_name) ? implode(', ', $speaker_name): ''), $content);
-        $content = str_replace('%%event_location_name%%', (isset($location->name) ? $location->name : ''), $content);
+        $content = str_replace('%%event_location_name%%', ($location->name ?? ''), $content);
         $content = str_replace('%%event_location_address%%', get_term_meta($location_id, 'address', true), $content);
 
         $additional_locations_name = '';
         $additional_locations_address = '';
 
         $additional_locations_ids = get_post_meta($this->event_id, 'mec_additional_location_ids', true);
-        if(!is_array($additional_locations_ids)) $additional_locations_ids = array();
+        if(!is_array($additional_locations_ids)) $additional_locations_ids = [];
 
         foreach($additional_locations_ids as $additional_locations_id){
             $additional_location = get_term($additional_locations_id, 'mec_location');
@@ -422,7 +422,7 @@ class SendEmail{
     public function add_template($content){
 
         $style = \MEC\Base::get_main()->get_styling();
-        $bgnotifications = isset($style['notification_bg']) ? $style['notification_bg'] : '#f6f6f6';
+        $bgnotifications = $style['notification_bg'] ?? '#f6f6f6';
 
         return '<table border="0" cellpadding="0" cellspacing="0" class="wn-body" style="background-color: '.$bgnotifications.'; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Oxygen,Open Sans, sans-serif;border-collapse: separate; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">
             <tr>

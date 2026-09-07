@@ -273,37 +273,37 @@ $event_fields = $this->main->get_event_fields();
                                 <input type="hidden" id="mec_new_event_field_key" value="<?php echo $i + 1; ?>" />
                                 <div class="mec-util-hidden">
                                     <div id="mec_event_field_text">
-                                        <?php echo $this->main->field_text(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_text(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_email">
-                                        <?php echo $this->main->field_email(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_email(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_url">
-                                        <?php echo $this->main->field_url(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_url(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_tel">
-                                        <?php echo $this->main->field_tel(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_tel(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_date">
-                                        <?php echo $this->main->field_date(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_date(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_textarea">
-                                        <?php echo $this->main->field_textarea(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_textarea(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_checkbox">
-                                        <?php echo $this->main->field_checkbox(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_checkbox(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_radio">
-                                        <?php echo $this->main->field_radio(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_radio(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_select">
-                                        <?php echo $this->main->field_select(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_select(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_p">
-                                        <?php echo $this->main->field_p(':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_p(':i:', [], 'event'); ?>
                                     </div>
                                     <div id="mec_event_field_option">
-                                        <?php echo $this->main->field_option(':fi:', ':i:', array(), 'event'); ?>
+                                        <?php echo $this->main->field_option(':fi:', ':i:', [], 'event'); ?>
                                     </div>
                                 </div>
                                 <div class="mec-form-row">

@@ -9,7 +9,7 @@ defined('MECEXEC') or die();
 class MEC_cache
 {
     protected static $instance = null;
-    protected static $cache = array();
+    protected static $cache = [];
 
     /**
      * Constructor method
@@ -30,7 +30,7 @@ class MEC_cache
     public static function getInstance()
     {
         // Get an instance of Class
-        if(is_null(self::$instance)) self::$instance = new self();
+        self::$instance ??= new self();
 
         // Return the instance
         return self::$instance;
@@ -48,7 +48,7 @@ class MEC_cache
 
     public static function get($key)
     {
-        return (isset(self::$cache[$key]) ? self::$cache[$key] : NULL);
+        return (self::$cache[$key] ?? NULL);
     }
 
     public static function delete($key)
