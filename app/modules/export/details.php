@@ -13,36 +13,36 @@ if($this->is_expired($event) and isset($settings['export_module_hide_expired']) 
 // Export module on single page is disabled
 if(!isset($settings['export_module_status']) or (isset($settings['export_module_status']) and !$settings['export_module_status'])) return;
 
-$title = isset($event->data->title) ? $event->data->title : '';
+$title = $event->data->title ?? '';
 $location_id = $this->get_master_location_id($event);
-$location_data = ($location_id ? $this->get_location_data($location_id) : array());
+$location_data = ($location_id ? $this->get_location_data($location_id) : []);
 $location = (($location_id and $location_data) ? '&location='.urlencode($location_data['address']) : '');
 $content = (isset($event->data->post->post_content) and trim($event->data->post->post_content)) ? strip_shortcodes(strip_tags($event->data->post->post_content)) : $title;
 $content = apply_filters('mec_add_content_to_export_google_calendar_details', $content,$event->data->ID );
 $occurrence = isset($_GET['occurrence']) ? sanitize_text_field($_GET['occurrence']) : '';
-$occurrence_end_date = trim($occurrence) ? $this->get_end_date_by_occurrence($event->data->ID, (isset($event->date['start']['date']) ? $event->date['start']['date'] : $occurrence)) : '';
+$occurrence_end_date = trim($occurrence) ? $this->get_end_date_by_occurrence($event->data->ID, ($event->date['start']['date'] ?? $occurrence)) : '';
 
 $start_date_temp = $start_hour_temp = '';
 if(!empty($event->date))
 {
-    $start_date_temp = isset($event->date['start']['date']) ? $event->date['start']['date'] : NULL;
-    $start_hour_temp = isset($event->date['start']['hour']) ? $event->date['start']['hour'] : NULL;
+    $start_date_temp = $event->date['start']['date'] ?? NULL;
+    $start_hour_temp = $event->date['start']['hour'] ?? NULL;
 }
 
-$start_minutes_temp = isset($event->date['start']['minutes']) ? $event->date['start']['minutes'] : NULL;
-$start_ampm_temp = isset($event->date['start']['ampm']) ? $event->date['start']['ampm'] : NULL;
+$start_minutes_temp = $event->date['start']['minutes'] ?? NULL;
+$start_ampm_temp = $event->date['start']['ampm'] ?? NULL;
 
-$end_date_temp = isset($event->date['end']['date']) ? $event->date['end']['date'] : NULL;
-$end_hour_temp = isset($event->date['end']['hour']) ? $event->date['end']['hour'] : NULL;
-$end_minutes_temp = isset($event->date['end']['minutes']) ? $event->date['end']['minutes'] : NULL;
-$end_ampm_temp = isset($event->date['end']['ampm']) ? $event->date['end']['ampm'] : NULL;
+$end_date_temp = $event->date['end']['date'] ?? NULL;
+$end_hour_temp = $event->date['end']['hour'] ?? NULL;
+$end_minutes_temp = $event->date['end']['minutes'] ?? NULL;
+$end_ampm_temp = $event->date['end']['ampm'] ?? NULL;
 
 if((is_null($start_date_temp) or is_null($start_hour_temp) or is_null($start_minutes_temp) or is_null($start_ampm_temp) or is_null($end_date_temp) or is_null($end_hour_temp) or is_null($end_minutes_temp) or is_null($end_ampm_temp)) and !trim($occurrence))
 {
     return;
 }
 
-$allday = isset($event->data->meta['mec_allday']) ? $event->data->meta['mec_allday'] : 0;
+$allday = $event->data->meta['mec_allday'] ?? 0;
 if($allday)
 {
     $start_hour_temp = 12;

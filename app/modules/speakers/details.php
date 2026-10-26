@@ -9,7 +9,7 @@ $settings = $this->get_settings();
 if(!isset($settings['speakers_status']) or (isset($settings['speakers_status']) and !$settings['speakers_status'])) return;
 
 // Event Speakers
-$speakers = (isset($event->data->speakers) and is_array($event->data->speakers)) ? $event->data->speakers : array();
+$speakers = (isset($event->data->speakers) and is_array($event->data->speakers)) ? $event->data->speakers : [];
 
 // No Speaker
 if(!count($speakers)) return false;

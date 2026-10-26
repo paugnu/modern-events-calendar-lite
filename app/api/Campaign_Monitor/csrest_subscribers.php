@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__).'/class/base_classes.php';
+require_once __DIR__.'/class/base_classes.php';
 
 /**
  * Class to access a subscribers resources from the create send API.
@@ -16,7 +16,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @var string
          * @access private
          */
-        var $_subscribers_base_route;
+        public $_subscribers_base_route;
 
         /**
          * Constructor.
@@ -38,7 +38,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @param object|null $transport The transport to use. Used for dependency injection
          * @access public
          */
-        function __construct (
+        public function __construct (
         $list_id,
         $auth_details,
         $protocol = 'https',
@@ -58,7 +58,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @param $list_id
          * @access public
          */
-        function set_list_id($list_id) {
+        public function set_list_id($list_id) {
             $this->_subscribers_base_route = $this->_base_route.'subscribers/'.$list_id;
         }
 
@@ -82,7 +82,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @access public
          * @return CS_REST_Wrapper_Result A successful response will be empty
          */
-        function add($subscriber) {
+        public function add($subscriber) {
             return $this->post_request($this->_subscribers_base_route.'.json', $subscriber);
         }
 
@@ -110,7 +110,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @access public
          * @return CS_REST_Wrapper_Result A successful response will be empty
          */
-        function update($email, $subscriber) {
+        public function update($email, $subscriber) {
             return $this->put_request($this->_subscribers_base_route.'.json?email='.urlencode($email), $subscriber);
         }
 
@@ -151,13 +151,13 @@ if (!class_exists('CS_REST_Subscribers')) {
          * }
          *
          */
-        function import($subscribers, $resubscribe, $queueSubscriptionBasedAutoResponders = false, $restartSubscriptionBasedAutoResponders = false) {
-            $subscribers = array(
+        public function import($subscribers, $resubscribe, $queueSubscriptionBasedAutoResponders = false, $restartSubscriptionBasedAutoResponders = false) {
+            $subscribers = [
     		    'Resubscribe' => $resubscribe,
     			'QueueSubscriptionBasedAutoResponders' => $queueSubscriptionBasedAutoResponders,
     		    'Subscribers' => $subscribers,
                 'RestartSubscriptionBasedAutoresponders' => $restartSubscriptionBasedAutoResponders
-            );
+            ];
             
             return $this->post_request($this->_subscribers_base_route.'/import.json', $subscribers);
         }
@@ -179,7 +179,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          *     )
          * }
          */
-        function get($email, $include_tracking_pref = NULL) {
+        public function get($email, $include_tracking_pref = NULL) {
             return $this->get_request($this->_subscribers_base_route.'.json?email='.urlencode($email), $include_tracking_pref);
         }
 
@@ -203,7 +203,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          *     }
          * )
          */
-        function get_history($email) {
+        public function get_history($email) {
             return $this->get_request($this->_subscribers_base_route.'/history.json?email='.urlencode($email));
         }
 
@@ -213,11 +213,11 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @access public
          * @return CS_REST_Wrapper_Result A successful response will be empty
          */
-        function unsubscribe($email) {
+        public function unsubscribe($email) {
             // We need to build the subscriber data structure.
-            $email = array(
+            $email = [
     		    'EmailAddress' => $email 
-            );
+            ];
             
             return $this->post_request($this->_subscribers_base_route.'/unsubscribe.json', $email);
         }
@@ -228,7 +228,7 @@ if (!class_exists('CS_REST_Subscribers')) {
          * @access public
          * @return CS_REST_Wrapper_Result A successful response will be empty
          */
-        function delete($email) {
+        public function delete($email) {
             return $this->delete_request($this->_subscribers_base_route.'.json?email='.urlencode($email));
         }
     }

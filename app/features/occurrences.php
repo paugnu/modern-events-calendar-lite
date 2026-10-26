@@ -45,20 +45,20 @@ class MEC_feature_occurrences extends MEC_base
         if(!$occurrences_status) return;
 
         // Tab
-        $this->factory->filter('mec-single-event-meta-title', array($this, 'tab'), 10, 3);
+        $this->factory->filter('mec-single-event-meta-title', $this->tab(...), 10, 3);
 
         // Metabox
-        $this->factory->action('mec_metabox_details', array($this, 'meta_box_occurrences'), 18);
+        $this->factory->action('mec_metabox_details', $this->meta_box_occurrences(...), 18);
 
         // Occurrences for FES
-        if(!isset($this->settings['fes_section_occurrences']) or (isset($this->settings['fes_section_occurrences']) and $this->settings['fes_section_occurrences'])) $this->factory->action('mec_fes_metabox_details', array($this, 'meta_box_occurrences'), 18);
+        if(!isset($this->settings['fes_section_occurrences']) or (isset($this->settings['fes_section_occurrences']) and $this->settings['fes_section_occurrences'])) $this->factory->action('mec_fes_metabox_details', $this->meta_box_occurrences(...), 18);
 
         // AJAX
-        $this->factory->action('wp_ajax_mec_occurrences_add', array($this, 'add'));
-        $this->factory->action('wp_ajax_mec_occurrences_delete', array($this, 'delete'));
+        $this->factory->action('wp_ajax_mec_occurrences_add', $this->add(...));
+        $this->factory->action('wp_ajax_mec_occurrences_delete', $this->delete(...));
 
         // Save Data
-        $this->factory->action('mec_save_event_data', array($this, 'save'), 10, 2);
+        $this->factory->action('mec_save_event_data', $this->save(...), 10, 2);
     }
 
     public function tab($tabs, $activated, $post)
@@ -268,39 +268,39 @@ class MEC_feature_occurrences extends MEC_base
     public function delete()
     {
         // Check if our nonce is set.
-        if(!isset($_POST['_wpnonce'])) $this->main->response(array('success'=>0, 'code'=>'NONCE_MISSING'));
+        if(!isset($_POST['_wpnonce'])) $this->main->response(['success'=>0, 'code'=>'NONCE_MISSING']);
 
         // Verify that the nonce is valid.
-        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_occurrences_delete')) $this->main->response(array('success'=>0, 'code'=>'NONCE_IS_INVALID'));
+        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_occurrences_delete')) $this->main->response(['success'=>0, 'code'=>'NONCE_IS_INVALID']);
 
-        $occurrence_id = isset($_POST['id']) ? $_POST['id'] : '';
+        $occurrence_id = $_POST['id'] ?? '';
 
         // Request is invalid!
-        if(!trim($occurrence_id)) $this->main->response(array('success'=>0, 'code'=>'ID_IS_INVALID'));
+        if(!trim($occurrence_id)) $this->main->response(['success'=>0, 'code'=>'ID_IS_INVALID']);
 
         $this->db->q("DELETE FROM `#__mec_occurrences` WHERE `id`='".$this->db->escape($occurrence_id)."'");
 
-        $this->main->response(array('success'=>1));
+        $this->main->response(['success'=>1]);
     }
 
     public function add()
     {
         // Check if our nonce is set.
-        if(!isset($_POST['_wpnonce'])) $this->main->response(array('success'=>0, 'code'=>'NONCE_MISSING'));
+        if(!isset($_POST['_wpnonce'])) $this->main->response(['success'=>0, 'code'=>'NONCE_MISSING']);
 
         // Verify that the nonce is valid.
-        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_occurrences_add')) $this->main->response(array('success'=>0, 'code'=>'NONCE_IS_INVALID'));
+        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_occurrences_add')) $this->main->response(['success'=>0, 'code'=>'NONCE_IS_INVALID']);
 
-        $date = isset($_POST['date']) ? $_POST['date'] : '';
-        $id = isset($_POST['id']) ? $_POST['id'] : '';
+        $date = $_POST['date'] ?? '';
+        $id = $_POST['id'] ?? '';
 
         // Date is invalid!
-        if(!trim($date) or !trim($id)) $this->main->response(array('success'=>0, 'code'=>'DATE_OR_ID_IS_INVALID'));
+        if(!trim($date) or !trim($id)) $this->main->response(['success'=>0, 'code'=>'DATE_OR_ID_IS_INVALID']);
 
         $dates = explode(':', $date);
 
         // Add Occurrence
-        $occurrence_id = $this->db->q("INSERT INTO `#__mec_occurrences` (`post_id`,`occurrence`,`params`) VALUES ('".$id."','".$dates[0]."','".json_encode(array())."')", 'insert');
+        $occurrence_id = $this->db->q("INSERT INTO `#__mec_occurrences` (`post_id`,`occurrence`,`params`) VALUES ('".$id."','".$dates[0]."','".json_encode([])."')", 'insert');
 
         $success = 1;
 
@@ -308,7 +308,7 @@ class MEC_feature_occurrences extends MEC_base
         $this->get_occurrence_form($occurrence_id);
         $html = ob_get_clean();
 
-        $this->main->response(array('success'=>$success, 'html'=>$html));
+        $this->main->response(['success'=>$success, 'html'=>$html]);
     }
 
     public function get_occurrence_form($occurrence_id)
@@ -316,7 +316,7 @@ class MEC_feature_occurrences extends MEC_base
         $params = $this->get($occurrence_id);
         $data = $this->get_data($occurrence_id);
 
-        $event_id = (isset($data['post_id']) ? $data['post_id'] : 0);
+        $event_id = ($data['post_id'] ?? 0);
         $post = get_post($event_id);
 
         $date_format = get_option('date_format');
@@ -328,16 +328,16 @@ class MEC_feature_occurrences extends MEC_base
         $cancelled_reason = (isset($params['cancelled_reason']) and trim($params['cancelled_reason'])) ? $params['cancelled_reason'] : '';
         $display_cancellation_reason_in_single_page = (isset($params['display_cancellation_reason_in_single_page']) and trim($params['display_cancellation_reason_in_single_page'])) ? $params['display_cancellation_reason_in_single_page'] : '';
 
-        $hourly_schedules = (isset($params['hourly_schedules']) and is_array($params['hourly_schedules'])) ? $params['hourly_schedules'] : array();
+        $hourly_schedules = (isset($params['hourly_schedules']) and is_array($params['hourly_schedules'])) ? $params['hourly_schedules'] : [];
         $fields_data = (isset($params['fields']) and is_array($params['fields'])) ? $params['fields'] : get_post_meta($post->ID, 'mec_fields', true);
 
         // Status of Speakers Feature
         $speakers_status = (!isset($this->settings['speakers_status']) or (isset($this->settings['speakers_status']) and !$this->settings['speakers_status'])) ? false : true;
-        $speakers = get_terms('mec_speaker', array(
+        $speakers = get_terms('mec_speaker', [
             'orderby' => 'name',
             'order' => 'ASC',
             'hide_empty' => '0',
-        ));
+        ]);
 
         // Cost
         $type = ((isset($this->settings['single_cost_type']) and trim($this->settings['single_cost_type'])) ? $this->settings['single_cost_type'] : 'numeric');
@@ -349,13 +349,13 @@ class MEC_feature_occurrences extends MEC_base
         $more_info_target = (isset($params['more_info_target']) ? esc_attr($params['more_info_target']) : '');
 
         // Locations
-        $locations = get_terms('mec_location', array('orderby'=>'name', 'hide_empty'=>'0'));
+        $locations = get_terms('mec_location', ['orderby'=>'name', 'hide_empty'=>'0']);
         $location_id = (isset($params['location_id']) ? esc_attr($params['location_id']) : '');
 
         $dont_show_map = (isset($params['dont_show_map']) ? esc_attr($params['dont_show_map']) : '');
 
         // Organizers
-        $organizers = get_terms('mec_organizer', array('orderby'=>'name', 'hide_empty'=>'0'));
+        $organizers = get_terms('mec_organizer', ['orderby'=>'name', 'hide_empty'=>'0']);
         $organizer_id = (isset($params['organizer_id']) ? esc_attr($params['organizer_id']) : '');
         ?>
         <li id="mec_occurrences_<?php echo $occurrence_id; ?>">
@@ -428,14 +428,14 @@ class MEC_feature_occurrences extends MEC_base
                 <div class="mec-col-12">
                     <?php
                         $hourly_schedule = $this->getHourlySchedule();
-                        $hourly_schedule->form(array(
+                        $hourly_schedule->form([
                             'hourly_schedules' => $hourly_schedules,
                             'speakers_status' => $speakers_status,
                             'speakers' => $speakers,
                             'wrapper_class' => '',
                             'prefix' => 'mec_occurrences_'.$occurrence_id.'_',
                             'name_prefix' => 'mec[occurrences]['.$occurrence_id.']',
-                        ));
+                        ]);
                     ?>
                 </div>
             </div>
@@ -443,7 +443,7 @@ class MEC_feature_occurrences extends MEC_base
                 <div class="mec-col-12">
                     <?php
                         $fields = $this->getEventFields();
-                        $fields->form(array(
+                        $fields->form([
                             'id' => 'mec_occurrences_event_fields_'.$occurrence_id,
                             'class' => 'no',
                             'post' => $post,
@@ -451,7 +451,7 @@ class MEC_feature_occurrences extends MEC_base
                             'id_prefix' => 'mec_occurrences_'.$occurrence_id.'_',
                             'name_prefix' => 'mec[occurrences]['.$occurrence_id.']',
                             'mandatory_status' => false,
-                        ));
+                        ]);
                     ?>
                 </div>
             </div>
@@ -544,16 +544,16 @@ class MEC_feature_occurrences extends MEC_base
         $occurrences = $data['occurrences'];
         do_action('mec_occurrences_save', $post_id, $occurrences);
 
-        $organizer_ids = array();
-        $location_ids = array();
+        $organizer_ids = [];
+        $location_ids = [];
 
         foreach($occurrences as $occurrence)
         {
             // Clean Hourly Schedules
-            $raw_hourly_schedules = isset($occurrence['hourly_schedules']) ? $occurrence['hourly_schedules'] : array();
+            $raw_hourly_schedules = $occurrence['hourly_schedules'] ?? [];
             if(isset($raw_hourly_schedules[':d:'])) unset($raw_hourly_schedules[':d:']);
 
-            $hourly_schedules = array();
+            $hourly_schedules = [];
             foreach($raw_hourly_schedules as $raw_hourly_schedule)
             {
                 if(isset($raw_hourly_schedule['schedules'][':i:'])) unset($raw_hourly_schedule['schedules'][':i:']);
@@ -563,10 +563,10 @@ class MEC_feature_occurrences extends MEC_base
             // Hourly Schedules
             $occurrence['hourly_schedules'] = $hourly_schedules;
 
-            $location_id = (isset($occurrence['location_id']) ? $occurrence['location_id'] : '');
+            $location_id = ($occurrence['location_id'] ?? '');
             if($location_id) $location_ids[] = $location_id;
 
-            $organizer_id = (isset($occurrence['organizer_id']) ? $occurrence['organizer_id'] : '');
+            $organizer_id = ($occurrence['organizer_id'] ?? '');
             if($organizer_id) $organizer_ids[] = $organizer_id;
 
             // Save Occurrence
@@ -589,12 +589,12 @@ class MEC_feature_occurrences extends MEC_base
     {
         $JSON = $this->db->select("SELECT `params` FROM `#__mec_occurrences` WHERE `id`='".$this->db->escape($occurrence_id)."'", 'loadResult');
 
-        if(!trim($JSON)) return array();
+        if(!trim($JSON)) return [];
         else
         {
             $params = json_decode($JSON, true);
 
-            if(!is_array($params)) return array();
+            if(!is_array($params)) return [];
             else return $params;
         }
     }
@@ -623,14 +623,14 @@ class MEC_feature_occurrences extends MEC_base
             $db = $o->getDB();
             $JSON = $db->select("SELECT `params` FROM `#__mec_occurrences` WHERE `post_id`='".$db->escape($post_id)."' AND `occurrence`='".$db->escape($timestamp)."' ORDER BY `id` DESC LIMIT 1", 'loadResult');
 
-            if(!trim($JSON)) $params = array();
+            if(!trim($JSON)) $params = [];
             else
             {
                 $params = json_decode($JSON, true);
             }
         }
 
-        if(!is_array($params)) $params = array();
+        if(!is_array($params)) $params = [];
 
         // Add to Cache
         $cache->set($cache_key, $params);

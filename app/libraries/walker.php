@@ -9,23 +9,23 @@ defined('MECEXEC') or die();
 class MEC_walker extends Walker
 {
     public $tree_type = 'category';
-    public $db_fields = array(
+    public $db_fields = [
         'parent' => 'parent',
         'id'     => 'term_id',
-    );
+    ];
 
-    public $mec_id = array();
-    public $mec_include = array();
+    public $mec_id = [];
+    public $mec_include = [];
 
     /**
      * Constructor method
      * @param array $params
      * @author Webnus <info@webnus.biz>
      */
-    public function __construct($params = array())
+    public function __construct($params = [])
     {
-        $this->mec_id = (isset($params['id']) ? $params['id'] : '');
-        $this->mec_include = (isset($params['include']) ? $params['include'] : array());
+        $this->mec_id = ($params['id'] ?? '');
+        $this->mec_include = ($params['include'] ?? []);
     }
 
     /**
@@ -39,7 +39,7 @@ class MEC_walker extends Walker
      * @param int    $depth  Depth of category. Used for tab indentation.
      * @param array  $args   An array of arguments. @see wp_terms_checklist()
      */
-    public function start_lvl(&$output, $depth = 0, $args = array())
+    public function start_lvl(&$output, $depth = 0, $args = [])
     {
         $indent  = str_repeat("\t", $depth);
         $output .= "$indent<ul class='children'>\n";
@@ -56,7 +56,7 @@ class MEC_walker extends Walker
      * @param int    $depth  Depth of category. Used for tab indentation.
      * @param array  $args   An array of arguments. @see wp_terms_checklist()
      */
-    public function end_lvl(&$output, $depth = 0, $args = array())
+    public function end_lvl(&$output, $depth = 0, $args = [])
     {
         $indent  = str_repeat("\t", $depth);
         $output .= "$indent</ul>\n";
@@ -75,7 +75,7 @@ class MEC_walker extends Walker
      * @param array   $args     An array of arguments. @see wp_terms_checklist()
      * @param int     $id       ID of the current term.
      */
-    public function start_el(&$output, $category, $depth = 0, $args = array(), $id = 0)
+    public function start_el(&$output, $category, $depth = 0, $args = [], $id = 0)
     {
         // Term is not Included
         if(is_array($this->mec_include) and count($this->mec_include) and !in_array($category->term_id, $this->mec_include)) return;
@@ -86,9 +86,9 @@ class MEC_walker extends Walker
         if('category' === $taxonomy) $name = 'post_category';
         else $name = 'tax_input[' . $taxonomy . ']';
 
-        $args['popular_cats'] = !empty($args['popular_cats']) ? array_map('intval', $args['popular_cats']) : array();
+        $args['popular_cats'] = !empty($args['popular_cats']) ? array_map(intval(...), $args['popular_cats']) : [];
         $class = in_array($category->term_id, $args['popular_cats'], true) ? ' class="popular-category"' : '';
-        $args['selected_cats'] = !empty($args['selected_cats']) ? array_map('intval', $args['selected_cats']) : array();
+        $args['selected_cats'] = !empty($args['selected_cats']) ? array_map(intval(...), $args['selected_cats']) : [];
 
         $is_selected = in_array($category->term_id, $args['selected_cats'], true);
         $is_disabled = !empty($args['disabled']);
@@ -109,7 +109,7 @@ class MEC_walker extends Walker
      * @param int     $depth    Depth of the term in reference to parents. Default 0.
      * @param array   $args     An array of arguments. @see wp_terms_checklist()
      */
-    public function end_el(&$output, $category, $depth = 0, $args = array())
+    public function end_el(&$output, $category, $depth = 0, $args = [])
     {
         $output .= "";
     }

@@ -9,9 +9,9 @@ echo '<dl class="mec-calendar-table-head"><dt class="mec-calendar-day-head">'.im
 // Start day of week
 $week_start = $this->main->get_first_day_of_week();
 
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
 // days and weeks vars
 $running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
@@ -65,7 +65,7 @@ $events_str = '';
                 foreach($events[$today] as $event)
                 {
                     $location_id = $this->main->get_master_location_id($event);
-                    $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                    $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                     $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                     $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -88,8 +88,8 @@ $events_str = '';
                     if(has_filter('mec_monthly_virtual_badge')) $events_str .= apply_filters('mec_monthly_virtual_badge', $events_str, $event->data->ID);
                     $events_str .='</h4>';
 
-                    if($this->localtime) $events_str .= $this->main->module('local-time.type3', array('event'=>$event));
-                    $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.(isset($location['name']) ? $location['name'] : '').'</div></div>';
+                    if($this->localtime) $events_str .= $this->main->module('local-time.type3', ['event'=>$event]);
+                    $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.($location['name'] ?? '').'</div></div>';
                     $events_str .= $this->booking_button($event);
                     $events_str .= $this->display_custom_data($event);
                     $events_str .= '</article>';
@@ -126,7 +126,7 @@ $events_str = '';
                 foreach($events[$today] as $event)
                 {
                     $location_id = $this->main->get_master_location_id($event);
-                    $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                    $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                     $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                     $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -149,8 +149,8 @@ $events_str = '';
                     if(has_filter('mec_monthly_virtual_badge')) $events_str .= apply_filters('mec_monthly_virtual_badge', $events_str, $event->data->ID);
                     $events_str .='</h4>';
                     
-                    if($this->localtime) $events_str .= $this->main->module('local-time.type3', array('event'=>$event));
-                    $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.(isset($location['name']) ? $location['name'] : '').'</div></div>';
+                    if($this->localtime) $events_str .= $this->main->module('local-time.type3', ['event'=>$event]);
+                    $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.($location['name'] ?? '').'</div></div>';
                     $events_str .= $this->booking_button($event);
                     $events_str .= $this->display_custom_data($event);
                     $events_str .= '</article>';
@@ -214,7 +214,7 @@ $events_str = '';
                     foreach($events[$today] as $event)
                     {
                         $location_id = $this->main->get_master_location_id($event);
-                        $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                        $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                         $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                         $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -237,8 +237,8 @@ $events_str = '';
                         if(has_filter('mec_monthly_virtual_badge')) $events_str .= apply_filters('mec_monthly_virtual_badge', $events_str, $event->data->ID);
                         $events_str .='</h4>';
 
-                        if($this->localtime) $events_str .= $this->main->module('local-time.type3', array('event'=>$event));
-                        $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.(isset($location['name']) ? $location['name'] : '').'</div></div>';
+                        if($this->localtime) $events_str .= $this->main->module('local-time.type3', ['event'=>$event]);
+                        $events_str .= '<div class="mec-event-detail"><div class="mec-event-loc-place">'.($location['name'] ?? '').'</div></div>';
                         $events_str .= $this->booking_button($event);
                         $events_str .= $this->display_custom_data($event);
                         $events_str .= '</article>';

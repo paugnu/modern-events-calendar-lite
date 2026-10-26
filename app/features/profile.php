@@ -54,7 +54,7 @@ class MEC_feature_profile extends MEC_base
     public function init()
     {
         // Profile Shortcode
-        $this->factory->shortcode('MEC_profile', array($this, 'profile'));
+        $this->factory->shortcode('MEC_profile', [$this, 'profile']);
     }
 
     /**
@@ -62,10 +62,10 @@ class MEC_feature_profile extends MEC_base
      * @param array $atts
      * @return string
      */
-    public function profile($atts = array())
+    public function profile($atts = [])
     {
         // Force to array
-        if(!is_array($atts)) $atts = array();
+        if(!is_array($atts)) $atts = [];
 
         // Show login/register message if user is not logged in and guest submission is not enabled.
         if(!is_user_logged_in())

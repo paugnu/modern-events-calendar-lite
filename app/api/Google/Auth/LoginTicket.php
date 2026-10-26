@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -28,22 +28,14 @@ class Google_Auth_LoginTicket
 {
   const USER_ATTR = "sub";
 
-  // Information from id token envelope.
-  private $envelope;
-
-  // Information from id token payload.
-  private $payload;
-
   /**
    * Creates a user based on the supplied token.
    *
    * @param string $envelope Header from a verified authentication token.
    * @param string $payload Information from a verified authentication token.
    */
-  public function __construct($envelope, $payload)
+  public function __construct(private $envelope, private $payload)
   {
-    $this->envelope = $envelope;
-    $this->payload = $payload;
   }
 
   /**
@@ -66,6 +58,6 @@ class Google_Auth_LoginTicket
    */
   public function getAttributes()
   {
-    return array("envelope" => $this->envelope, "payload" => $this->payload);
+    return ["envelope" => $this->envelope, "payload" => $this->payload];
   }
 }

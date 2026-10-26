@@ -57,7 +57,7 @@ class Order extends ApiResource
     public function returnOrder($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/returns';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
 
         return Util\Util::convertToStripeObject($response, $opts);
     }
@@ -73,7 +73,7 @@ class Order extends ApiResource
     public function pay($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/pay';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

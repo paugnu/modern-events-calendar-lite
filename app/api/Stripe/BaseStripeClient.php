@@ -131,7 +131,7 @@ class BaseStripeClient implements StripeClientInterface
         $opts = $this->defaultOpts->merge($opts, true);
         $baseUrl = $opts->apiBase ?: $this->getApiBase();
         $requestor = new \Stripe\ApiRequestor($this->apiKeyForRequest($opts), $baseUrl);
-        list($response, $opts->apiKey) = $requestor->request($method, $path, $params, $opts->headers);
+        [$response, $opts->apiKey] = $requestor->request($method, $path, $params, $opts->headers);
         $opts->discardNonPersistentHeaders();
         $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
@@ -153,7 +153,7 @@ class BaseStripeClient implements StripeClientInterface
     {
         $obj = $this->request($method, $path, $params, $opts);
         if (!($obj instanceof \Stripe\Collection)) {
-            $received_class = \get_class($obj);
+            $received_class = $obj::class;
             $msg = "Expected to receive `Stripe\\Collection` object from Stripe API. Instead received `{$received_class}`.";
 
             throw new \Stripe\Exception\UnexpectedValueException($msg);

@@ -9,11 +9,11 @@ echo '<dl class="mec-calendar-table-head"><dt class="mec-calendar-day-head">'.im
 // Start day of week
 $week_start = $this->main->get_first_day_of_week();
 
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
 // Single Event Display Method
-$target_set = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : false;
+$target_set = $this->skin_options['sed_method'] ?? false;
 $target_url = ($target_set == 'new') ? 'target="_blank"' : '';
 
 // days and weeks vars

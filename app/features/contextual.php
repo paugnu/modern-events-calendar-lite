@@ -49,59 +49,59 @@ class MEC_feature_contextual extends MEC_base
             case 'm-e-calendar_page_MEC-settings':
 
                 // To add a whole tab group
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-settings',
                     'title' => __('Settings', 'modern-events-calendar-lite'),
-                    'callback' => array($this, 'settings')
-                ));
+                    'callback' => [$this, 'settings']
+                ]);
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-form',
                     'title' => __('Booking Form', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Booking Form<hr></h2>
                         <strong>Build your booking registration form (This form will be used for every attendee).</strong>                   <iframe width="600" height="300" src="https://www.youtube.com/embed/YM8cCOvgpk0" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-gateways',
                     'title' => __('Payment Gateways', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Payment Gateways <hr></h2><iframe width="600" height="300" src="https://www.youtube.com/embed/Hpg4chWlxoQ" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-notifications',
                     'title' => __('Notifications', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Notifications <hr></h2><strong>You can edit your messages in there.</strong><strong>MEC Notificatoin Module</strong><iframe width="600" height="300" src="https://www.youtube.com/embed/ZAA8zVewOj0" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
                 break;
 
             case 'm-e-calendar_page_MEC-ix':
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-importexport',
                     'title' => __('Google Cal. Import', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Import/Export<hr></h2><div class="big-title2"><strong>Google Cal. Import:</strong></div><iframe width="854" height="420" src="https://www.youtube.com/embed/vxHC7NVbmuc" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-importexportg',
                     'title' => __('Google Cal. Export', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Import/Export<hr></h2><div class="big-title2"><strong>Google Cal. Export:</strong></div><iframe width="854" height="420" src="https://www.youtube.com/embed/DdeNazxbLyo" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
-                $screen->add_help_tab(array
-                (
+                $screen->add_help_tab(
+                [
                     'id' => 'mec-importexportf',
                     'title' => __('Facebook Cal. Import', 'modern-events-calendar-lite'),
                     'content' => __('<h2 class="dark-text">Import/Export<hr></h2><div class="big-title2"><strong>Facebook Cal. Import:</strong></div><iframe width="854" height="420" src="https://www.youtube.com/embed/dqgt1b8X8hs" frameborder="0" allowfullscreen></iframe>', 'modern-events-calendar-lite')
-                ));
+                ]);
 
                 break;
         }

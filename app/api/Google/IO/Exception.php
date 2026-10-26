@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 class Google_IO_Exception extends Google_Exception implements Google_Task_Retryable
@@ -24,7 +24,7 @@ class Google_IO_Exception extends Google_Exception implements Google_Task_Retrya
   /**
    * @var array $retryMap Map of errors with retry counts.
    */
-  private $retryMap = array();
+  private $retryMap = [];
 
   /**
    * Creates a new IO exception with an optional retry map.
@@ -37,8 +37,8 @@ class Google_IO_Exception extends Google_Exception implements Google_Task_Retrya
   public function __construct(
       $message,
       $code = 0,
-      Exception $previous = null,
-      array $retryMap = null
+      ?Exception $previous = null,
+      ?array $retryMap = null
   ) {
     if (version_compare(PHP_VERSION, '5.3.0') >= 0) {
       parent::__construct($message, $code, $previous);
@@ -60,10 +60,6 @@ class Google_IO_Exception extends Google_Exception implements Google_Task_Retrya
    */
   public function allowedRetries()
   {
-    if (isset($this->retryMap[$this->code])) {
-      return $this->retryMap[$this->code];
-    }
-
-    return 0;
+    return $this->retryMap[$this->code] ?? 0;
   }
 }

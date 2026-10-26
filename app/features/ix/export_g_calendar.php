@@ -24,24 +24,24 @@ if(isset($ix_options['google_export_token']) && $ix_options['google_export_token
         <div class="export-content w-clearfix extra">
             <div class="mec-export-events-g-calendar">
                 <h3><?php _e('Add events to Google Calendar', 'modern-events-calendar-lite'); ?></h3>
-                <p class="description"><?php _e("Add your desired website events to your Google Calendar.", 'modern-events-calendar-lite'); ?> <?php echo sprintf(__('You should set %s as redirect page in Google App Console.', 'modern-events-calendar-lite'), '<code>'.$this->main->add_qs_vars(array('mec-ix-action'=>'google-calendar-export-get-token'), $this->main->URL('backend').'admin.php?page=MEC-ix&tab=MEC-g-calendar-export').'</code>'); ?></p>
+                <p class="description"><?php _e("Add your desired website events to your Google Calendar.", 'modern-events-calendar-lite'); ?> <?php echo sprintf(__('You should set %s as redirect page in Google App Console.', 'modern-events-calendar-lite'), '<code>'.$this->main->add_qs_vars(['mec-ix-action'=>'google-calendar-export-get-token'], $this->main->URL('backend').'admin.php?page=MEC-ix&tab=MEC-g-calendar-export').'</code>'); ?></p>
                 <form id="mec_g_calendar_export_form_authenticate" action="<?php echo $this->main->get_full_url(); ?>" method="POST">
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_export_client_id"><?php _e('App Client ID', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_export_client_id" name="ix[google_export_client_id]" value="<?php echo (isset($ix_options['google_export_client_id']) ? $ix_options['google_export_client_id'] : ''); ?>" />
+                            <input type="text" id="mec_ix_google_export_client_id" name="ix[google_export_client_id]" value="<?php echo ($ix_options['google_export_client_id'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_export_client_secret"><?php _e('App Client Secret', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_export_client_secret" name="ix[google_export_client_secret]" value="<?php echo (isset($ix_options['google_export_client_secret']) ? $ix_options['google_export_client_secret'] : ''); ?>" />
+                            <input type="text" id="mec_ix_google_export_client_secret" name="ix[google_export_client_secret]" value="<?php echo ($ix_options['google_export_client_secret'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_google_export_calendar_id"><?php _e('Calendar ID', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_google_export_calendar_id" name="ix[google_export_calendar_id]" value="<?php echo (isset($ix_options['google_export_calendar_id']) ? $ix_options['google_export_calendar_id'] : ''); ?>" />
+                            <input type="text" id="mec_ix_google_export_calendar_id" name="ix[google_export_calendar_id]" value="<?php echo ($ix_options['google_export_calendar_id'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-options-fields">

@@ -59,7 +59,7 @@ class MEC_skin_slider extends MEC_skins
         $this->atts = $atts;
         
         // Skin Options
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Date Formats
         $this->date_format_type1_1 = (isset($this->skin_options['type1_date_format1']) and trim($this->skin_options['type1_date_format1'])) ? $this->skin_options['type1_date_format1'] : 'd';
@@ -86,13 +86,13 @@ class MEC_skin_slider extends MEC_skins
         $this->sf_status = false;
         
         // Generate an ID for the sking
-        $this->id = isset($this->atts['id']) ? $this->atts['id'] : mt_rand(100, 999);
+        $this->id = $this->atts['id'] ?? mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // The style
-        $this->style = isset($this->skin_options['style']) ? $this->skin_options['style'] : 'type1';
+        $this->style = $this->skin_options['style'] ?? 'type1';
         if($this->style == 'fluent' and !is_plugin_active('mec-fluent-layouts/mec-fluent-layouts.php')) $this->style = 'type1';
         
         // Autoplay Time
@@ -122,7 +122,7 @@ class MEC_skin_slider extends MEC_skins
         $this->display_available_tickets = (isset($this->skin_options['display_available_tickets']) and trim($this->skin_options['display_available_tickets'])) ? $this->skin_options['display_available_tickets'] : '';
         
         // The count in row
-        $this->count = isset($this->skin_options['count']) ? $this->skin_options['count'] : '3';
+        $this->count = $this->skin_options['count'] ?? '3';
         
         // Init MEC
         $this->args['mec-init'] = true;
@@ -154,10 +154,10 @@ class MEC_skin_slider extends MEC_skins
         $this->limit = (isset($this->skin_options['limit']) and trim($this->skin_options['limit'])) ? $this->skin_options['limit'] : 12;
 
         // reason_for_cancellation
-        $this->reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+        $this->reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
         // display_label
-        $this->display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
+        $this->display_label = $this->skin_options['display_label'] ?? false;
         
         $this->args['posts_per_page'] = $this->limit;
         $this->args['paged'] = $this->paged;
@@ -178,7 +178,7 @@ class MEC_skin_slider extends MEC_skins
         }
 
         // Show Past Events
-        $this->args['mec-past-events'] = isset($this->atts['show_past_events']) ? $this->atts['show_past_events'] : '0';
+        $this->args['mec-past-events'] = $this->atts['show_past_events'] ?? '0';
 
         // Start Date
         $this->start_date = $this->get_start_date();

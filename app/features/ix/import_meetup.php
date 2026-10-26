@@ -25,13 +25,13 @@ $ix_options = $this->main->get_ix_options();
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_meetup_api_key"><?php _e('Meetup API Key', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_meetup_api_key" name="ix[meetup_api_key]" value="<?php echo (isset($ix_options['meetup_api_key']) ? $ix_options['meetup_api_key'] : ''); ?>" />
+                            <input type="text" id="mec_ix_meetup_api_key" name="ix[meetup_api_key]" value="<?php echo ($ix_options['meetup_api_key'] ?? ''); ?>" />
                         </div>
                     </div>
                     <div class="mec-form-row">
                         <label class="mec-col-3" for="mec_ix_meetup_group_url"><?php _e('Group URL', 'modern-events-calendar-lite'); ?></label>
                         <div class="mec-col-4">
-                            <input type="text" id="mec_ix_meetup_group_url" name="ix[meetup_group_url]" value="<?php echo (isset($ix_options['meetup_group_url']) ? $ix_options['meetup_group_url'] : ''); ?>" />
+                            <input type="text" id="mec_ix_meetup_group_url" name="ix[meetup_group_url]" value="<?php echo ($ix_options['meetup_group_url'] ?? ''); ?>" />
                             <p><?php echo sprintf(__('just put the slug of your group like %s in %s', 'modern-events-calendar-lite'), '<strong>your-group-slug</strong>', 'https://www.meetup.com/your-group-slug/'); ?></p>
                         </div>
                     </div>
@@ -80,8 +80,8 @@ $ix_options = $this->main->get_ix_options();
                                 </label>
                             </div>
                             <input type="hidden" name="mec-ix-action" value="meetup-import-do" />
-                            <input type="hidden" name="ix[meetup_api_key]" value="<?php echo (isset($this->ix['meetup_api_key']) ? $this->ix['meetup_api_key'] : ''); ?>" />
-                            <input type="hidden" name="ix[meetup_group_url]" value="<?php echo (isset($this->ix['meetup_group_url']) ? $this->ix['meetup_group_url'] : ''); ?>" />
+                            <input type="hidden" name="ix[meetup_api_key]" value="<?php echo ($this->ix['meetup_api_key'] ?? ''); ?>" />
+                            <input type="hidden" name="ix[meetup_group_url]" value="<?php echo ($this->ix['meetup_group_url'] ?? ''); ?>" />
                             <button id="mec_ix_meetup_import_do_form_button" class="button button-primary mec-button-primary" type="submit"><?php _e('Import', 'modern-events-calendar-lite'); ?></button>
                         </div>
                     </form>

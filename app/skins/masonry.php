@@ -33,8 +33,8 @@ class MEC_skin_masonry extends MEC_skins
      */
     public function actions()
     {
-        $this->factory->action('wp_ajax_mec_masonry_load_more', array($this, 'load_more'));
-        $this->factory->action('wp_ajax_nopriv_mec_masonry_load_more', array($this, 'load_more'));
+        $this->factory->action('wp_ajax_mec_masonry_load_more', $this->load_more(...));
+        $this->factory->action('wp_ajax_nopriv_mec_masonry_load_more', $this->load_more(...));
     }
     
     /**
@@ -47,7 +47,7 @@ class MEC_skin_masonry extends MEC_skins
         $this->atts = $atts;
         
         // Skin Options
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Date Formats
         $this->date_format_1 = (isset($this->skin_options['date_format1']) and trim($this->skin_options['date_format1'])) ? $this->skin_options['date_format1'] : 'j';
@@ -57,28 +57,28 @@ class MEC_skin_masonry extends MEC_skins
         $this->filter_by = (isset($this->skin_options['filter_by']) and trim($this->skin_options['filter_by'])) ? $this->skin_options['filter_by'] : '';
         
         // Search Form Options
-        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : array();
+        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : [];
         
         // Search Form Status
-        $this->sf_status = isset($this->atts['sf_status']) ? $this->atts['sf_status'] : true;
-        $this->sf_display_label = isset($this->atts['sf_display_label']) ? $this->atts['sf_display_label'] : false;
-        $this->sf_reset_button = isset($this->atts['sf_reset_button']) ? $this->atts['sf_reset_button'] : false;
-        $this->sf_refine = isset($this->atts['sf_refine']) ? $this->atts['sf_refine'] : false;
+        $this->sf_status = $this->atts['sf_status'] ?? true;
+        $this->sf_display_label = $this->atts['sf_display_label'] ?? false;
+        $this->sf_reset_button = $this->atts['sf_reset_button'] ?? false;
+        $this->sf_refine = $this->atts['sf_refine'] ?? false;
         
         // Generate an ID for the sking
-        $this->id = isset($this->atts['id']) ? $this->atts['id'] : mt_rand(100, 999);
+        $this->id = $this->atts['id'] ?? mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // Show "Load More" button or not
-        $this->load_more_button = isset($this->skin_options['load_more_button']) ? $this->skin_options['load_more_button'] : true;
+        $this->load_more_button = $this->skin_options['load_more_button'] ?? true;
 
         // Show Masonry like grid
-        $this->masonry_like_grid = isset($this->skin_options['masonry_like_grid']) ? $this->skin_options['masonry_like_grid'] : true;
+        $this->masonry_like_grid = $this->skin_options['masonry_like_grid'] ?? true;
 
         // Show "Sort by date" button or not
-        $this->fit_to_row = isset($this->skin_options['fit_to_row']) ? $this->skin_options['fit_to_row'] : true;
+        $this->fit_to_row = $this->skin_options['fit_to_row'] ?? true;
 
         // HTML class
         $this->html_class = '';
@@ -88,16 +88,16 @@ class MEC_skin_masonry extends MEC_skins
         $this->booking_button = isset($this->skin_options['booking_button']) ? (int) $this->skin_options['booking_button'] : 0;
 
         // SED Method
-        $this->sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
+        $this->sed_method = $this->skin_options['sed_method'] ?? '0';
 
         // Image popup
-        $this->image_popup = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
+        $this->image_popup = $this->skin_options['image_popup'] ?? '0';
 
         // reason_for_cancellation
-        $this->reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+        $this->reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
         // display_label
-        $this->display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
+        $this->display_label = $this->skin_options['display_label'] ?? false;
         
         // From Widget
         $this->widget = (isset($this->atts['widget']) and trim($this->atts['widget'])) ? true : false;
@@ -158,7 +158,7 @@ class MEC_skin_masonry extends MEC_skins
         }
 
         // Show Past Events
-        $this->args['mec-past-events'] = isset($this->atts['show_past_events']) ? $this->atts['show_past_events'] : '0';
+        $this->args['mec-past-events'] = $this->atts['show_past_events'] ?? '0';
 
         // Start Date
         $this->start_date = $this->get_start_date();
@@ -170,7 +170,7 @@ class MEC_skin_masonry extends MEC_skins
         if(isset($this->atts['seconds']))
         {
             $this->args['mec-seconds'] = $this->atts['seconds'];
-            $this->args['mec-seconds-date'] = isset($this->atts['seconds_date']) ? $this->atts['seconds_date'] : $this->start_date;
+            $this->args['mec-seconds-date'] = $this->atts['seconds_date'] ?? $this->start_date;
         }
         
         // Apply Maximum Date
@@ -224,14 +224,14 @@ class MEC_skin_masonry extends MEC_skins
      */
     public function load_more()
     {
-        $this->sf = $this->request->getVar('sf', array());
+        $this->sf = $this->request->getVar('sf', []);
 
         $mec_filter_by = $this->request->getVar('mec_filter_by', '');
         $mec_filter_value = $this->request->getVar('mec_filter_value', '');
         if($mec_filter_by and ($mec_filter_value and $mec_filter_value != '*')) $this->sf[$mec_filter_by] = $mec_filter_value;
 
         $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-        $atts = $this->sf_apply($this->request->getVar('atts', array()), $this->sf, $apply_sf_date);
+        $atts = $this->sf_apply($this->request->getVar('atts', []), $this->sf, $apply_sf_date);
         
         // Initialize the skin
         $this->initialize($atts);
@@ -262,11 +262,11 @@ class MEC_skin_masonry extends MEC_skins
         $output = '<div class="mec-events-masonry-cats"><a href="#" class="mec-masonry-cat-selected" data-filter="*">'.__('All', 'modern-events-calendar-lite').'</a>';
 
         $taxonomy = $this->filter_by_get_taxonomy();
-        $terms = get_terms($taxonomy, array
-        (
+        $terms = get_terms($taxonomy, 
+        [
             'hide_empty' => true,
             'include' => ((isset($this->atts[$this->filter_by]) and trim($this->atts[$this->filter_by])) ? $this->atts[$this->filter_by] : ''),
-        ));
+        ]);
 
         foreach($terms as $term) $output .= '<a href="#" data-filter=".mec-t'.$term->term_id.'">'.$term->name.'</a>';
 
@@ -289,10 +289,10 @@ class MEC_skin_masonry extends MEC_skins
         $output = '';
 
         $taxonomy = $this->filter_by_get_taxonomy();
-        $terms = wp_get_post_terms($event_id, $taxonomy, array
-        (
+        $terms = wp_get_post_terms($event_id, $taxonomy, 
+        [
             'hide_empty' => true,
-        ));
+        ]);
 
         foreach($terms as $term) $output .= ' mec-t'.$term->term_id;
         return trim($output);

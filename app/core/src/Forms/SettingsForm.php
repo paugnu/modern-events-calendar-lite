@@ -28,7 +28,7 @@ class SettingsForm extends Singleton {
 		if ( true !== $this->enqueue ) {
 
 			wp_enqueue_style( 'mec-backend', plugin_dir_url( __FILE__ ) . 'backend.css' );
-			wp_enqueue_script( 'mec-backend', plugin_dir_url( __FILE__ ) . 'backend.js', array( 'jquery' ) );
+			wp_enqueue_script( 'mec-backend', plugin_dir_url( __FILE__ ) . 'backend.js', [ 'jquery' ] );
 			$this->enqueue = true;
 		}
 	}
@@ -54,7 +54,7 @@ class SettingsForm extends Singleton {
 
 		$fixed_fields = CustomForm::getInstance()->get_fixed_fields( $group_id );
 		if ( !is_array( $fixed_fields ) ) {
-			$fixed_fields = array();
+			$fixed_fields = [];
 		}
 
 		return $fixed_fields;
@@ -67,73 +67,73 @@ class SettingsForm extends Singleton {
 	 */
 	public function get_element_fields( $type = 'reg' ) {
 
-		$elements = array(
-				'name'      => array(
+		$elements = [
+				'name'      => [
 						'required' => true,
 						'text'     => __( 'MEC Name', 'mec' ),
 						'class'    => 'red',
-				),
-				'mec_email' => array(
+				],
+				'mec_email' => [
 						'required' => true,
 						'text'     => __( 'MEC Email', 'mec' ),
 						'class'    => 'red',
-				),
-				'text'      => array(
+				],
+				'text'      => [
 						'required' => false,
 						'text'     => __( 'Text', 'mec' ),
 						'class'    => '',
-				),
-				'email'     => array(
+				],
+				'email'     => [
 						'required' => false,
 						'text'     => __( 'Email', 'mec' ),
 						'class'    => '',
-				),
-				'date'      => array(
+				],
+				'date'      => [
 						'required' => false,
 						'text'     => __( 'Date', 'mec' ),
 						'class'    => '',
-				),
-				'tel'       => array(
+				],
+				'tel'       => [
 						'required' => false,
 						'text'     => __( 'Tel', 'mec' ),
 						'class'    => '',
-				),
-				'file'      => array(
+				],
+				'file'      => [
 						'required' => false,
 						'text'     => __( 'File', 'mec' ),
 						'class'    => '',
-				),
-				'textarea'  => array(
+				],
+				'textarea'  => [
 						'required' => false,
 						'text'     => __( 'Textarea', 'mec' ),
 						'class'    => '',
-				),
-				'checkbox'  => array(
+				],
+				'checkbox'  => [
 						'required' => false,
 						'text'     => __( 'Checkboxes', 'mec' ),
 						'class'    => '',
-				),
-				'radio'     => array(
+				],
+				'radio'     => [
 						'required' => false,
 						'text'     => __( 'Radio Buttons', 'mec' ),
 						'class'    => '',
-				),
-				'select'    => array(
+				],
+				'select'    => [
 						'required' => false,
 						'text'     => __( 'Dropdown', 'mec' ),
 						'class'    => '',
-				),
-				'agreement' => array(
+				],
+				'agreement' => [
 						'required' => false,
 						'text'     => __( 'Agreement', 'mec' ),
 						'class'    => '',
-				),
-				'p'         => array(
+				],
+				'p'         => [
 						'required' => false,
 						'text'     => __( 'Paragraph', 'mec' ),
 						'class'    => '',
-				),
-		);
+				],
+		];
 
 		if ( 'reg' !== $type ) {
 
@@ -153,7 +153,7 @@ class SettingsForm extends Singleton {
 
 		$type_fields = $type;
 		$type        = $group_id . '_' . $type;
-		add_action( 'admin_footer', array( $this, 'enqueue' ) );
+		add_action( 'admin_footer', $this->enqueue(...) );
 		?>
 		<div class="mec-container">
 			<?php do_action( 'before_mec_' . $type . '_fields_form' ); ?>
@@ -184,8 +184,8 @@ class SettingsForm extends Singleton {
 					$elements = $this->get_element_fields( $type_fields );
 					foreach ( $elements as $element_id => $element ) {
 
-						$text  = isset( $element['text'] ) ? $element['text'] : '';
-						$class = isset( $element['class'] ) ? $element['class'] : '';
+						$text  = $element['text'] ?? '';
+						$class = $element['class'] ?? '';
 						echo '<button type="button" class="button ' . $class . '" data-type="' . $element_id . '">' . $text . '</button>';
 					}
 
@@ -210,7 +210,7 @@ class SettingsForm extends Singleton {
 
 				?>
 				<div id="mec_<?php echo $type ?>_option" class="mec_field_option">
-					<?php echo FormFields::getInstance()->field_option( ':fi:', ':i:', array(), $type ); ?>
+					<?php echo FormFields::getInstance()->field_option( ':fi:', ':i:', [], $type ); ?>
 				</div>
 			</div>
 		</div>
@@ -227,7 +227,7 @@ class SettingsForm extends Singleton {
 	 */
 	public function display_field( $key, $field_args, $prefix = 'reg' ) {
 
-		$type = isset( $field_args['type'] ) ? $field_args['type'] : false;
+		$type = $field_args['type'] ?? false;
 
 		if ( !$type ) {
 
@@ -240,47 +240,22 @@ class SettingsForm extends Singleton {
 		}
 
 		$html = '';
-		switch ( $type ) {
-			case 'text':
-				$html .= $this->fieldFactory->field_text( $key, $field_args, $prefix );
-				break;
-			case 'name':
-				$html .= $this->fieldFactory->field_name( $key, $field_args, $prefix );
-				break;
-			case 'mec_email':
-				$html .= $this->fieldFactory->field_mec_email( $key, $field_args, $prefix );
-				break;
-			case 'email':
-				$html .= $this->fieldFactory->field_email( $key, $field_args, $prefix );
-				break;
-			case 'date':
-				$html .= $this->fieldFactory->field_date( $key, $field_args, $prefix );
-				break;
-			case 'file':
-				$html .= $this->fieldFactory->field_file( $key, $field_args, $prefix );
-				break;
-			case 'tel':
-				$html .= $this->fieldFactory->field_tel( $key, $field_args, $prefix );
-				break;
-			case 'textarea':
-				$html .= $this->fieldFactory->field_textarea( $key, $field_args, $prefix );
-				break;
-			case 'p':
-				$html .= $this->fieldFactory->field_p( $key, $field_args, $prefix );
-				break;
-			case 'checkbox':
-				$html .= $this->fieldFactory->field_checkbox( $key, $field_args, $prefix );
-				break;
-			case 'radio':
-				$html .= $this->fieldFactory->field_radio( $key, $field_args, $prefix );
-				break;
-			case 'select':
-				$html .= $this->fieldFactory->field_select( $key, $field_args, $prefix );
-				break;
-			case 'agreement':
-				$html .= $this->fieldFactory->field_agreement( $key, $field_args, $prefix );
-				break;
-		}
+		match ($type) {
+            'text' => $html .= $this->fieldFactory->field_text( $key, $field_args, $prefix ),
+            'name' => $html .= $this->fieldFactory->field_name( $key, $field_args, $prefix ),
+            'mec_email' => $html .= $this->fieldFactory->field_mec_email( $key, $field_args, $prefix ),
+            'email' => $html .= $this->fieldFactory->field_email( $key, $field_args, $prefix ),
+            'date' => $html .= $this->fieldFactory->field_date( $key, $field_args, $prefix ),
+            'file' => $html .= $this->fieldFactory->field_file( $key, $field_args, $prefix ),
+            'tel' => $html .= $this->fieldFactory->field_tel( $key, $field_args, $prefix ),
+            'textarea' => $html .= $this->fieldFactory->field_textarea( $key, $field_args, $prefix ),
+            'p' => $html .= $this->fieldFactory->field_p( $key, $field_args, $prefix ),
+            'checkbox' => $html .= $this->fieldFactory->field_checkbox( $key, $field_args, $prefix ),
+            'radio' => $html .= $this->fieldFactory->field_radio( $key, $field_args, $prefix ),
+            'select' => $html .= $this->fieldFactory->field_select( $key, $field_args, $prefix ),
+            'agreement' => $html .= $this->fieldFactory->field_agreement( $key, $field_args, $prefix ),
+            default => $html,
+        };
 
 		return $html;
 	}
@@ -288,10 +263,7 @@ class SettingsForm extends Singleton {
 	public function display_settings_form_fields( $group_id, $fields = null) {
 
 		$type   = 'reg';
-		if( is_null( $fields ) ){
-
-			$fields = $this->get_fields( $group_id );
-		}
+		$fields ??= $this->get_fields( $group_id );
 
 		$this->display_fields( $fields, $group_id, $type );
 	}
@@ -299,10 +271,7 @@ class SettingsForm extends Singleton {
 	public function display_settings_form_fixed_fields( $group_id, $fields = null ) {
 
 		$type   = 'bfixed';
-		if( is_null( $fields ) ){
-
-			$fields = $this->get_fixed_fields( $group_id );
-		}
+		$fields ??= $this->get_fixed_fields( $group_id );
 
 		$this->display_fields( $fields, $group_id, $type );
 	}

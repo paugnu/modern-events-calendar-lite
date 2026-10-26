@@ -8,18 +8,12 @@ namespace Stripe\Service;
 abstract class AbstractService
 {
     /**
-     * @var \Stripe\StripeClientInterface
-     */
-    protected $client;
-
-    /**
      * Initializes a new instance of the {@link AbstractService} class.
      *
      * @param \Stripe\StripeClientInterface $client
      */
-    public function __construct($client)
+    public function __construct(protected $client)
     {
-        $this->client = $client;
     }
 
     /**
@@ -46,9 +40,7 @@ abstract class AbstractService
             return null;
         }
         \array_walk_recursive($params, function (&$value, $key) {
-            if (null === $value) {
-                $value = '';
-            }
+            $value ??= '';
         });
 
         return $params;
@@ -74,6 +66,6 @@ abstract class AbstractService
             }
         }
 
-        return \sprintf($basePath, ...\array_map('\urlencode', $ids));
+        return \sprintf($basePath, ...\array_map(\urlencode(...), $ids));
     }
 }

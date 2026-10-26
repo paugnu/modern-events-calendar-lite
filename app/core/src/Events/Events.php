@@ -9,26 +9,26 @@ class Events {
 
 	public function save_event( $event ) {
 
-		$d_args = array(
+		$d_args = [
 			'title'   => '',
 			'content' => '',
 			'status'  => 'publish',
-		);
+		];
 
 		$event = wp_parse_args( $event, $d_args );
 
-		$event_arg = array(
+		$event_arg = [
 
 			'post_title'   => $event['title'],
 			'post_content' => $event['content'],
 			'post_status'  => $event['status'],
-		);
+		];
 
 		$event_id = wp_insert_post( $event_arg );
 
 		do_action( 'mec_saved_event', $event_id, $event );
 
-		$event_mata = array(
+		$event_mata = [
 			'mec_location_id',
 			'mec_dont_show_map',
 			'mec_organizer_id',
@@ -94,7 +94,7 @@ class Events {
 
 			'mec_fields',
 			'mec_notifications',
-		);
+		];
 
 	}
 }

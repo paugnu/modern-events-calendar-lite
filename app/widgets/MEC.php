@@ -30,7 +30,7 @@ class MEC_MEC_widget extends WP_Widget
         // MEC Main Class
         $this->main = MEC::getInstance('app.libraries.main');
         
-        parent::__construct('MEC_MEC_widget', __('Modern Events Calendar', 'modern-events-calendar-lite'), array('description'=>__('Show events based on created shortcodes.', 'modern-events-calendar-lite')));
+        parent::__construct('MEC_MEC_widget', __('Modern Events Calendar', 'modern-events-calendar-lite'), ['description'=>__('Show events based on created shortcodes.', 'modern-events-calendar-lite')]);
     }
 
     /**
@@ -46,37 +46,37 @@ class MEC_MEC_widget extends WP_Widget
         $this->main->load_owl_assets();
 
         // Before Widget
-        echo (isset($args['before_widget']) ? $args['before_widget'] : '');
+        echo ($args['before_widget'] ?? '');
         
         // Print the widget title
         if(!empty($instance['title']))
         {
-			echo (isset($args['before_title']) ? $args['before_title'] : '').apply_filters('widget_title', $instance['title']).(isset($args['after_title']) ? $args['after_title'] : '');
+			echo ($args['before_title'] ?? '').apply_filters('widget_title', $instance['title']).($args['after_title'] ?? '');
 		}
         
-        $calendar_id = isset($instance['calendar_id']) ? $instance['calendar_id'] : 0;
+        $calendar_id = $instance['calendar_id'] ?? 0;
 
         // Get Skin Options
         $sk_options = get_post_meta($calendar_id, 'sk-options', true);
         $sk_options_list_style = (isset($sk_options['list']) and isset($sk_options['list']['style'])) ? trim($sk_options['list']['style']) : 'classic';
 
-        $current_hide = (isset($instance['current_hide']) ? $instance['current_hide'] : '');
-        $autoplay = (isset($instance['autoplay']) ? $instance['autoplay'] : 1);
-        $autoplay_time = (isset($instance['autoplay_time']) ? $instance['autoplay_time'] : 3000);
-        $loop = (isset($instance['loop']) ? $instance['loop'] : 1);
+        $current_hide = ($instance['current_hide'] ?? '');
+        $autoplay = ($instance['autoplay'] ?? 1);
+        $autoplay_time = ($instance['autoplay_time'] ?? 3000);
+        $loop = ($instance['loop'] ?? 1);
 
         // Print the skin output
-        echo $this->render->widget($calendar_id, array(
+        echo $this->render->widget($calendar_id, [
             'html-class'=>'mec-widget '.$current_hide,
             'style'=>$sk_options_list_style,
             'widget'=>true,
             'widget_autoplay'=>$autoplay,
             'widget_loop'=>$loop,
             'widget_autoplay_time'=>$autoplay_time,
-        ));
+        ]);
         
         // After Widget
-        echo (isset($args['after_widget']) ? $args['after_widget'] : '');
+        echo ($args['after_widget'] ?? '');
     }
 
     /**
@@ -87,19 +87,19 @@ class MEC_MEC_widget extends WP_Widget
      */
     public function form($instance)
     {
-        $calendars = get_posts(array('post_type'=>'mec_calendars', 'posts_per_page'=>'-1', 'meta_query'=>array(array('key'=>'skin', 'value'=>array('list', 'grid', 'monthly_view'), 'compare'=>'IN'))));
+        $calendars = get_posts(['post_type'=>'mec_calendars', 'posts_per_page'=>'-1', 'meta_query'=>[['key'=>'skin', 'value'=>['list', 'grid', 'monthly_view'], 'compare'=>'IN']]]);
 
-        $current_hide = (isset($instance['current_hide']) ? $instance['current_hide'] : '');
-        $autoplay = (isset($instance['autoplay']) ? $instance['autoplay'] : 1);
-        $autoplay_time = (isset($instance['autoplay_time']) ? $instance['autoplay_time'] : 3000);
-        $loop = (isset($instance['loop']) ? $instance['loop'] : 1);
+        $current_hide = ($instance['current_hide'] ?? '');
+        $autoplay = ($instance['autoplay'] ?? 1);
+        $autoplay_time = ($instance['autoplay_time'] ?? 3000);
+        $loop = ($instance['loop'] ?? 1);
 
         $monthly_view_options = false;
         $grid_view_options = false;
 
         echo '<p class="mec-widget-row-container">'
         .'<label for="'.$this->get_field_id('title').'">'.__('Title:', 'modern-events-calendar-lite').'</label>'
-        .'<input class="widefat" type="text" id="'.$this->get_field_id('title').'" name="'.$this->get_field_name('title').'" value="'.(isset($instance['title']) ? $instance['title'] : '').'" />'
+        .'<input class="widefat" type="text" id="'.$this->get_field_id('title').'" name="'.$this->get_field_name('title').'" value="'.($instance['title'] ?? '').'" />'
         .'</p>';
         
         if(count($calendars))
@@ -156,7 +156,7 @@ class MEC_MEC_widget extends WP_Widget
      */
     public function update($new_instance, $old_instance)
     {
-        $instance = array();
+        $instance = [];
         $instance['title'] = isset($new_instance['title']) ? strip_tags($new_instance['title']) : '';
         $instance['calendar_id'] = isset($new_instance['calendar_id']) ? intval($new_instance['calendar_id']) : 0;
         $instance['current_hide'] = isset($new_instance['current_hide']) ? strip_tags($new_instance['current_hide']) : '';

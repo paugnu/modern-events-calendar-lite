@@ -84,7 +84,7 @@ class BankAccount extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function retrieve($_id, $_opts = null)
+    public static function retrieve($_id, $_opts = null): never
     {
         $msg = 'Bank accounts cannot be retrieved without a customer ID or ' .
                'an account ID. Retrieve a bank account using ' .
@@ -102,7 +102,7 @@ class BankAccount extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function update($_id, $_params = null, $_options = null)
+    public static function update($_id, $_params = null, $_options = null): never
     {
         $msg = 'Bank accounts cannot be updated without a customer ID or an ' .
                'account ID. Update a bank account using ' .
@@ -124,7 +124,7 @@ class BankAccount extends ApiResource
     public function verify($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/verify';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

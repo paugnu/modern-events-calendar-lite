@@ -196,7 +196,7 @@ $this->factory->params('footer', $javascript);
 
             // Advanced Repeating Day
 		    $advanced_days = get_post_meta( $post->ID, 'mec_advanced_days', true );
-		    $advanced_days = (is_array($advanced_days)) ? $advanced_days : array();
+		    $advanced_days = (is_array($advanced_days)) ? $advanced_days : [];
 		    $advanced_str = (count($advanced_days)) ? implode('-', $advanced_days) : '';
 
             $start_time_hour = get_post_meta($post_id, 'mec_start_time_hour', true);
@@ -224,13 +224,13 @@ $this->factory->params('footer', $javascript);
             if(trim($repeat_type) == '') $repeat_type = 'daily';
 
             $repeat_interval = get_post_meta($post_id, 'mec_repeat_interval', true);
-            if(trim($repeat_interval) == '' and in_array($repeat_type, array('daily', 'weekly'))) $repeat_interval = 1;
+            if(trim($repeat_interval) == '' and in_array($repeat_type, ['daily', 'weekly'])) $repeat_interval = 1;
 
             $certain_weekdays = get_post_meta($post_id, 'mec_certain_weekdays', true);
-            if($repeat_type != 'certain_weekdays') $certain_weekdays = array();
+            if($repeat_type != 'certain_weekdays') $certain_weekdays = [];
             
             $in_days_str = get_post_meta($post_id, 'mec_in_days', true);
-            $in_days = trim($in_days_str) ? explode(',', $in_days_str) : array();
+            $in_days = trim($in_days_str) ? explode(',', $in_days_str) : [];
             
             $mec_repeat_end = get_post_meta($post_id, 'mec_repeat_end', true);
             if(trim($mec_repeat_end) == '') $mec_repeat_end = 'never';
@@ -258,17 +258,17 @@ $this->factory->params('footer', $javascript);
         <div class="mec-fes-form-cntt">
             <div class="mec-form-row">
                 <label for="mec_fes_title"><?php _e('Title', 'modern-events-calendar-lite'); ?> <span class="mec-required">*</span></label>
-                <input type="text" name="mec[title]" id="mec_fes_title" value="<?php echo (isset($post->post_title) ? $post->post_title : ''); ?>" required="required" />
+                <input type="text" name="mec[title]" id="mec_fes_title" value="<?php echo ($post->post_title ?? ''); ?>" required="required" />
             </div>
             <div class="mec-form-row">
-                <?php wp_editor((isset($post->post_content) ? $post->post_content : ''), 'mec_fes_content', array('textarea_name'=>'mec[content]')); ?>
+                <?php wp_editor(($post->post_content ?? ''), 'mec_fes_content', ['textarea_name'=>'mec[content]']); ?>
             </div>
             <?php if(isset($this->settings['fes_section_excerpt']) && $this->settings['fes_section_excerpt']): ?>
             <div class="mec-meta-box-fields" id="mec-excerpt">
                 <h4><?php _e('Excerpt', 'modern-events-calendar-lite'); ?> <?php echo ((isset($this->settings['fes_required_excerpt']) and $this->settings['fes_required_excerpt']) ? '<span class="mec-required">*</span>' : ''); ?></h4>
                 <div class="mec-form-row">
                     <div class="mec-col-12">
-                        <textarea name="mec[excerpt]" id="mec_fes_excerpt" class="widefat" rows="10" title="<?php esc_attr_e('Optional Event Excerpt', 'modern-events-calendar-lite'); ?>" placeholder="<?php esc_attr_e('Optional Event Excerpt', 'modern-events-calendar-lite'); ?>" <?php echo ((isset($this->settings['fes_required_excerpt']) and $this->settings['fes_required_excerpt']) ? 'required' : ''); ?>><?php echo (isset($post->post_excerpt) ? $post->post_excerpt : ''); ?></textarea>
+                        <textarea name="mec[excerpt]" id="mec_fes_excerpt" class="widefat" rows="10" title="<?php esc_attr_e('Optional Event Excerpt', 'modern-events-calendar-lite'); ?>" placeholder="<?php esc_attr_e('Optional Event Excerpt', 'modern-events-calendar-lite'); ?>" <?php echo ((isset($this->settings['fes_required_excerpt']) and $this->settings['fes_required_excerpt']) ? 'required' : ''); ?>><?php echo ($post->post_excerpt ?? ''); ?></textarea>
                     </div>
                 </div>
             </div>
@@ -290,14 +290,14 @@ $this->factory->params('footer', $javascript);
                             <input type="text" name="mec[date][start][date]" id="mec_start_date" value="<?php echo esc_attr($this->main->standardize_format($start_date, $datepicker_format)); ?>" placeholder="<?php _e('Start Date', 'modern-events-calendar-lite'); ?>" autocomplete="off" />
                         </div>
                         <div class="mec-col-6 mec-time-picker <?php echo ($allday == 1) ? 'mec-util-hidden' : ''; ?>">
-                            <?php $this->main->timepicker(array(
-                                'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                            <?php $this->main->timepicker([
+                                'method' => ($this->settings['time_format'] ?? 12),
                                 'time_hour' => $start_time_hour,
                                 'time_minutes' => $start_time_minutes,
                                 'time_ampm' => $start_time_ampm,
                                 'name' => 'mec[date][start]',
                                 'id_key' => 'start_',
-                            )); ?>
+                            ]); ?>
                         </div>
                     </div>
                     <div class="mec-title">
@@ -309,14 +309,14 @@ $this->factory->params('footer', $javascript);
                             <input type="text" name="mec[date][end][date]" id="mec_end_date" value="<?php echo esc_attr($this->main->standardize_format($end_date, $datepicker_format)); ?>" placeholder="<?php _e('End Date', 'modern-events-calendar-lite'); ?>" autocomplete="off" />
                         </div>
                         <div class="mec-col-6 mec-time-picker <?php echo ($allday == 1) ? 'mec-util-hidden' : ''; ?>">
-                            <?php $this->main->timepicker(array(
-                                'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                            <?php $this->main->timepicker([
+                                'method' => ($this->settings['time_format'] ?? 12),
                                 'time_hour' => $end_time_hour,
                                 'time_minutes' => $end_time_minutes,
                                 'time_ampm' => $end_time_ampm,
                                 'name' => 'mec[date][end]',
                                 'id_key' => 'end_',
-                            )); ?>
+                            ]); ?>
                         </div>
                     </div>
                     <div class="mec-form-row">
@@ -419,14 +419,14 @@ $this->factory->params('footer', $javascript);
                                             <input type="text" id="mec_exceptions_in_days_start_date" value="" placeholder="<?php _e('Start', 'modern-events-calendar-lite'); ?>" title="<?php _e('Start', 'modern-events-calendar-lite'); ?>" class="mec_date_picker_dynamic_format widefat" autocomplete="off"/>
                                         </div>
                                         <div class="mec-col-8">
-                                            <?php $this->main->timepicker(array(
-                                                'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                                            <?php $this->main->timepicker([
+                                                'method' => ($this->settings['time_format'] ?? 12),
                                                 'time_hour' => $start_time_hour,
                                                 'time_minutes' => $start_time_minutes,
                                                 'time_ampm' => $start_time_ampm,
                                                 'name' => 'mec[exceptionsdays][start]',
                                                 'id_key' => 'exceptions_in_days_start_',
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                     </div>
                                     <div class="mec-form-row">
@@ -434,14 +434,14 @@ $this->factory->params('footer', $javascript);
                                             <input type="text" id="mec_exceptions_in_days_end_date" value="" placeholder="<?php _e('End', 'modern-events-calendar-lite'); ?>" title="<?php _e('End', 'modern-events-calendar-lite'); ?>" class="mec_date_picker_dynamic_format" autocomplete="off"/>
                                         </div>
                                         <div class="mec-col-8">
-                                            <?php $this->main->timepicker(array(
-                                                'method' => (isset($this->settings['time_format']) ? $this->settings['time_format'] : 12),
+                                            <?php $this->main->timepicker([
+                                                'method' => ($this->settings['time_format'] ?? 12),
                                                 'time_hour' => $end_time_hour,
                                                 'time_minutes' => $end_time_minutes,
                                                 'time_ampm' => $end_time_ampm,
                                                 'name' => 'mec[exceptionsdays][end]',
                                                 'id_key' => 'exceptions_in_days_end_',
-                                            )); ?>
+                                            ]); ?>
                                         </div>
                                     </div>
                                     <div class="mec-form-row">
@@ -850,12 +850,12 @@ $this->factory->params('footer', $javascript);
                 $cost_type = ((isset($this->settings['single_cost_type']) and trim($this->settings['single_cost_type'])) ? $this->settings['single_cost_type'] : 'numeric');
 
                 $currency = get_post_meta($post_id, 'mec_currency', true);
-                if(!is_array($currency)) $currency = array();
+                if(!is_array($currency)) $currency = [];
 
                 $currency_per_event = ((isset($this->settings['currency_per_event']) and trim($this->settings['currency_per_event'])) ? $this->settings['currency_per_event'] : 0);
 
                 $currencies = $this->main->get_currencies();
-                $current_currency = (isset($currency['currency']) ? $currency['currency'] : (isset($this->settings['currency']) ? $this->settings['currency'] : NULL));
+                $current_currency = ($currency['currency'] ?? $this->settings['currency'] ?? NULL);
             ?>
             <div class="mec-meta-box-fields" id="mec-event-cost">
                 <h4><?php echo $this->main->m('event_cost', __('Event Cost', 'modern-events-calendar-lite')); ?> <?php echo ((isset($this->settings['fes_required_cost']) and $this->settings['fes_required_cost']) ? '<span class="mec-required">*</span>' : ''); ?></h4>
@@ -880,7 +880,7 @@ $this->factory->params('footer', $javascript);
                 <div class="mec-form-row">
                     <label class="mec-col-2" for="mec_currency_currency_symptom"><?php _e('Currency Sign', 'modern-events-calendar-lite'); ?></label>
                     <div class="mec-col-4">
-                        <input type="text" name="mec[currency][currency_symptom]" id="mec_currency_currency_symptom" value="<?php echo (isset($currency['currency_symptom']) ? $currency['currency_symptom'] : ''); ?>" />
+                        <input type="text" name="mec[currency][currency_symptom]" id="mec_currency_currency_symptom" value="<?php echo ($currency['currency_symptom'] ?? ''); ?>" />
                         <span class="mec-tooltip">
                             <div class="box left">
                                 <h5 class="title"><?php _e('Currency Sign', 'modern-events-calendar-lite'); ?></h5>
@@ -904,13 +904,13 @@ $this->factory->params('footer', $javascript);
                 <div class="mec-form-row">
                     <label class="mec-col-2" for="mec_currency_thousand_separator"><?php _e('Thousand Separator', 'modern-events-calendar-lite'); ?></label>
                     <div class="mec-col-4">
-                        <input type="text" name="mec[currency][thousand_separator]" id="mec_currency_thousand_separator" value="<?php echo (isset($currency['thousand_separator']) ? $currency['thousand_separator'] : ','); ?>" />
+                        <input type="text" name="mec[currency][thousand_separator]" id="mec_currency_thousand_separator" value="<?php echo ($currency['thousand_separator'] ?? ','); ?>" />
                     </div>
                 </div>
                 <div class="mec-form-row">
                     <label class="mec-col-2" for="mec_currency_decimal_separator"><?php _e('Decimal Separator', 'modern-events-calendar-lite'); ?></label>
                     <div class="mec-col-4">
-                        <input type="text" name="mec[currency][decimal_separator]" id="mec_currency_decimal_separator" value="<?php echo (isset($currency['decimal_separator']) ? $currency['decimal_separator'] : '.'); ?>" />
+                        <input type="text" name="mec[currency][decimal_separator]" id="mec_currency_decimal_separator" value="<?php echo ($currency['decimal_separator'] ?? '.'); ?>" />
                     </div>
                 </div>
                 <div class="mec-form-row">
@@ -952,12 +952,12 @@ $this->factory->params('footer', $javascript);
                 <h4><?php echo $this->main->m('taxonomy_categories', __('Categories', 'modern-events-calendar-lite')); ?> <?php echo ((isset($this->settings['fes_required_category']) and $this->settings['fes_required_category']) ? '<span class="mec-required">*</span>' : ''); ?></h4>
                 <div class="mec-form-row">
                     <?php 
-                        wp_list_categories(array(
+                        wp_list_categories([
                             'taxonomy' => 'mec_category',
                             'hide_empty' => false,
                             'title_li' => '',
                             'walker' => new FES_Custom_Walker($post_id),
-                        ));
+                        ]);
                     ?>
                 </div>
             </div>
@@ -968,10 +968,10 @@ $this->factory->params('footer', $javascript);
             <?php
                 $post_labels = get_the_terms($post_id, 'mec_label');
 
-                $labels = array();
+                $labels = [];
                 if($post_labels) foreach($post_labels as $post_label) $labels[] = $post_label->term_id;
                 
-                $label_terms = get_terms(array('taxonomy'=>'mec_label', 'hide_empty'=>false));
+                $label_terms = get_terms(['taxonomy'=>'mec_label', 'hide_empty'=>false]);
             ?>
             <?php if(count($label_terms)): ?>
             <div class="mec-meta-box-fields" id="mec-labels">
@@ -1033,14 +1033,14 @@ $this->factory->params('footer', $javascript);
                 <?php
                 $post_speakers = get_the_terms($post_id, 'mec_speaker');
 
-                $speakers = array();
+                $speakers = [];
                 if($post_speakers) foreach($post_speakers as $post_speaker)
                 {
                     if(!isset($post_speaker->term_id)) continue;
                     $speakers[] = $post_speaker->term_id;
                 }
 
-                $speaker_terms = get_terms(array('taxonomy'=>'mec_speaker', 'hide_empty'=>false));
+                $speaker_terms = get_terms(['taxonomy'=>'mec_speaker', 'hide_empty'=>false]);
                 ?>
                     <div class="mec-meta-box-fields" id="mec-speakers">
                         <h4><?php echo $this->main->m('taxonomy_speakers', __('Speakers', 'modern-events-calendar-lite')); ?></h4>

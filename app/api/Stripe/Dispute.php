@@ -74,7 +74,7 @@ class Dispute extends ApiResource
     public function close($opts = null)
     {
         $url = $this->instanceUrl() . '/close';
-        list($response, $opts) = $this->_request('post', $url, null, $opts);
+        [$response, $opts] = $this->_request('post', $url, null, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

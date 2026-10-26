@@ -6,8 +6,8 @@ defined('MECEXEC') or die();
 
 $settings = $this->main->get_settings();
 
-$fees = isset($settings['fees']) ? $settings['fees'] : array();
-$ticket_variations = isset($settings['ticket_variations']) ? $settings['ticket_variations'] : array();
+$fees = $settings['fees'] ?? [];
+$ticket_variations = $settings['ticket_variations'] ?? [];
 
 // WordPress Pages
 $pages = get_pages();
@@ -16,14 +16,14 @@ $pages = get_pages();
 $roles = array_reverse(wp_roles()->roles);
 
 $bfixed_fields = $this->main->get_bfixed_fields();
-if(!is_array($bfixed_fields)) $bfixed_fields = array();
+if(!is_array($bfixed_fields)) $bfixed_fields = [];
 
 // Booking form
 $mec_email  = false;
 $mec_name   = false;
 
 $reg_fields = $this->main->get_reg_fields();
-if(!is_array($reg_fields)) $reg_fields = array();
+if(!is_array($reg_fields)) $reg_fields = [];
 
 foreach($reg_fields as $field)
 {
@@ -39,11 +39,11 @@ if(!$mec_name)
 {
 	array_unshift(
 		$reg_fields,
-		array(
+		[
 			'mandatory' => '0',
 			'type'      => 'name',
 			'label'     => esc_html__('Name', 'modern-events-calendar-lite'),
-        )
+        ]
 	);
 }
 
@@ -51,11 +51,11 @@ if(!$mec_email)
 {
 	array_unshift(
 		$reg_fields,
-		array(
+		[
 			'mandatory' => '0',
 			'type'      => 'mec_email',
 			'label'     => esc_html__('Email', 'modern-events-calendar-lite'),
-        )
+        ]
 	);
 }
 
@@ -361,7 +361,7 @@ $gateways_options = $this->main->get_gateways_options();
                                     <div class="mec-form-row">
                                         <label class="mec-col-3" for="mec_settings_booking_tid_start_from"><?php _e('Start From', 'modern-events-calendar-lite'); ?></label>
                                         <div class="mec-col-9">
-                                            <input type="number" id="mec_settings_booking_tid_start_from" name="mec[settings][booking_tid_start_from]" value="<?php echo (isset($settings['booking_tid_start_from']) ? $settings['booking_tid_start_from'] : 10000); ?>" min="1" step="1">
+                                            <input type="number" id="mec_settings_booking_tid_start_from" name="mec[settings][booking_tid_start_from]" value="<?php echo ($settings['booking_tid_start_from'] ?? 10000); ?>" min="1" step="1">
                                         </div>
                                     </div>
                                 </div>
@@ -374,7 +374,7 @@ $gateways_options = $this->main->get_gateways_options();
                                     </label>
                                 </div>
                                 <div id="mec_settings_booking_booking_wcb_options" class="<?php echo (!isset($settings['booking_wcb_all']) or (isset($settings['booking_wcb_all']) and $settings['booking_wcb_all'] == '1')) ? 'mec-util-hidden' : ''; ?>" style="margin: 0 0 40px 0; padding: 20px 20px 4px; border: 1px solid #ddd;">
-                                    <?php foreach($roles as $role_key => $role): $wcb_value = isset($settings['booking_wcb_'.$role_key]) ? $settings['booking_wcb_'.$role_key] : 1; ?>
+                                    <?php foreach($roles as $role_key => $role): $wcb_value = $settings['booking_wcb_'.$role_key] ?? 1; ?>
                                         <div class="mec-form-row">
                                             <div class="mec-col-12">
                                                 <label for="mec_settings_booking_wcb_<?php echo $role_key; ?>">
@@ -564,11 +564,11 @@ $gateways_options = $this->main->get_gateways_options();
                                     <?php $i = 0; foreach($fees as $key=>$fee): if(!is_numeric($key)) continue; $i = max($i, $key); ?>
                                     <div class="mec-box" id="mec_fee_row<?php echo $i; ?>">
                                         <div class="mec-form-row">
-                                            <input class="mec-col-12" type="text" name="mec[settings][fees][<?php echo $i; ?>][title]" placeholder="<?php esc_attr_e('Fee Title', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($fee['title']) ? $fee['title'] : ''); ?>" />
+                                            <input class="mec-col-12" type="text" name="mec[settings][fees][<?php echo $i; ?>][title]" placeholder="<?php esc_attr_e('Fee Title', 'modern-events-calendar-lite'); ?>" value="<?php echo ($fee['title'] ?? ''); ?>" />
                                         </div>
                                         <div class="mec-form-row">
                                             <span class="mec-col-4">
-                                                <input type="text" name="mec[settings][fees][<?php echo $i; ?>][amount]" placeholder="<?php esc_attr_e('Amount', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($fee['amount']) ? $fee['amount'] : ''); ?>" />
+                                                <input type="text" name="mec[settings][fees][<?php echo $i; ?>][amount]" placeholder="<?php esc_attr_e('Amount', 'modern-events-calendar-lite'); ?>" value="<?php echo ($fee['amount'] ?? ''); ?>" />
                                                 <span class="mec-tooltip">
                                                     <div class="box top">
                                                         <h5 class="title"><?php _e('Amount', 'modern-events-calendar-lite'); ?></h5>
@@ -658,11 +658,11 @@ $gateways_options = $this->main->get_gateways_options();
                                         <?php $i = 0; foreach($ticket_variations as $key=>$ticket_variation): if(!is_numeric($key)) continue; $i = max($i, $key); ?>
                                             <div class="mec-box" id="mec_ticket_variation_row<?php echo $i; ?>">
                                                 <div class="mec-form-row">
-                                                    <input class="mec-col-12" type="text" name="mec[settings][ticket_variations][<?php echo $i; ?>][title]" placeholder="<?php esc_attr_e('Title', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($ticket_variation['title']) ? $ticket_variation['title'] : ''); ?>" />
+                                                    <input class="mec-col-12" type="text" name="mec[settings][ticket_variations][<?php echo $i; ?>][title]" placeholder="<?php esc_attr_e('Title', 'modern-events-calendar-lite'); ?>" value="<?php echo ($ticket_variation['title'] ?? ''); ?>" />
                                                 </div>
                                                 <div class="mec-form-row">
                                                     <span class="mec-col-4">
-                                                        <input type="text" name="mec[settings][ticket_variations][<?php echo $i; ?>][price]" placeholder="<?php esc_attr_e('Price', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($ticket_variation['price']) ? $ticket_variation['price'] : ''); ?>" />
+                                                        <input type="text" name="mec[settings][ticket_variations][<?php echo $i; ?>][price]" placeholder="<?php esc_attr_e('Price', 'modern-events-calendar-lite'); ?>" value="<?php echo ($ticket_variation['price'] ?? ''); ?>" />
                                                         <span class="mec-tooltip">
                                                             <div class="box top">
                                                                 <h5 class="title"><?php _e('Price', 'modern-events-calendar-lite'); ?></h5>
@@ -672,7 +672,7 @@ $gateways_options = $this->main->get_gateways_options();
                                                         </span>                                                          
                                                     </span>
                                                     <span class="mec-col-4">
-                                                        <input type="number" min="0" name="mec[settings][ticket_variations][<?php echo $i; ?>][max]" placeholder="<?php esc_attr_e('Maximum Per Ticket', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($ticket_variation['max']) ? $ticket_variation['max'] : ''); ?>" />
+                                                        <input type="number" min="0" name="mec[settings][ticket_variations][<?php echo $i; ?>][max]" placeholder="<?php esc_attr_e('Maximum Per Ticket', 'modern-events-calendar-lite'); ?>" value="<?php echo ($ticket_variation['max'] ?? ''); ?>" />
                                                         <span class="mec-tooltip">
                                                             <div class="box top">
                                                                 <h5 class="title"><?php _e('Maximum Per Ticket', 'modern-events-calendar-lite'); ?></h5>
@@ -877,37 +877,37 @@ $gateways_options = $this->main->get_gateways_options();
                                 <input type="hidden" id="mec_new_bfixed_field_key" value="<?php echo $b + 1; ?>" />
                                 <div class="mec-util-hidden">
                                     <div id="mec_bfixed_field_text">
-                                        <?php echo $this->main->field_text(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_text(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_email">
-                                        <?php echo $this->main->field_email(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_email(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_tel">
-                                        <?php echo $this->main->field_tel(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_tel(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_date">
-                                        <?php echo $this->main->field_date(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_date(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_textarea">
-                                        <?php echo $this->main->field_textarea(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_textarea(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_checkbox">
-                                        <?php echo $this->main->field_checkbox(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_checkbox(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_radio">
-                                        <?php echo $this->main->field_radio(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_radio(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_select">
-                                        <?php echo $this->main->field_select(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_select(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_agreement">
-                                        <?php echo $this->main->field_agreement(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_agreement(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_p">
-                                        <?php echo $this->main->field_p(':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_p(':i:', [], 'bfixed'); ?>
                                     </div>
                                     <div id="mec_bfixed_field_option">
-                                        <?php echo $this->main->field_option(':fi:', ':i:', array(), 'bfixed'); ?>
+                                        <?php echo $this->main->field_option(':fi:', ':i:', [], 'bfixed'); ?>
                                     </div>
                                 </div>
                             </div>

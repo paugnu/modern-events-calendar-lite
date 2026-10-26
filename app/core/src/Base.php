@@ -105,8 +105,8 @@ final class Base {
 	 */
 	public function init_hooks() {
 
-		add_action( 'init', [ $this, 'init' ] );
-		register_activation_hook( MEC_CORE_FILE, __CLASS__ . '::register_activation' );
+		add_action( 'init', $this->init(...) );
+		register_activation_hook( MEC_CORE_FILE, self::class . '::register_activation' );
 	}
 
 	/**
@@ -132,10 +132,7 @@ final class Base {
 	public static function get_main(){
 
 		global $MEC_Main;
-		if(is_null($MEC_Main)){
-
-			$MEC_Main = new \MEC_main();
-		}
+		$MEC_Main ??= new \MEC_main();
 
 		return $MEC_Main;
 	}

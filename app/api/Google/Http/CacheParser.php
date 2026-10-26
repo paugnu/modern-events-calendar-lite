@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -25,8 +25,8 @@ if (!class_exists('Google_Client')) {
  */
 class Google_Http_CacheParser
 {
-  public static $CACHEABLE_HTTP_METHODS = array('GET', 'HEAD');
-  public static $CACHEABLE_STATUS_CODES = array('200', '203', '300', '301');
+  public static $CACHEABLE_HTTP_METHODS = ['GET', 'HEAD'];
+  public static $CACHEABLE_STATUS_CODES = ['200', '203', '300', '301'];
 
   /**
    * Check if an HTTP request can be cached by a private local cache.
@@ -92,7 +92,7 @@ class Google_Http_CacheParser
     // Pragma: no-cache is an http request directive, but is occasionally
     // used as a response header incorrectly.
     $pragma = $resp->getResponseHeader('pragma');
-    if ($pragma == 'no-cache' || strpos($pragma, 'no-cache') !== false) {
+    if ($pragma == 'no-cache' || str_contains($pragma, 'no-cache')) {
       return false;
     }
 

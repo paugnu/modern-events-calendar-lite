@@ -58,7 +58,7 @@ class CaseInsensitiveArray implements \ArrayAccess, \Countable, \IteratorAggrega
     {
         $offset = static::maybeLowercase($offset);
 
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+        return $this->container[$offset] ?? null;
     }
 
     private static function maybeLowercase($v)

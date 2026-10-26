@@ -46,6 +46,6 @@ class Tickets extends MEC\Singleton{
 
         $tickets = $this->get_event_tickets($event_id);
 
-        return isset($tickets[$ticket_id]) ? $tickets[$ticket_id] : null;
+        return $tickets[$ticket_id] ?? null;
     }
 }

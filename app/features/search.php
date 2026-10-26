@@ -53,21 +53,21 @@ class MEC_feature_search extends MEC_base
     public function init()
     {
         // Search Shortcode
-        $this->factory->shortcode('MEC_search_bar', array($this, 'search'));
+        $this->factory->shortcode('MEC_search_bar', [$this, 'search']);
 
         if(isset($this->settings['search_bar_ajax_mode']) && $this->settings['search_bar_ajax_mode'] == '1')
         {
-            $this->factory->action('wp_ajax_mec_get_ajax_search_data', array($this, 'mec_get_ajax_search_data'));
-            $this->factory->action('wp_ajax_nopriv_mec_get_ajax_search_data', array($this, 'mec_get_ajax_search_data'));
+            $this->factory->action('wp_ajax_mec_get_ajax_search_data', [$this, 'mec_get_ajax_search_data']);
+            $this->factory->action('wp_ajax_nopriv_mec_get_ajax_search_data', [$this, 'mec_get_ajax_search_data']);
         }
         else
         {
-            $this->factory->filter('pre_get_posts', array($this, 'mec_search_filter'));
+            $this->factory->filter('pre_get_posts', [$this, 'mec_search_filter']);
         }
 
         // Search Narrow
-        $this->factory->action('wp_ajax_mec_refine_search_items', array($this->search, 'refine'));
-        $this->factory->action('wp_ajax_nopriv_mec_refine_search_items', array($this->search, 'refine'));
+        $this->factory->action('wp_ajax_mec_refine_search_items', [$this->search, 'refine']);
+        $this->factory->action('wp_ajax_nopriv_mec_refine_search_items', [$this->search, 'refine']);
     }
 
     /**
@@ -78,7 +78,7 @@ class MEC_feature_search extends MEC_base
      */
     public function show_taxonomy($taxonomy, $icon)
     {
-        $terms = get_terms($taxonomy, array('hide_empty' => false));
+        $terms = get_terms($taxonomy, ['hide_empty' => false]);
         $out = '';
         
         if(is_wp_error($terms) || empty($terms)) return false;
@@ -130,7 +130,7 @@ class MEC_feature_search extends MEC_base
         }
 
         $out .= '<div class="mec-dropdown-search"><i class="mec-sl-'.$icon.'"></i>';
-        $args = array(
+        $args = [
             'show_option_none'   => $taxonomy_name,
             'option_none_value'  => '',
             'orderby'            => 'name',
@@ -143,7 +143,7 @@ class MEC_feature_search extends MEC_base
             'hierarchical'       => true,
             'name'               => $taxonomy_key,
             'taxonomy'           => $taxonomy,
-        );
+        ];
 
         $out .= wp_dropdown_categories($args);
         $out .= '</div>';
@@ -160,50 +160,50 @@ class MEC_feature_search extends MEC_base
         }
 
         $mec_tag_query = NULL;
-        $mec_queries = array();
+        $mec_queries = [];
 
         if(!empty($_POST['location']))
         {
             $location = sanitize_text_field($_POST['location']);
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy'  => 'mec_location',
                 'field'     => 'id',
-                'terms'     => array($location),
+                'terms'     => [$location],
                 'operator'  => 'IN'
-            );
+            ];
         }
 
         if(!empty($_POST['category']))
         {
             $category = sanitize_text_field($_POST['category']);
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy'  => 'mec_category',
                 'field'     => 'id',
-                'terms'     => array($category),
+                'terms'     => [$category],
                 'operator'  => 'IN'
-            );
+            ];
         }
 
         if(!empty($_POST['organizer']))
         {
             $organizer = sanitize_text_field($_POST['organizer']);
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy'  => 'mec_organizer',
                 'field'     => 'id',
-                'terms'     => array($organizer),
+                'terms'     => [$organizer],
                 'operator'  => 'IN'
-            );
+            ];
         }
 
         if(!empty($_POST['speaker']))
         {
             $speaker = sanitize_text_field($_POST['speaker']);
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy'  => 'mec_speaker',
                 'field'     => 'id',
-                'terms'     => array($speaker),
+                'terms'     => [$speaker],
                 'operator'  => 'IN'
-            );
+            ];
         }
 
         if(!empty($_POST['tag']))
@@ -215,20 +215,20 @@ class MEC_feature_search extends MEC_base
         if(!empty($_POST['label']))
         {
             $label = sanitize_text_field($_POST['label']);
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy'  => 'mec_label',
                 'field'     => 'id',
-                'terms'     => array($label),
+                'terms'     => [$label],
                 'operator'  => 'IN'
-            );
+            ];
         }
 
-        $args = array(
+        $args = [
             'tax_query' => $mec_queries,
             's' => esc_attr($_POST['keyword']),
             'post_type' => $this->main->get_main_post_type(),
-            'post_status' => array('publish'),
-        );
+            'post_status' => ['publish'],
+        ];
 
         if($mec_tag_query) $args['tag'] = $mec_tag_query;
         $the_query = new WP_Query($args);
@@ -271,46 +271,46 @@ class MEC_feature_search extends MEC_base
         if((is_array($query->get('post_type')) and !in_array($this->main->get_main_post_type(), $query->get('post_type'))) or (!is_array($query->get('post_type')) and $query->get('post_type') != 'mec-events')) return $query;
 
         $mec_tag_query = NULL;
-        $mec_queries = array();
+        $mec_queries = [];
 
         if(!empty($_GET['location']))
         {
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy' => 'mec_location',
                 'field' => 'id',
-                'terms' => array($_GET['location']),
+                'terms' => [$_GET['location']],
                 'operator'=> 'IN'
-            );
+            ];
         }
 
         if(!empty($_GET['category']))
         {
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy' => 'mec_category',
                 'field' => 'id',
-                'terms' => array($_GET['category']),
+                'terms' => [$_GET['category']],
                 'operator'=> 'IN'
-            );
+            ];
         }
 
         if(!empty($_GET['organizer']))
         {
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy' => 'mec_organizer',
                 'field' => 'id',
-                'terms' => array($_GET['organizer']),
+                'terms' => [$_GET['organizer']],
                 'operator'=> 'IN'
-            );
+            ];
         }
 
         if(!empty($_GET['speaker']))
         {
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy' => 'mec_speaker',
                 'field' => 'id',
-                'terms' => array($_GET['speaker']),
+                'terms' => [$_GET['speaker']],
                 'operator'=> 'IN'
-            );
+            ];
         }
 
         if(!empty($_GET['tag']))
@@ -321,12 +321,12 @@ class MEC_feature_search extends MEC_base
 
         if(!empty($_GET['label']))
         {
-            $mec_queries[] = array(
+            $mec_queries[] = [
                 'taxonomy' => 'mec_label',
                 'field' => 'id',
-                'terms' => array($_GET['label']),
+                'terms' => [$_GET['label']],
                 'operator'=> 'IN'
-            );
+            ];
         }
 
         if($mec_tag_query) $query->set('tag', $mec_tag_query);

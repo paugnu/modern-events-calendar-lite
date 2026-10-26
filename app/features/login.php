@@ -26,10 +26,10 @@ class MEC_feature_login extends MEC_base
     public function init()
     {
         // login form shortcode
-        $this->factory->shortcode('MEC_login', array($this, 'login'));
+        $this->factory->shortcode('MEC_login', $this->login(...));
 
-        $this->factory->action('wp_ajax_mec_ajax_login_data', array($this, 'mec_ajax_login_data'));
-        $this->factory->action('wp_ajax_nopriv_mec_ajax_login_data', array($this, 'mec_ajax_login_data'));
+        $this->factory->action('wp_ajax_mec_ajax_login_data', $this->mec_ajax_login_data(...));
+        $this->factory->action('wp_ajax_nopriv_mec_ajax_login_data', $this->mec_ajax_login_data(...));
     }
 
     public function mec_ajax_login_data()
@@ -40,7 +40,7 @@ class MEC_feature_login extends MEC_base
         // Verify that the nonce is valid.
         if(!wp_verify_nonce(sanitize_text_field($_POST['mec_login_nonce']), 'mec-ajax-login-nonce')) return;
         
-        $info = array();
+        $info = [];
         $info['user_login'] = $_POST['username'];
         $info['user_password'] = $_POST['password'];
         $info['remember'] = true;
@@ -48,11 +48,11 @@ class MEC_feature_login extends MEC_base
         $user_signon = wp_signon($info, true); // secure_cookie set true.
         if(is_wp_error($user_signon))
         {
-            echo json_encode(array('loggedin'=>false, 'message'=>__('<strong>'.esc_html__('Wrong username or password, reloading...', 'modern-events-calendar-lite').'</strong>')));
+            echo json_encode(['loggedin'=>false, 'message'=>__('<strong>'.esc_html__('Wrong username or password, reloading...', 'modern-events-calendar-lite').'</strong>')]);
         }
         else
         {
-            echo json_encode(array('loggedin'=>true, 'message'=>__('<strong>'.esc_html__('Login successful, redirecting...', 'modern-events-calendar-lite').'</strong>')));
+            echo json_encode(['loggedin'=>true, 'message'=>__('<strong>'.esc_html__('Login successful, redirecting...', 'modern-events-calendar-lite').'</strong>')]);
         }
 
         die();

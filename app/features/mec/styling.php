@@ -5,25 +5,25 @@ defined('MECEXEC') or die();
 $styling = $this->main->get_styling();
 $fonts = include MEC::import('app.features.mec.webfonts.webfonts', true, true);
 
-$google_fonts = array();
-$google_fonts['none'] = array(
+$google_fonts = [];
+$google_fonts['none'] = [
 	'label'=>esc_html__('Default Font', 'modern-events-calendar-lite'),
-	'variants'=>array('regular'),
-	'subsets'=>array(),
+	'variants'=>['regular'],
+	'subsets'=>[],
 	'category'=>'',
     'value'=>'',
-);
+];
 
 if(is_array($fonts))
 {
 	foreach($fonts['items'] as $font)
     {
-        $google_fonts[$font['family']] = array(
+        $google_fonts[$font['family']] = [
             'label'=>$font['family'],
             'variants'=>$font['variants'],
             'subsets'=>$font['subsets'],
             'category'=>$font['category'],
-        );
+        ];
     }
 }
 ?>
@@ -61,7 +61,7 @@ if(is_array($fonts))
                                 <div class="mec-col-9">
                                     <ul class="mec-image-select-wrap">
                                         <?php
-                                        $colorskins = array(
+                                        $colorskins = [
                                             '#40d9f1'=>'mec-colorskin-1',
                                             '#0093d0'=>'mec-colorskin-2',
                                             '#e53f51'=>'mec-colorskin-3',
@@ -87,7 +87,7 @@ if(is_array($fonts))
                                             '#333333'=>'mec-colorskin-23',
                                             '#D2D2D2'=>'mec-colorskin-24',
                                             '#636363'=>'mec-colorskin-25',
-                                            );
+                                            ];
 
                                             foreach($colorskins as $colorskin=>$values): ?>
                                             <li class="mec-image-select">
@@ -105,7 +105,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Custom Color Skin', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo (isset($styling['color']) ? $styling['color'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo ($styling['color'] ?? ''); ?>" data-default-color="" />
                                 </div>
                                 <div class="mec-col-12">
                                     <p><?php esc_attr_e("If you want to select a predefined color skin, you must clear the color of this item", 'modern-events-calendar-lite'); ?></p>
@@ -134,7 +134,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Title', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_title_color" name="mec[styling][title_color]" value="<?php echo (isset($styling['title_color']) ? $styling['title_color'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_title_color" name="mec[styling][title_color]" value="<?php echo ($styling['title_color'] ?? ''); ?>" data-default-color="" />
                                 </div>
                             </div>
                             
@@ -143,7 +143,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Title Hover', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_title_color_hover" name="mec[styling][title_color_hover]" value="<?php echo (isset($styling['title_color_hover']) ? $styling['title_color_hover'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_title_color_hover" name="mec[styling][title_color_hover]" value="<?php echo ($styling['title_color_hover'] ?? ''); ?>" data-default-color="" />
                                 </div>
                             </div>
 
@@ -152,7 +152,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Content', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_content_color" name="mec[styling][content_color]" value="<?php echo (isset($styling['content_color']) ? $styling['content_color'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_content_color" name="mec[styling][content_color]" value="<?php echo ($styling['content_color'] ?? ''); ?>" data-default-color="" />
                                 </div>
                             </div>
 
@@ -173,7 +173,7 @@ if(is_array($fonts))
                                                 if(next($google_font['variants']) == true) $variants .= ",";
                                             }
 
-                                            $value = (isset($google_font['value']) ? $google_font['value'] : '['. $google_font['label'] .','. $variants .']');
+                                            $value = ($google_font['value'] ?? '[' . $google_font['label'] . ',' . $variants . ']');
                                             if($value == '['.__('Default Font', 'modern-events-calendar-lite').',regular]') $value = '';
                                             ?>
                                             <option value="<?php echo $value; ?>" <?php if(isset($styling['mec_h_fontfamily']) and ($styling['mec_h_fontfamily'] == $value)) echo 'selected="selected"'; ?>><?php echo $google_font['label']; ?></option>
@@ -200,7 +200,7 @@ if(is_array($fonts))
                                                 if(next($google_font['variants']) == true) $variants .= ",";
                                             }
                                             
-                                            $value = (isset($google_font['value']) ? $google_font['value'] : '['. $google_font['label'] .','. $variants .']');
+                                            $value = ($google_font['value'] ?? '[' . $google_font['label'] . ',' . $variants . ']');
                                             if($value == '['.__('Default Font', 'modern-events-calendar-lite').',regular]') $value = '';
                                             ?>
                                             <option value="<?php echo $value; ?>" <?php if(isset($styling['mec_p_fontfamily'] ) && ($styling['mec_p_fontfamily'] == $value ) ) echo 'selected'; ?>><?php echo $google_font['label']; ?></option>
@@ -267,7 +267,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Frontend Event Submission Color', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_fes_color" name="mec[styling][fes_color]" value="<?php echo (isset($styling['fes_color']) ? $styling['fes_color'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_fes_color" name="mec[styling][fes_color]" value="<?php echo ($styling['fes_color'] ?? ''); ?>" data-default-color="" />
                                 </div>
                             </div>
 
@@ -276,7 +276,7 @@ if(is_array($fonts))
                                     <span><?php esc_html_e('Notifications Background', 'modern-events-calendar-lite' ); ?></span>
                                 </div>
                                 <div class="mec-col-9">
-                                    <input type="text" class="wp-color-picker-field" id="mec_settings_notification_bg" name="mec[styling][notification_bg]" value="<?php echo (isset($styling['notification_bg']) ? $styling['notification_bg'] : ''); ?>" data-default-color="" />
+                                    <input type="text" class="wp-color-picker-field" id="mec_settings_notification_bg" name="mec[styling][notification_bg]" value="<?php echo ($styling['notification_bg'] ?? ''); ?>" data-default-color="" />
                                 </div>
                             </div>
 

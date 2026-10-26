@@ -315,12 +315,12 @@
                             <div class="mec-form-row">
                                 <ul id="mec_export_module_options" class="mec-form-row">
                                     <?php
-                                    $event_options = array('googlecal'=>__('Google Calendar', 'modern-events-calendar-lite'), 'ical'=>__('iCal', 'modern-events-calendar-lite'));
+                                    $event_options = ['googlecal'=>__('Google Calendar', 'modern-events-calendar-lite'), 'ical'=>__('iCal', 'modern-events-calendar-lite')];
                                     foreach($event_options as $event_key=>$event_option): ?>
                                     <li id="mec_sn_<?php echo esc_attr($event_key); ?>" data-id="<?php echo esc_attr($event_key); ?>" class="mec-form-row mec-switcher <?php echo ((isset($settings['sn'][$event_key]) and $settings['sn'][$event_key]) ? 'mec-enabled' : 'mec-disabled'); ?>">
                                         <label class="mec-col-3"><?php echo esc_html($event_option); ?></label>
                                         <div class="mec-col-9">
-                                            <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($event_key); ?>]" value="<?php echo (isset($settings['sn'][$event_key]) ? $settings['sn'][$event_key] : '1'); ?>" />
+                                            <input class="mec-status" type="hidden" name="mec[settings][sn][<?php echo esc_attr($event_key); ?>]" value="<?php echo ($settings['sn'][$event_key] ?? '1'); ?>" />
                                             <label for="mec[settings][sn][<?php echo esc_attr($event_key); ?>]"></label>
                                         </div>
                                     </li>
@@ -413,7 +413,7 @@
                             <span><?php esc_html_e('Custom Color Skin', 'modern-events-calendar-lite' ); ?></span>
                         </div>
                         <div class="mec-col-6">
-                            <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo (isset($styling['color']) ? $styling['color'] : ''); ?>" data-default-color="" />
+                            <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo ($styling['color'] ?? ''); ?>" data-default-color="" />
                         </div>
                         <div class="mec-col-12">
                             <p><?php esc_attr_e("If you want to select a predefined color skin, you must clear the color of this item", 'modern-events-calendar-lite'); ?></p>
@@ -426,7 +426,7 @@
                         <div class="mec-col-6">
                             <ul class="mec-image-select-wrap">
                                 <?php
-                                $colorskins = array(
+                                $colorskins = [
                                     '#40d9f1'=>'mec-colorskin-1',
                                     '#0093d0'=>'mec-colorskin-2',
                                     '#e53f51'=>'mec-colorskin-3',
@@ -452,7 +452,7 @@
                                     '#333333'=>'mec-colorskin-23',
                                     '#D2D2D2'=>'mec-colorskin-24',
                                     '#636363'=>'mec-colorskin-25',
-                                    );
+                                    ];
 
                                     foreach($colorskins as $colorskin=>$values): ?>
                                     <li class="mec-image-select">
@@ -475,7 +475,7 @@
                             <span><?php esc_html_e('Custom Color Skin', 'modern-events-calendar-lite' ); ?></span>
                         </div>
                         <div class="mec-col-6">
-                            <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo (isset($styling['color']) ? $styling['color'] : ''); ?>" data-default-color="" />
+                            <input type="text" class="wp-color-picker-field" id="mec_settings_color" name="mec[styling][color]" value="<?php echo ($styling['color'] ?? ''); ?>" data-default-color="" />
                         </div>
                         <div class="mec-col-6">
                             <p><?php esc_attr_e("If you want to select a predefined color skin, you must clear the color of this item", 'modern-events-calendar-lite'); ?></p>
@@ -488,7 +488,7 @@
                         <div class="mec-col-6">
                             <ul class="mec-image-select-wrap">
                                 <?php
-                                $colorskins = array(
+                                $colorskins = [
                                     '#40d9f1'=>'mec-colorskin-1',
                                     '#0093d0'=>'mec-colorskin-2',
                                     '#e53f51'=>'mec-colorskin-3',
@@ -514,7 +514,7 @@
                                     '#333333'=>'mec-colorskin-23',
                                     '#D2D2D2'=>'mec-colorskin-24',
                                     '#636363'=>'mec-colorskin-25',
-                                    );
+                                    ];
 
                                     foreach($colorskins as $colorskin=>$values): ?>
                                     <li class="mec-image-select">

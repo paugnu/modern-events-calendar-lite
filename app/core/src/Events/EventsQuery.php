@@ -10,23 +10,23 @@ class EventsQuery extends Singleton{
 
     public function parse_args($q_args){
 
-        $default = array(
+        $default = [
             'post_type' => 'mec-events',
             'fields' => '',
             'posts_per_page' => get_option('posts_per_page',12),
-            'post_status' => array('publish','pending','draft','future','private'),
-            'meta_query' => array(
+            'post_status' => ['publish','pending','draft','future','private'],
+            'meta_query' => [
                 'relation' => 'AND',
-            ),
-            'post__in' => array(),
-            'meta_query' => array(),
-        );
+            ],
+            'post__in' => [],
+            'meta_query' => [],
+        ];
 
         if(is_numeric($q_args) && $q_args > 0){
 
-            $q_args = array(
+            $q_args = [
                 'event_id' => $q_args
-            );
+            ];
         }
 
         $q_args = wp_parse_args( $q_args, $default );
@@ -36,7 +36,7 @@ class EventsQuery extends Singleton{
 
     public function get_tax_query($q_args){
 
-        $taxonomies = array(
+        $taxonomies = [
             'label',
             'category',
             'location',
@@ -44,22 +44,22 @@ class EventsQuery extends Singleton{
             'speaker',
             'event_type',
             'event_type_2',
-        );
+        ];
 
-        $tax_query = array(
+        $tax_query = [
             'relation'=>'AND'
-        );
+        ];
 
         foreach($q_args as $tax => $v){
 
             if(!empty($v) && in_array($tax,$taxonomies)){
 
                 $taxonomy = 'mec_'.$tax;
-                $tax_query[$taxonomy.'_term_ids'] = array(
+                $tax_query[$taxonomy.'_term_ids'] = [
                     'taxonomy'=> $taxonomy,
                     'field'=>'term_id',
                     'terms'=> !is_array($v) ? explode(',', trim($v, ', ')) : (array)$v,
-                );
+                ];
             }
         }
 
@@ -71,7 +71,7 @@ class EventsQuery extends Singleton{
     public function get_events($q_args){
 
         $tax_query = array_merge_recursive(
-            isset($q_args['tax_query']) ? $q_args['tax_query'] : array(),
+            $q_args['tax_query'] ?? [],
             $this->get_tax_query($q_args)
         );
         $q_args['tax_query'] = $tax_query;
@@ -81,58 +81,58 @@ class EventsQuery extends Singleton{
         //event_ids start
         if(array_key_exists('event_id',$q_args) && !empty($q_args['event_id'])){
 
-            $q_args['meta_query']['event_id'] = array(
+            $q_args['meta_query']['event_id'] = [
                 'key' => 'mec_event_id',
                 'value' => $q_args['event_id'],
                 'compare' => '=',
-            );
+            ];
         }
 
         if(array_key_exists('event_ids__in',$q_args)){
 
-            $q_args['meta_query']['event_ids__in'] = array(
+            $q_args['meta_query']['event_ids__in'] = [
                 'key' => 'mec_event_id',
                 'value' => (array) $q_args['event_ids__in'],
                 'compare' => 'IN',
-            );
+            ];
         }
 
         if(array_key_exists('event_ids__not_in',$q_args)){
 
-            $q_args['meta_query']['event_ids__not_in'] = array(
+            $q_args['meta_query']['event_ids__not_in'] = [
                 'key' => 'mec_event_id',
                 'value' => (array) $q_args['event_ids__not_in'],
                 'compare' => 'NOT IN',
-            );
+            ];
         }
         //event_ids end
 
         //other meta start
         if(array_key_exists('attendee_email',$q_args) && !empty($q_args['event_id'])){
 
-            $q_args['meta_query']['attendee_email'] = array(
+            $q_args['meta_query']['attendee_email'] = [
                 'key' => 'mec_attendees',
                 'value' => '"'.$q_args['attendee_email'].'"',
                 'compare' => 'LIKE',
-            );
+            ];
         }
 
         if(array_key_exists('confirmed',$q_args) && !empty($q_args['confirmed'])){
 
-            $q_args['meta_query']['confirmed'] = array(
+            $q_args['meta_query']['confirmed'] = [
                 'key' => 'mec_confirmed',
                 'value' => $q_args['confirmed'],
                 'compare' => '=',
-            );
+            ];
         }
 
         if(array_key_exists('verified',$q_args) && !empty($q_args['confirmed'])){
 
-            $q_args['meta_query']['verified'] = array(
+            $q_args['meta_query']['verified'] = [
                 'key' => 'mec_verified',
                 'value' => $q_args['verified'],
                 'compare' => '=',
-            );
+            ];
         }
         //other meta end
 
@@ -141,10 +141,10 @@ class EventsQuery extends Singleton{
 
     public function get_events_ids($q_args){
 
-        $default = array(
+        $default = [
             'limit' => -1,
             'fields' => 'ids',
-        );
+        ];
 
         $q_args = wp_parse_args($q_args,$default);
 
@@ -154,11 +154,11 @@ class EventsQuery extends Singleton{
     public function get_last_event($return = 'post'){
 
 		$query_args = $this->parse_args(
-			array(
+			[
 				'posts_per_page' => 1,
 				'order' => 'DESC',
 				'orderby' => 'ID'
-			)
+			]
 		);
 		$events = get_posts($query_args);
 

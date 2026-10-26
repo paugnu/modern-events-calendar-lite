@@ -6,7 +6,7 @@ class DisplayNotificationSettings{
 
     public function output($atts){
 
-        $default = array(
+        $default = [
             'class' => '',
             'group_id' => '',
             'base_field_name' => '',
@@ -15,7 +15,7 @@ class DisplayNotificationSettings{
             'enable_options_description' => '',
             'placeholders' => [],
             'options' => '',
-        );
+        ];
 
         $atts = wp_parse_args( $atts, $default );
 

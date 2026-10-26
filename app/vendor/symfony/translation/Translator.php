@@ -31,7 +31,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * @var MessageCatalogueInterface[]
      */
-    protected $catalogues = array();
+    protected $catalogues = [];
 
     /**
      * @var string
@@ -41,32 +41,22 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * @var array
      */
-    private $fallbackLocales = array();
+    private $fallbackLocales = [];
 
     /**
      * @var LoaderInterface[]
      */
-    private $loaders = array();
+    private $loaders = [];
 
     /**
      * @var array
      */
-    private $resources = array();
+    private $resources = [];
 
     /**
      * @var MessageFormatterInterface
      */
     private $formatter;
-
-    /**
-     * @var string
-     */
-    private $cacheDir;
-
-    /**
-     * @var bool
-     */
-    private $debug;
 
     /**
      * @var ConfigCacheFactoryInterface|null
@@ -76,17 +66,13 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * @throws InvalidArgumentException If a locale contains invalid characters
      */
-    public function __construct(?string $locale, MessageFormatterInterface $formatter = null, string $cacheDir = null, bool $debug = false)
+    public function __construct(?string $locale, ?MessageFormatterInterface $formatter = null, private readonly ?string $cacheDir = null, private readonly bool $debug = false)
     {
         $this->setLocale($locale);
 
-        if (null === $formatter) {
-            $formatter = new MessageFormatter();
-        }
+        $formatter ??= new MessageFormatter();
 
         $this->formatter = $formatter;
-        $this->cacheDir = $cacheDir;
-        $this->debug = $debug;
     }
 
     public function setConfigCacheFactory(ConfigCacheFactoryInterface $configCacheFactory)
@@ -117,16 +103,14 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
      */
     public function addResource($format, $resource, $locale, $domain = null)
     {
-        if (null === $domain) {
-            $domain = 'messages';
-        }
+        $domain ??= 'messages';
 
         $this->assertValidLocale($locale);
 
-        $this->resources[$locale][] = array($format, $resource, $domain);
+        $this->resources[$locale][] = [$format, $resource, $domain];
 
         if (in_array($locale, $this->fallbackLocales)) {
-            $this->catalogues = array();
+            $this->catalogues = [];
         } else {
             unset($this->catalogues[$locale]);
         }
@@ -159,7 +143,7 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     public function setFallbackLocales(array $locales)
     {
         // needed as the fallback locales are linked to the already loaded catalogues
-        $this->catalogues = array();
+        $this->catalogues = [];
 
         foreach ($locales as $locale) {
             $this->assertValidLocale($locale);
@@ -181,11 +165,9 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function trans($id, array $parameters = array(), $domain = null, $locale = null)
+    public function trans($id, array $parameters = [], $domain = null, $locale = null)
     {
-        if (null === $domain) {
-            $domain = 'messages';
-        }
+        $domain ??= 'messages';
 
         return $this->formatter->format($this->getCatalogue($locale)->get((string) $id, $domain), $locale, $parameters);
     }
@@ -193,15 +175,13 @@ class Translator implements TranslatorInterface, TranslatorBagInterface
     /**
      * {@inheritdoc}
      */
-    public function transChoice($id, $number, array $parameters = array(), $domain = null, $locale = null)
+    public function transChoice($id, $number, array $parameters = [], $domain = null, $locale = null)
     {
         if (!$this->formatter instanceof ChoiceMessageFormatterInterface) {
-            throw new LogicException(sprintf('The formatter "%s" does not support plural translations.', get_class($this->formatter)));
+            throw new LogicException(sprintf('The formatter "%s" does not support plural translations.', $this->formatter::class));
         }
 
-        if (null === $domain) {
-            $domain = 'messages';
-        }
+        $domain ??= 'messages';
 
         $id = (string) $id;
         $catalogue = $this->getCatalogue($locale);
@@ -392,7 +372,7 @@ EOF
 
     protected function computeFallbackLocales($locale)
     {
-        $locales = array();
+        $locales = [];
         foreach ($this->fallbackLocales as $fallback) {
             if ($fallback === $locale) {
                 continue;

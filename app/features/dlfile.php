@@ -44,13 +44,13 @@ class MEC_feature_dlfile extends MEC_base
         if(!$booking_status or !$downloadable_status) return;
 
         // Metabox
-        $this->factory->action('mec_metabox_booking', array($this, 'meta_box_downloadable_file'), 17);
+        $this->factory->action('mec_metabox_booking', $this->meta_box_downloadable_file(...), 17);
 
         // Downloadable File for FES
-        if(!isset($this->settings['fes_section_downloadable_file']) or (isset($this->settings['fes_section_downloadable_file']) and $this->settings['fes_section_downloadable_file'])) $this->factory->action('mec_fes_metabox_details', array($this, 'meta_box_downloadable_file'), 47);
+        if(!isset($this->settings['fes_section_downloadable_file']) or (isset($this->settings['fes_section_downloadable_file']) and $this->settings['fes_section_downloadable_file'])) $this->factory->action('mec_fes_metabox_details', $this->meta_box_downloadable_file(...), 47);
 
         // AJAX
-        $this->factory->action('wp_ajax_mec_downloadable_file_upload', array($this, 'upload'));
+        $this->factory->action('wp_ajax_mec_downloadable_file_upload', $this->upload(...));
     }
 
     /**
@@ -134,29 +134,29 @@ class MEC_feature_dlfile extends MEC_base
     public function upload()
     {
         // Check if our nonce is set.
-        if(!isset($_POST['_wpnonce'])) $this->main->response(array('success'=>0, 'code'=>'NONCE_MISSING'));
+        if(!isset($_POST['_wpnonce'])) $this->main->response(['success'=>0, 'code'=>'NONCE_MISSING']);
 
         // Verify that the nonce is valid.
-        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_downloadable_file_upload')) $this->main->response(array('success'=>0, 'code'=>'NONCE_IS_INVALID'));
+        if(!wp_verify_nonce(sanitize_text_field($_POST['_wpnonce']), 'mec_downloadable_file_upload')) $this->main->response(['success'=>0, 'code'=>'NONCE_IS_INVALID']);
 
-        $uploaded_file = isset($_FILES['file']) ? $_FILES['file'] : NULL;
+        $uploaded_file = $_FILES['file'] ?? NULL;
 
         // No file
-        if(!$uploaded_file) $this->main->response(array('success'=>0, 'code'=>'NO_FILE', 'message'=>esc_html__('Please upload a file.', 'modern-events-calendar-lite')));
+        if(!$uploaded_file) $this->main->response(['success'=>0, 'code'=>'NO_FILE', 'message'=>esc_html__('Please upload a file.', 'modern-events-calendar-lite')]);
 
-        $allowed = array('gif', 'jpeg', 'jpg', 'png', 'pdf', 'zip');
+        $allowed = ['gif', 'jpeg', 'jpg', 'png', 'pdf', 'zip'];
 
         $ex = explode('.', $uploaded_file['name']);
         $extension = end($ex);
 
         // Invalid Extension
-        if(!in_array($extension, $allowed)) $this->main->response(array('success'=>0, 'code'=>'INVALID_EXTENSION', 'message'=>sprintf(esc_html__('File extension is invalid. You can upload %s files.', 'modern-events-calendar-lite'), implode(', ', $allowed))));
+        if(!in_array($extension, $allowed)) $this->main->response(['success'=>0, 'code'=>'INVALID_EXTENSION', 'message'=>sprintf(esc_html__('File extension is invalid. You can upload %s files.', 'modern-events-calendar-lite'), implode(', ', $allowed))]);
 
         // Maximum File Size
         $max_file_size = isset($this->settings['fes_max_file_size']) ? (int) ($this->settings['fes_max_file_size'] * 1000) : (5000 * 1000);
 
         // Invalid Size
-        if($uploaded_file['size'] > $max_file_size) $this->main->response(array('success'=>0, 'code'=>'IMAGE_IS_TOO_BIG', 'message'=>sprintf(esc_html__('File is too big. Maximum size is %s KB.', 'modern-events-calendar-lite'), ($max_file_size / 1000))));
+        if($uploaded_file['size'] > $max_file_size) $this->main->response(['success'=>0, 'code'=>'IMAGE_IS_TOO_BIG', 'message'=>sprintf(esc_html__('File is too big. Maximum size is %s KB.', 'modern-events-calendar-lite'), ($max_file_size / 1000))]);
 
         // Include the functions
         if(!function_exists('wp_handle_upload'))
@@ -169,19 +169,19 @@ class MEC_feature_dlfile extends MEC_base
         $wp_filetype = wp_check_filetype(basename($upload['file']), NULL);
 
         $wp_upload_dir = wp_upload_dir();
-        $attachment = array(
+        $attachment = [
             'guid' => $wp_upload_dir['baseurl'] . _wp_relative_upload_path($upload['file']),
             'post_mime_type' => $wp_filetype['type'],
             'post_title' => preg_replace('/\.[^.]+$/', '', basename($upload['file'])),
             'post_content' => '',
             'post_status' => 'inherit'
-        );
+        ];
 
         $attach_id = wp_insert_attachment($attachment, $upload['file']);
         wp_update_attachment_metadata($attach_id, wp_generate_attachment_metadata($attach_id, $upload['file']));
 
         $success = 0;
-        $data = array();
+        $data = [];
 
         if($attach_id and (!isset($upload['error']) or (isset($upload['error']) and !$upload['error'])))
         {
@@ -196,6 +196,6 @@ class MEC_feature_dlfile extends MEC_base
             $message = $upload['error'];
         }
 
-        $this->main->response(array('success'=>$success, 'message'=>$message, 'data'=>$data));
+        $this->main->response(['success'=>$success, 'message'=>$message, 'data'=>$data]);
     }
 }

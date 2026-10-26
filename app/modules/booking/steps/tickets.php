@@ -10,11 +10,11 @@ global $post;
 $translated_event_id = $post->ID;
 
 $event_id = $event->ID;
-$tickets = isset($event->data->tickets) ? $event->data->tickets : array();
-$dates = isset($event->dates) ? $event->dates : array($event->date);
+$tickets = $event->data->tickets ?? [];
+$dates = $event->dates ?? [$event->date];
 
 $booking_options = get_post_meta($event_id, 'mec_booking', true);
-if(!is_array($booking_options)) $booking_options = array();
+if(!is_array($booking_options)) $booking_options = [];
 
 // WC System
 $WC_status = (isset($settings['wc_status']) and $settings['wc_status'] and class_exists('WooCommerce')) ? true : false;
@@ -22,7 +22,7 @@ $WC_booking_form = (isset($settings['wc_booking_form']) and $settings['wc_bookin
 
 if($ticket_id)
 {
-    $new_tickets = array();
+    $new_tickets = [];
     foreach($tickets as $t_id => $ticket)
     {
         if((int) $t_id === (int) $ticket_id)
@@ -34,7 +34,7 @@ if($ticket_id)
     if(count($new_tickets)) $tickets = $new_tickets;
 }
 
-$occurrence_time = isset($dates[0]['start']['timestamp']) ? $dates[0]['start']['timestamp'] : strtotime($dates[0]['start']['date']);
+$occurrence_time = $dates[0]['start']['timestamp'] ?? strtotime($dates[0]['start']['date']);
 
 $default_ticket_number = 0;
 if(count($tickets) == 1) $default_ticket_number = 1;
@@ -51,15 +51,15 @@ $book_all_occurrences = 0;
 if(isset($event->data) and isset($event->data->meta) and isset($event->data->meta['mec_booking']) and isset($event->data->meta['mec_booking']['bookings_all_occurrences'])) $book_all_occurrences = (int) $event->data->meta['mec_booking']['bookings_all_occurrences'];
 
 // User Booking Limits
-list($user_ticket_limit, $user_ticket_unlimited) = $book->get_user_booking_limit($event_id);
+[$user_ticket_limit, $user_ticket_unlimited] = $book->get_user_booking_limit($event_id);
 
 // Show Booking Form Interval
-$show_booking_form_interval = (isset($settings['show_booking_form_interval'])) ? $settings['show_booking_form_interval'] : 0;
+$show_booking_form_interval = $settings['show_booking_form_interval'] ?? 0;
 if(isset($booking_options['show_booking_form_interval']) and trim($booking_options['show_booking_form_interval']) != '') $show_booking_form_interval = $booking_options['show_booking_form_interval'];
 
 if($show_booking_form_interval)
 {
-    $filtered_dates = array();
+    $filtered_dates = [];
     foreach($dates as $date)
     {
         $date_diff = $this->date_diff(date('Y-m-d h:i a', current_time('timestamp', 0)), date('Y-m-d h:i a', $date['start']['timestamp']));
@@ -113,12 +113,12 @@ $modal_booking = (isset($_GET['method']) and $_GET['method'] === 'mec-booking-mo
 
             <?php if(!$modal_booking): ?>
             <div class="mec-booking-calendar-wrapper" id="mec_booking_calendar_wrapper<?php echo $uniqueid; ?>">
-                <?php echo (new MEC_feature_bookingcalendar())->display_calendar($event, $uniqueid); ?>
+                <?php echo new MEC_feature_bookingcalendar()->display_calendar($event, $uniqueid); ?>
             </div>
             <input type="hidden" name="book[date]" id="mec_book_form_date<?php echo $uniqueid; ?>" value="" onchange="mec_get_tickets_availability<?php echo $uniqueid; ?>(<?php echo $event_id; ?>, this.value);">
             <?php else: ?>
             <div>
-                <h6><?php echo $this->date_label($dates[0]['start'], $dates[0]['end'], $date_format, ' - ', false, (isset($dates[0]['allday']) ? $dates[0]['allday'] : 0)); ?></h6>
+                <h6><?php echo $this->date_label($dates[0]['start'], $dates[0]['end'], $date_format, ' - ', false, ($dates[0]['allday'] ?? 0)); ?></h6>
                 <input type="hidden" name="book[date]" id="mec_book_form_date<?php echo $uniqueid; ?>" value="<?php echo $book->timestamp($dates[0]['start'], $dates[0]['end']); ?>" onchange="mec_get_tickets_availability<?php echo $uniqueid; ?>(<?php echo $event_id; ?>, this.value);">
             </div>
             <?php endif; ?>
@@ -128,7 +128,7 @@ $modal_booking = (isset($_GET['method']) and $_GET['method'] === 'mec-booking-mo
         <select class="mec-custom-nice-select" name="book[date]" id="mec_book_form_date<?php echo $uniqueid; ?>" onchange="mec_get_tickets_availability<?php echo $uniqueid; ?>(<?php echo $event_id; ?>, this.value);">
             <?php foreach($dates as $date): ?>
             <option value="<?php echo $book->timestamp($date['start'], $date['end']); ?>">
-                <?php echo strip_tags($this->date_label($date['start'], $date['end'], $date_format, ' - ', false, (isset($date['allday']) ? $date['allday'] : 0))); ?>
+                <?php echo strip_tags($this->date_label($date['start'], $date['end'], $date_format, ' - ', false, ($date['allday'] ?? 0))); ?>
             </option>
             <?php endforeach; ?>
         </select>
@@ -144,8 +144,8 @@ $modal_booking = (isset($_GET['method']) and $_GET['method'] === 'mec-booking-mo
     <input type="hidden" name="book[date]" id="mec_book_form_date<?php echo $uniqueid; ?>" value="<?php echo $book->timestamp($dates[0]['start'], $dates[0]['end']); ?>">
     <?php endif; ?>
 
-    <div class="mec-event-tickets-list <?php echo (!$book_all_occurrences and count($dates) > 1) ? '' : 'mec-sell-all-occurrences'; ?>" id="mec_book_form_tickets_container<?php echo $uniqueid; ?>" data-total-booking-limit="<?php echo isset($availability['total']) ? $availability['total'] : '-1'; ?>">
-        <?php foreach($tickets as $ticket_id=>$ticket): $stop_selling = isset($availability['stop_selling_'.$ticket_id]) ? $availability['stop_selling_'.$ticket_id] : false; $ticket_limit = isset($availability[$ticket_id]) ? $availability[$ticket_id] : -1; if($ticket_limit === '0' and count($dates) <= 1) continue; ?>
+    <div class="mec-event-tickets-list <?php echo (!$book_all_occurrences and count($dates) > 1) ? '' : 'mec-sell-all-occurrences'; ?>" id="mec_book_form_tickets_container<?php echo $uniqueid; ?>" data-total-booking-limit="<?php echo $availability['total'] ?? '-1'; ?>">
+        <?php foreach($tickets as $ticket_id=>$ticket): $stop_selling = $availability['stop_selling_'.$ticket_id] ?? false; $ticket_limit = $availability[$ticket_id] ?? -1; if($ticket_limit === '0' and count($dates) <= 1) continue; ?>
         <div class="mec-event-ticket mec-event-ticket<?php echo $ticket_limit; ?>" id="mec_event_ticket<?php echo $ticket_id; ?>">
             <div class="mec-ticket-available-spots <?php echo ($ticket_limit == '0' ? 'mec-util-hidden' : ''); ?>">
                 <span class="mec-event-ticket-name"><?php echo (isset($ticket['name']) ? __($ticket['name'], 'modern-events-calendar-lite') : ''); ?></span>

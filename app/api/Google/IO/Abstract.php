@@ -20,19 +20,19 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 abstract class Google_IO_Abstract
 {
   const UNKNOWN_CODE = 0;
   const FORM_URLENCODED = 'application/x-www-form-urlencoded';
-  private static $CONNECTION_ESTABLISHED_HEADERS = array(
+  private static $CONNECTION_ESTABLISHED_HEADERS = [
     "HTTP/1.0 200 Connection established\r\n\r\n",
     "HTTP/1.1 200 Connection established\r\n\r\n",
-  );
-  private static $ENTITY_HTTP_METHODS = array("POST" => null, "PUT" => null);
-  private static $HOP_BY_HOP = array(
+  ];
+  private static $ENTITY_HTTP_METHODS = ["POST" => null, "PUT" => null];
+  private static $HOP_BY_HOP = [
     'connection' => true,
     'keep-alive' => true,
     'proxy-authenticate' => true,
@@ -41,7 +41,7 @@ abstract class Google_IO_Abstract
     'trailers' => true,
     'transfer-encoding' => true,
     'upgrade' => true
-  );
+  ];
 
 
   /** @var Google_Client */
@@ -133,7 +133,7 @@ abstract class Google_IO_Abstract
       $request = $this->processEntityRequest($request);
     }
 
-    list($responseData, $responseHeaders, $respHttpCode) = $this->executeRequest($request);
+    [$responseData, $responseHeaders, $respHttpCode] = $this->executeRequest($request);
 
     if ($respHttpCode == 304 && $cached) {
       // If the server responded NOT_MODIFIED, return the cached request.
@@ -183,7 +183,7 @@ abstract class Google_IO_Abstract
     // Set the default content-type as application/x-www-form-urlencoded.
     if (false == $contentType) {
       $contentType = self::FORM_URLENCODED;
-      $request->setRequestHeaders(array('content-type' => $contentType));
+      $request->setRequestHeaders(['content-type' => $contentType]);
     }
 
     // Force the payload to match the content-type asserted in the header.
@@ -195,7 +195,7 @@ abstract class Google_IO_Abstract
     // Make sure the content-length header is set.
     if (!$postBody || is_string($postBody)) {
       $postsLength = strlen($postBody);
-      $request->setRequestHeaders(array('content-length' => $postsLength));
+      $request->setRequestHeaders(['content-length' => $postsLength]);
     }
 
     return $request;
@@ -212,7 +212,7 @@ abstract class Google_IO_Abstract
   protected function checkMustRevalidateCachedRequest($cached, $request)
   {
     if (Google_Http_CacheParser::mustRevalidate($cached)) {
-      $addHeaders = array();
+      $addHeaders = [];
       if ($cached->getResponseHeader('etag')) {
         // [13.3.4] If an entity tag has been provided by the origin server,
         // we must use that entity tag in any cache-conditional request.
@@ -238,9 +238,9 @@ abstract class Google_IO_Abstract
     $hopByHop = self::$HOP_BY_HOP;
     if (!empty($responseHeaders['connection'])) {
       $connectionHeaders = array_map(
-          'strtolower',
+          strtolower(...),
           array_filter(
-              array_map('trim', explode(',', $responseHeaders['connection']))
+              array_map(trim(...), explode(',', $responseHeaders['connection']))
           )
       );
       $hopByHop += array_fill_keys($connectionHeaders, true);
@@ -261,7 +261,7 @@ abstract class Google_IO_Abstract
   {
     // check proxy header
     foreach (self::$CONNECTION_ESTABLISHED_HEADERS as $established_header) {
-      if (stripos($respData, $established_header) !== false) {
+      if (stripos($respData, (string) $established_header) !== false) {
         // existed, remove it
         $respData = str_ireplace($established_header, '', $respData);
         // Subtract the proxy header size unless the cURL bug prior to 7.30.0
@@ -280,12 +280,11 @@ abstract class Google_IO_Abstract
     } else {
       $responseSegments = explode("\r\n\r\n", $respData, 2);
       $responseHeaders = $responseSegments[0];
-      $responseBody = isset($responseSegments[1]) ? $responseSegments[1] :
-                                                    null;
+      $responseBody = $responseSegments[1] ?? null;
     }
 
     $responseHeaders = $this->getHttpResponseHeaders($responseHeaders);
-    return array($responseHeaders, $responseBody);
+    return [$responseHeaders, $responseBody];
   }
 
   /**
@@ -304,11 +303,11 @@ abstract class Google_IO_Abstract
 
   private function parseStringHeaders($rawHeaders)
   {
-    $headers = array();
+    $headers = [];
     $responseHeaderLines = explode("\r\n", $rawHeaders);
     foreach ($responseHeaderLines as $headerLine) {
-      if ($headerLine && strpos($headerLine, ':') !== false) {
-        list($header, $value) = explode(': ', $headerLine, 2);
+      if ($headerLine && str_contains($headerLine, ':')) {
+        [$header, $value] = explode(': ', $headerLine, 2);
         $header = strtolower($header);
         if (isset($headers[$header])) {
           $headers[$header] .= "\n" . $value;
@@ -323,7 +322,7 @@ abstract class Google_IO_Abstract
   private function parseArrayHeaders($rawHeaders)
   {
     $header_count = count($rawHeaders);
-    $headers = array();
+    $headers = [];
 
     for ($i = 0; $i < $header_count; $i++) {
       $header = $rawHeaders[$i];

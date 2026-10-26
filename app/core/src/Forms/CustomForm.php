@@ -9,16 +9,13 @@ class CustomForm extends Singleton {
 
 	public function get_fields( $group_id, $event_id = null, $translated_event_id = null ) {
 
-		if(is_null($event_id)){
+		$event_id ??= ('mec-events' === get_post_type()) ? get_the_ID() : null;
 
-			$event_id = ('mec-events' === get_post_type()) ? get_the_ID() : null;
-		}
-
-		$form_id  = str_replace( array( '_reg', '_bfixed', '' ), '', $group_id );
+		$form_id  = str_replace( [ '_reg', '_bfixed', '' ], '', $group_id );
 		$group_id .= '_fields';
 		$primary_group_id = $group_id;
 
-		if ( false === strpos( $form_id, 'general' ) && ( !isset($_GET['page']) || 'MEC-settings' !== $_GET['page'] ) ) {
+		if ( !str_contains( $form_id, 'general' ) && ( !isset($_GET['page']) || 'MEC-settings' !== $_GET['page'] ) ) {
 
 			$status_key = 'form_' . $form_id . '_status';
 			$status     = Settings::getInstance()->get_settings( $status_key );
@@ -35,7 +32,7 @@ class CustomForm extends Singleton {
 		}
 
 		$options = Settings::getInstance()->get_options();
-		$fields  = isset( $options[ $group_id ] ) ? $options[ $group_id ] : array();
+		$fields  = $options[ $group_id ] ?? [];
 
 
 		return apply_filters( 'mec_get_custom_form_fields', $fields, $event_id, $form_id, $group_id, $primary_group_id,$translated_event_id );
@@ -51,7 +48,7 @@ class CustomForm extends Singleton {
 		$fields = $this->get_fields( $group_id, $event_id, $translated_event_id );
 
 		if ( !is_array( $fields ) ) {
-			$fields = array();
+			$fields = [];
 		}
 
 		foreach ( $fields as $field ) {
@@ -70,22 +67,22 @@ class CustomForm extends Singleton {
 		if ( !$mec_name ) {
 			array_unshift(
 				$fields,
-				array(
+				[
 					'mandatory' => '0',
 					'type'      => 'name',
 					'label'     => esc_html__( 'Name', 'mec' ),
-				)
+				]
 			);
 		}
 
 		if ( !$mec_email ) {
 			array_unshift(
 				$fields,
-				array(
+				[
 					'mandatory' => '0',
 					'type'      => 'mec_email',
 					'label'     => esc_html__( 'Email', 'mec' ),
-				)
+				]
 			);
 		}
 
@@ -99,12 +96,9 @@ class CustomForm extends Singleton {
 		return $this->get_fields( $group_id, $event_id, $translated_event_id );
 	}
 
-	public function display_reg_fields( $group_id, $event_id = null, $attendee_id = 0, $translated_event_id = null, $data = array() ) {
+	public function display_reg_fields( $group_id, $event_id = null, $attendee_id = 0, $translated_event_id = null, $data = [] ) {
 
-		if ( is_null( $event_id ) ) {
-
-			$event_id = get_the_ID();
-		}
+		$event_id ??= get_the_ID();
 
 		$fields = $this->get_reg_fields( $group_id, $event_id );
 		ob_start();
@@ -113,12 +107,9 @@ class CustomForm extends Singleton {
 		return ob_get_clean();
 	}
 
-	public function display_fixed_fields( $group_id, $event_id = null, $translated_event_id = null, $data = array() ) {
+	public function display_fixed_fields( $group_id, $event_id = null, $translated_event_id = null, $data = [] ) {
 
-		if ( is_null( $event_id ) ) {
-
-			$event_id = get_the_ID();
-		}
+		$event_id ??= get_the_ID();
 
 		$fields = $this->get_fixed_fields( $group_id, $event_id );
 		ob_start();

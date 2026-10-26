@@ -28,8 +28,8 @@ class MEC_hourlyschedule extends MEC_base
         $hourly_schedules = $args['hourly_schedules'];
         $speakers_status = $args['speakers_status'];
         $speakers = $args['speakers'];
-        $wrapper_class = (isset($args['wrapper_class']) ? $args['wrapper_class'] : 'mec-meta-box-fields mec-event-tab-content');
-        $prefix = (isset($args['prefix']) ? $args['prefix'] : '');
+        $wrapper_class = ($args['wrapper_class'] ?? 'mec-meta-box-fields mec-event-tab-content');
+        $prefix = ($args['prefix'] ?? '');
         $name_prefix = ((isset($args['name_prefix']) and trim($args['name_prefix'])) ? $args['name_prefix'] : 'mec');
         ?>
         <div class="<?php echo esc_attr($wrapper_class); ?>" id="<?php echo $prefix; ?>mec-hourly-schedule">
@@ -43,12 +43,12 @@ class MEC_hourlyschedule extends MEC_base
             <div id="<?php echo $prefix; ?>mec_meta_box_hourly_schedule_days">
                 <?php $d = 0; foreach($hourly_schedules as $day): ?>
                     <div id="<?php echo $prefix; ?>mec_meta_box_hourly_schedule_day_<?php echo $d; ?>">
-                        <h4><?php echo isset($day['title']) ? $day['title'] : sprintf(__('Day %s', 'modern-events-calendar-lite'), $d + 1); ?></h4>
+                        <h4><?php echo $day['title'] ?? sprintf(__('Day %s', 'modern-events-calendar-lite'), $d + 1); ?></h4>
                         <div id="<?php echo $prefix; ?>mec_meta_box_hourly_schedule_form<?php echo $d; ?>">
                             <div class="mec-form-row">
                                 <div class="mec-col-1"><label for="<?php echo $prefix; ?>mec_add_hourly_schedule_day<?php echo $d; ?>_title"><?php echo __('Title', 'modern-events-calendar-lite'); ?></label>
                                 </div>
-                                <div class="mec-col-10"><input type="text" id="<?php echo $prefix; ?>mec_add_hourly_schedule_day<?php echo $d; ?>_title" name="<?php echo $name_prefix; ?>[hourly_schedules][<?php echo $d; ?>][title]" value="<?php echo isset($day['title']) ? $day['title'] : ''; ?>" class="widefat"></div>
+                                <div class="mec-col-10"><input type="text" id="<?php echo $prefix; ?>mec_add_hourly_schedule_day<?php echo $d; ?>_title" name="<?php echo $name_prefix; ?>[hourly_schedules][<?php echo $d; ?>][title]" value="<?php echo $day['title'] ?? ''; ?>" class="widefat"></div>
                                 <div class="mec-col-1">
                                     <button class="button" type="button" onclick="mec_hourly_schedule_day_remove(<?php echo $d; ?>, '<?php echo $prefix; ?>');"><?php echo __('Remove', 'modern-events-calendar-lite'); ?></button>
                                 </div>

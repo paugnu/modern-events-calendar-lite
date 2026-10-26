@@ -5,7 +5,7 @@ defined('MECEXEC') or die();
 /** @var MEC_feature_fes $this */
 
 // The Query
-$query = new WP_Query(array('post_type'=>$this->PT, 'author'=>get_current_user_id(), 'posts_per_page'=>'-1', 'post_status'=>array('pending', 'draft', 'future', 'publish')));
+$query = new WP_Query(['post_type'=>$this->PT, 'author'=>get_current_user_id(), 'posts_per_page'=>'-1', 'post_status'=>['pending', 'draft', 'future', 'publish']]);
 
 // Date Format
 $date_format = get_option('date_format');
@@ -83,11 +83,11 @@ $this->factory->params('footer', $javascript);
             <span class="mec-event-title">
                 <a href="<?php echo $this->link_edit_event(get_the_ID()); ?>"><?php the_title(); ?></a>
                 <?php if($display_date): ?>
-                <span>(<?php echo $this->main->date_label(array(
+                <span>(<?php echo $this->main->date_label([
                     'date' => get_post_meta(get_the_ID(), 'mec_start_date', true)
-                ), array(
+                ], [
                     'date' => get_post_meta(get_the_ID(), 'mec_end_date', true)
-                ), $date_format); ?>)</span>
+                ], $date_format); ?>)</span>
                 <?php endif; ?>
             </span>
             <?php 

@@ -20,7 +20,7 @@ class LoggingTranslatorTest extends TestCase
 {
     public function testTransWithNoTranslationIsLogged()
     {
-        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock();
+        $logger = $this->getMockBuilder(\Psr\Log\LoggerInterface::class)->getMock();
         $logger->expects($this->exactly(2))
             ->method('warning')
             ->with('Translation not found.')
@@ -28,23 +28,23 @@ class LoggingTranslatorTest extends TestCase
 
         $translator = new Translator('ar');
         $loggableTranslator = new LoggingTranslator($translator, $logger);
-        $loggableTranslator->transChoice('some_message2', 10, array('%count%' => 10));
+        $loggableTranslator->transChoice('some_message2', 10, ['%count%' => 10]);
         $loggableTranslator->trans('bar');
     }
 
     public function testTransChoiceFallbackIsLogged()
     {
-        $logger = $this->getMockBuilder('Psr\Log\LoggerInterface')->getMock();
+        $logger = $this->getMockBuilder(\Psr\Log\LoggerInterface::class)->getMock();
         $logger->expects($this->once())
             ->method('debug')
             ->with('Translation use fallback catalogue.')
         ;
 
         $translator = new Translator('ar');
-        $translator->setFallbackLocales(array('en'));
+        $translator->setFallbackLocales(['en']);
         $translator->addLoader('array', new ArrayLoader());
-        $translator->addResource('array', array('some_message2' => 'one thing|%count% things'), 'en');
+        $translator->addResource('array', ['some_message2' => 'one thing|%count% things'], 'en');
         $loggableTranslator = new LoggingTranslator($translator, $logger);
-        $loggableTranslator->transChoice('some_message2', 10, array('%count%' => 10));
+        $loggableTranslator->transChoice('some_message2', 10, ['%count%' => 10]);
     }
 }

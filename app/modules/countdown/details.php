@@ -64,7 +64,7 @@ elseif($d1 < $d2 and !$ongoing)
 }
 
 $gmt_offset = $this->get_gmt_offset($event);
-if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') === false) $gmt_offset = ' : '.$gmt_offset;
+if(isset($_SERVER['HTTP_USER_AGENT']) and !str_contains($_SERVER['HTTP_USER_AGENT'], 'Safari')) $gmt_offset = ' : '.$gmt_offset;
 if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == true) $gmt_offset = substr(trim($gmt_offset), 0 , 3);
 if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') == true) $gmt_offset = substr(trim($gmt_offset), 2 , 3);
 

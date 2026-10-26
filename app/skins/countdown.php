@@ -46,7 +46,7 @@ class MEC_skin_countdown extends MEC_skins
     public function initialize($atts)
     {
         $this->atts = $atts;
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Date Formats
         $this->date_format_style11 = (isset($this->skin_options['date_format_style11']) and trim($this->skin_options['date_format_style11'])) ? $this->skin_options['date_format_style11'] : 'j F Y';
@@ -65,17 +65,17 @@ class MEC_skin_countdown extends MEC_skins
         $this->id = mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // The style
-        $this->style = isset($this->skin_options['style']) ? $this->skin_options['style'] : 'style1';
+        $this->style = $this->skin_options['style'] ?? 'style1';
         if($this->style == 'fluent' and !is_plugin_active('mec-fluent-layouts/mec-fluent-layouts.php')) $this->style = 'style1';
 
         // reason_for_cancellation
-        $this->reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+        $this->reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
         // display_label
-        $this->display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
+        $this->display_label = $this->skin_options['display_label'] ?? false;
         
         // Override the style if the style forced by us in a widget etc
         if(isset($this->atts['style']) and trim($this->atts['style']) != '') $this->style = $this->atts['style'];
@@ -91,7 +91,7 @@ class MEC_skin_countdown extends MEC_skins
         $this->args['mec-skin'] = $this->skin;
         
         // Event ID
-        $this->event_id = isset($this->skin_options['event_id']) ? $this->skin_options['event_id'] : '-1';
+        $this->event_id = $this->skin_options['event_id'] ?? '-1';
         if(!get_post($this->event_id)) $this->event_id = '-1';
     }
     
@@ -102,7 +102,7 @@ class MEC_skin_countdown extends MEC_skins
      */
     public function search()
     {
-        $events = array();
+        $events = [];
         
         // Get next upcoming event ID
         if($this->event_id == '-1')
@@ -111,13 +111,13 @@ class MEC_skin_countdown extends MEC_skins
         }
         else
         {
-            $rendered = $this->render->data($this->event_id, (isset($this->atts['content']) ? $this->atts['content'] : ''));
+            $rendered = $this->render->data($this->event_id, ($this->atts['content'] ?? ''));
 
             $data = new stdClass();
             $data->ID = $this->event_id;
             $data->data = $rendered;
             $data->dates = $this->render->dates($this->event_id, $rendered, $this->maximum_dates);
-            $data->date = isset($data->dates[0]) ? $data->dates[0] : array();
+            $data->date = $data->dates[0] ?? [];
 
             $events[] = $this->render->after_render($data, $this);
         }

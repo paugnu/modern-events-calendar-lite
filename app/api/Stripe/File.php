@@ -70,9 +70,7 @@ class File extends ApiResource
     public static function create($params = null, $opts = null)
     {
         $opts = \Stripe\Util\RequestOptions::parse($opts);
-        if (null === $opts->apiBase) {
-            $opts->apiBase = Stripe::$apiUploadBase;
-        }
+        $opts->apiBase ??= Stripe::$apiUploadBase;
         // Manually flatten params, otherwise curl's multipart encoder will
         // choke on nested arrays.
         $flatParams = \array_column(\Stripe\Util\Util::flattenParams($params), 1, 0);

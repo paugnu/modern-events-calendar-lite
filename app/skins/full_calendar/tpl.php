@@ -15,7 +15,7 @@ jQuery(document).ready(function()
     jQuery("#mec_skin_'.$this->id.'").mecFullCalendar(
     {
         id: "'.$this->id.'",
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",
@@ -37,7 +37,7 @@ else $this->factory->params('footer', $javascript);
 $styling = $this->main->get_styling();
 $event_colorskin = (isset($styling['mec_colorskin'] ) || isset($styling['color'])) ? 'colorskin-custom' : '';
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 
@@ -49,17 +49,17 @@ do_action('mec_full_skin_head');
     <div class="mec-search-form mec-totalcal-box">
         <?php if($this->sf_status): ?>
             <?php
-                $sf_month_filter = (isset($this->sf_options['month_filter']) ? $this->sf_options['month_filter'] : array());
-                $sf_category = (isset($this->sf_options['category']) ? $this->sf_options['category'] : array());
-                $sf_location = (isset($this->sf_options['location']) ? $this->sf_options['location'] : array());
-                $sf_organizer = (isset($this->sf_options['organizer']) ? $this->sf_options['organizer'] : array());
-                $sf_speaker = (isset($this->sf_options['speaker']) ? $this->sf_options['speaker'] : array());
-                $sf_tag = (isset($this->sf_options['tag']) ? $this->sf_options['tag'] : array());
-                $sf_label = (isset($this->sf_options['label']) ? $this->sf_options['label'] : array());
-                $sf_text_search = (isset($this->sf_options['text_search']) ? $this->sf_options['text_search'] : array());
-                $sf_address_search = (isset($this->sf_options['address_search']) ? $this->sf_options['address_search'] : array());
-                $sf_event_cost = (isset($this->sf_options['event_cost']) ? $this->sf_options['event_cost'] : array());
-                $sf_local_time = (isset($this->sf_options['time_filter']) ? $this->sf_options['time_filter'] : array());
+                $sf_month_filter = ($this->sf_options['month_filter'] ?? []);
+                $sf_category = ($this->sf_options['category'] ?? []);
+                $sf_location = ($this->sf_options['location'] ?? []);
+                $sf_organizer = ($this->sf_options['organizer'] ?? []);
+                $sf_speaker = ($this->sf_options['speaker'] ?? []);
+                $sf_tag = ($this->sf_options['tag'] ?? []);
+                $sf_label = ($this->sf_options['label'] ?? []);
+                $sf_text_search = ($this->sf_options['text_search'] ?? []);
+                $sf_address_search = ($this->sf_options['address_search'] ?? []);
+                $sf_event_cost = ($this->sf_options['event_cost'] ?? []);
+                $sf_local_time = ($this->sf_options['time_filter'] ?? []);
 
                 $sf_month_filter_status = (isset($sf_month_filter['type']) and trim($sf_month_filter['type'])) ? true : false;
                 $sf_category_status = (isset($sf_category['type']) and trim($sf_category['type'])) ? true : false;

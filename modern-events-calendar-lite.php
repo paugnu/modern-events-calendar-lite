@@ -19,7 +19,7 @@ if(!defined('MECEXEC'))
     if(!defined('DS')) define('DS', DIRECTORY_SEPARATOR);
 
     /** MEC Absolute Path **/
-    define('MEC_ABSPATH', dirname(__FILE__).DS);
+    define('MEC_ABSPATH', __DIR__.DS);
 
     /** Plugin Directory Name **/
     define('MEC_DIRNAME', basename(MEC_ABSPATH));

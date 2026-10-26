@@ -79,10 +79,10 @@ class Book extends PostBase {
 
 		if ( 'start' === $type ) {
 
-			$data = isset( $data[0] ) ? $data[0] : '';
+			$data = $data[0] ?? '';
 		} elseif ( 'end' === $type ) {
 
-			$data = isset( $data[1] ) ? $data[1] : '';
+			$data = $data[1] ?? '';
 		}
 
 		return $data;
@@ -100,24 +100,11 @@ class Book extends PostBase {
 
 		$status = $this->get_confirm_status();
 
-		switch ( $status ) {
-			case '-1':
-
-				$text = __('Rejected', 'mec');
-
-				break;
-			case '1':
-
-				$text = __('Confirmed', 'mec');
-
-				break;
-			case '0':
-			default:
-
-				$text = __('Pending', 'mec');
-
-				break;
-		}
+		$text = match ($status) {
+            '-1' => __('Rejected', 'mec'),
+            '1' => __('Confirmed', 'mec'),
+            default => __('Pending', 'mec'),
+        };
 
 		return $text;
 	}
@@ -150,7 +137,7 @@ class Book extends PostBase {
 				break;
 		}
 
-		if ( in_array( $status, array( -1, 0, 1 ), false ) ) {
+		if ( in_array( $status, [ -1, 0, 1 ], false ) ) {
 
 			$old_status = $this->get_meta( 'mec_confirmed' );
 			$status     = apply_filters( 'mec_' . $this->type . '_confirmed_status_value', $status, $mode, $this->ID, $this );
@@ -180,24 +167,11 @@ class Book extends PostBase {
 
 		$status = $this->get_verification_status();
 
-		switch ( $status ) {
-			case '-1':
-
-				$text = __('Canceled', 'mec');
-
-				break;
-			case '1':
-
-				$text = __('Verified', 'mec');
-
-				break;
-			case '0':
-			default:
-
-				$text = __('Waiting', 'mec');
-
-				break;
-		}
+		$text = match ($status) {
+            '-1' => __('Canceled', 'mec'),
+            '1' => __('Verified', 'mec'),
+            default => __('Waiting', 'mec'),
+        };
 
 		return $text;
 	}
@@ -230,7 +204,7 @@ class Book extends PostBase {
 				break;
 		}
 
-		if ( in_array( $status, array( -1, 0, 1 ), false ) ) {
+		if ( in_array( $status, [ -1, 0, 1 ], false ) ) {
 
 			$old_status = $this->get_meta( 'mec_verified' );
 			$status     = apply_filters( 'mec_' . $this->type . '_verified_status_value', $status, $mode, $this->ID, $this );
@@ -290,7 +264,7 @@ class Book extends PostBase {
 	 */
 	public function get_tickets_ids() {
 
-		$ids     = array();
+		$ids     = [];
 		$tickets = $this->get_tickets();
 		$tickets = explode( ',', trim( $tickets, ', ' ) );
 

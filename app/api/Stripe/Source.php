@@ -104,7 +104,7 @@ class Source extends ApiResource
             $extn = \urlencode(Util\Util::utf8($id));
             $url = "{$base}/{$parentExtn}/sources/{$extn}";
 
-            list($response, $opts) = $this->_request('delete', $url, $params, $opts);
+            [$response, $opts] = $this->_request('delete', $url, $params, $opts);
             $this->refreshFrom($response, $opts);
 
             return $this;
@@ -128,7 +128,7 @@ class Source extends ApiResource
     public function sourceTransactions($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/source_transactions';
-        list($response, $opts) = $this->_request('get', $url, $params, $opts);
+        [$response, $opts] = $this->_request('get', $url, $params, $opts);
         $obj = \Stripe\Util\Util::convertToStripeObject($response, $opts);
         $obj->setLastResponse($response);
 
@@ -160,7 +160,7 @@ class Source extends ApiResource
     public function verify($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/verify';
-        list($response, $opts) = $this->_request('post', $url, $params, $opts);
+        [$response, $opts] = $this->_request('post', $url, $params, $opts);
         $this->refreshFrom($response, $opts);
 
         return $this;

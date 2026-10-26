@@ -87,9 +87,7 @@ class OAuthService extends \Stripe\Service\AbstractService
     {
         $clientId = ($params && \array_key_exists('client_id', $params)) ? $params['client_id'] : null;
 
-        if (null === $clientId) {
-            $clientId = $this->client->getClientId();
-        }
+        $clientId ??= $this->client->getClientId();
         if (null === $clientId) {
             $msg = 'No client_id provided. (HINT: set your client_id using '
               . '`new \Stripe\StripeClient([clientId => <CLIENT-ID>
@@ -143,8 +141,6 @@ class OAuthService extends \Stripe\Service\AbstractService
      */
     private function _getBase($opts)
     {
-        return isset($opts->apiBase) ?
-          $opts->apiBase :
-          $this->client->getConnectBase();
+        return $opts->apiBase ?? $this->client->getConnectBase();
     }
 }

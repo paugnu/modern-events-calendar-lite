@@ -29,8 +29,8 @@ class MEC_skin_map extends MEC_skins
      */
     public function actions()
     {
-        $this->factory->action('wp_ajax_mec_map_get_markers', array($this, 'get_markers'));
-        $this->factory->action('wp_ajax_nopriv_mec_map_get_markers', array($this, 'get_markers'));
+        $this->factory->action('wp_ajax_mec_map_get_markers', $this->get_markers(...));
+        $this->factory->action('wp_ajax_nopriv_mec_map_get_markers', $this->get_markers(...));
     }
     
     /**
@@ -43,22 +43,22 @@ class MEC_skin_map extends MEC_skins
         $this->atts = $atts;
         
         // Skin Options
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Search Form Options
-        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : array();
+        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : [];
         
         // Search Form Status
-        $this->sf_status = isset($this->atts['sf_status']) ? $this->atts['sf_status'] : true;
-        $this->sf_display_label = isset($this->atts['sf_display_label']) ? $this->atts['sf_display_label'] : false;
-        $this->sf_reset_button = isset($this->atts['sf_reset_button']) ? $this->atts['sf_reset_button'] : false;
-        $this->sf_refine = isset($this->atts['sf_refine']) ? $this->atts['sf_refine'] : false;
+        $this->sf_status = $this->atts['sf_status'] ?? true;
+        $this->sf_display_label = $this->atts['sf_display_label'] ?? false;
+        $this->sf_reset_button = $this->atts['sf_reset_button'] ?? false;
+        $this->sf_refine = $this->atts['sf_refine'] ?? false;
         
         // Generate an ID for the sking
-        $this->id = isset($this->atts['id']) ? $this->atts['id'] : mt_rand(100, 999);
+        $this->id = $this->atts['id'] ?? mt_rand(100, 999);
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
         
         // HTML class
         $this->html_class = '';
@@ -104,13 +104,13 @@ class MEC_skin_map extends MEC_skins
         $this->args['meta_key'] = 'mec_start_day_seconds';
         
         // Show Past Events
-        $this->args['mec-past-events'] = isset($this->atts['show_past_events']) ? $this->atts['show_past_events'] : 0;
+        $this->args['mec-past-events'] = $this->atts['show_past_events'] ?? 0;
 
         // Geolocation
-        $this->geolocation = isset($this->skin_options['geolocation']) ? $this->skin_options['geolocation'] : 0;
+        $this->geolocation = $this->skin_options['geolocation'] ?? 0;
         
         // Geolocation Focus
-        $this->geolocation_focus = isset($this->skin_options['geolocation_focus']) ? $this->skin_options['geolocation_focus'] : 0;
+        $this->geolocation_focus = $this->skin_options['geolocation_focus'] ?? 0;
 
         // Start Date
         $this->start_date = $this->get_start_date();
@@ -155,8 +155,8 @@ class MEC_skin_map extends MEC_skins
      */
     public function search()
     {
-        $events = array();
-        $sorted = array();
+        $events = [];
+        $sorted = [];
 
         $yesterday = ($this->end_date ? $this->start_date : date('Y-m-d', strtotime('Yesterday', strtotime($this->start_date))));
 
@@ -177,7 +177,7 @@ class MEC_skin_map extends MEC_skins
                 $data->ID = $event_id;
                 $data->data = $rendered;
                 $data->dates = $this->render->dates($event_id, $rendered, 1, $yesterday);
-                $data->date = isset($data->dates[0]) ? $data->dates[0] : array();
+                $data->date = $data->dates[0] ?? [];
 
                 if(strtotime($data->date['end']['date']) < strtotime($this->start_date)) continue;
                 if($this->end_date and strtotime($data->date['start']['date']) > strtotime($this->end_date)) continue;
@@ -192,7 +192,7 @@ class MEC_skin_map extends MEC_skins
                 $event_start_time = (isset($data->date['start']) ? strtotime($data->date['start']['date']) : 0) + $rendered->meta['mec_start_day_seconds'];
 
                 // Add the event into the to be sorted array
-                if(!isset($sorted[$event_start_time])) $sorted[$event_start_time] = array();
+                $sorted[$event_start_time] ??= [];
                 $sorted[$event_start_time][] = $this->render->after_render($data, $this);
             }
 
@@ -217,11 +217,11 @@ class MEC_skin_map extends MEC_skins
      * @author Webnus <info@webnus.biz>
      * @return void
      */
-    public function get_markers()
+    public function get_markers(): never
     {
-        $this->sf = $this->request->getVar('sf', array());
+        $this->sf = $this->request->getVar('sf', []);
         $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-        $atts = $this->sf_apply($this->request->getVar('atts', array()), $this->sf, $apply_sf_date);
+        $atts = $this->sf_apply($this->request->getVar('atts', []), $this->sf, $apply_sf_date);
 
         // Initialize the skin
         $this->initialize($atts);

@@ -3,35 +3,35 @@
 class Meetup {
 	const BASE = 'https://api.meetup.com';
 
-	protected $_parameters = array(
+	protected $_parameters = [
 		'sign' => 'true',
-	);
+	];
 
-	public function __construct(array $parameters = array()) {
+	public function __construct(array $parameters = []) {
 		$this->_parameters = array_merge($this->_parameters, $parameters);
 	}
 	
-	public function getEvents(array $parameters = array()) {
+	public function getEvents(array $parameters = []) {
 		return $this->get('/:urlname/events', $parameters);
 	}
 
-    public function getEvent(array $parameters = array()) {
+    public function getEvent(array $parameters = []) {
         return $this->get('/:urlname/events/:id', $parameters);
     }
 	
-	public function getPhotos(array $parameters = array()) {
+	public function getPhotos(array $parameters = []) {
 		return $this->get('/2/photos', $parameters)->results;
 	}
 	
-	public function getDiscussionBoards(array $parameters = array()) {
+	public function getDiscussionBoards(array $parameters = []) {
 		return $this->get('/:urlname/boards', $parameters);
 	}
 	
-	public function getDiscussions(array $parameters = array()) {
+	public function getDiscussions(array $parameters = []) {
 		return $this->get('/:urlname/boards/:bid/discussions', $parameters);
 	}
 
-	public function getMembers(array $parameters = array()) {
+	public function getMembers(array $parameters = []) {
 		return $this->get('/2/members', $parameters);
 	}
 
@@ -43,7 +43,7 @@ class Meetup {
 		return $this->get_url($response->meta->next);
 	}
 	
-	public function get($path, array $parameters = array()) {
+	public function get($path, array $parameters = []) {
 		$parameters = array_merge($this->_parameters, $parameters);
 
 		if (preg_match_all('/:([a-z]+)/', $path, $matches)) {
@@ -68,7 +68,7 @@ class Meetup {
 	
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, array("Accept-Charset: utf-8"));
+		curl_setopt($ch, CURLOPT_HTTPHEADER, ["Accept-Charset: utf-8"]);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
 
@@ -99,29 +99,15 @@ class Meetup {
 
 		if (isset($response) == false) {
 		
-			switch (json_last_error()) {
-				case JSON_ERROR_NONE:
-					$error = 'No errors';
-				break;
-				case JSON_ERROR_DEPTH:
-					$error = 'Maximum stack depth exceeded';
-				break;
-				case JSON_ERROR_STATE_MISMATCH:
-					$error = ' Underflow or the modes mismatch';
-				break;
-				case JSON_ERROR_CTRL_CHAR:
-					$error = 'Unexpected control character found';
-				break;
-				case JSON_ERROR_SYNTAX:
-					$error = 'Syntax error, malformed JSON';
-				break;
-				case JSON_ERROR_UTF8:
-					$error = 'Malformed UTF-8 characters, possibly incorrectly encoded';
-				break;
-				default:
-					$error = 'Unknown error';
-				break;
-			}
+			$error = match (json_last_error()) {
+                JSON_ERROR_NONE => 'No errors',
+                JSON_ERROR_DEPTH => 'Maximum stack depth exceeded',
+                JSON_ERROR_STATE_MISMATCH => ' Underflow or the modes mismatch',
+                JSON_ERROR_CTRL_CHAR => 'Unexpected control character found',
+                JSON_ERROR_SYNTAX => 'Syntax error, malformed JSON',
+                JSON_ERROR_UTF8 => 'Malformed UTF-8 characters, possibly incorrectly encoded',
+                default => 'Unknown error',
+            };
     
 			throw new Exception("Cannot read response by  '" . $url . "' because of: '" . $error . "'.");
 		}

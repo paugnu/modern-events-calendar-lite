@@ -22,11 +22,11 @@ trait All
         self::_validateParams($params);
         $url = static::classUrl();
 
-        list($response, $opts) = static::_staticRequest('get', $url, $params, $opts);
+        [$response, $opts] = static::_staticRequest('get', $url, $params, $opts);
         $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         if (!($obj instanceof \Stripe\Collection)) {
             throw new \Stripe\Exception\UnexpectedValueException(
-                'Expected type ' . \Stripe\Collection::class . ', got "' . \get_class($obj) . '" instead.'
+                'Expected type ' . \Stripe\Collection::class . ', got "' . $obj::class . '" instead.'
             );
         }
         $obj->setLastResponse($response);

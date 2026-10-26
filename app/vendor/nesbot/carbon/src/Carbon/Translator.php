@@ -18,7 +18,7 @@ class Translator extends Translation\Translator
      *
      * @var array
      */
-    protected static $messages = array();
+    protected static $messages = [];
 
     /**
      * Return a singleton instance of Translator.
@@ -36,7 +36,7 @@ class Translator extends Translation\Translator
         return static::$singleton;
     }
 
-    public function __construct($locale, Translation\Formatter\MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
+    public function __construct($locale, ?Translation\Formatter\MessageFormatterInterface $formatter = null, $cacheDir = null, $debug = false)
     {
         $this->addLoader('array', new Translation\Loader\ArrayLoader());
         parent::__construct($locale, $formatter, $cacheDir, $debug);
@@ -54,7 +54,7 @@ class Translator extends Translation\Translator
     public function resetMessages($locale = null)
     {
         if ($locale === null) {
-            static::$messages = array();
+            static::$messages = [];
 
             return true;
         }
@@ -98,7 +98,7 @@ class Translator extends Translation\Translator
         $this->loadMessagesFromFile($locale);
         $this->addResource('array', $messages, $locale);
         static::$messages[$locale] = array_merge(
-            isset(static::$messages[$locale]) ? static::$messages[$locale] : array(),
+            static::$messages[$locale] ?? [],
             $messages
         );
 
@@ -127,10 +127,9 @@ class Translator extends Translation\Translator
      */
     public function setLocale($locale)
     {
-        $locale = preg_replace_callback('/[-_]([a-z]{2,})/', function ($matches) {
+        $locale = preg_replace_callback('/[-_]([a-z]{2,})/', 
             // _2-letters is a region, _3+-letters is a variant
-            return '_'.call_user_func(strlen($matches[1]) > 2 ? 'ucfirst' : 'strtoupper', $matches[1]);
-        }, strtolower($locale));
+            fn($matches) => '_'.call_user_func(strlen($matches[1]) > 2 ? 'ucfirst' : 'strtoupper', $matches[1]), strtolower($locale));
 
         if ($this->loadMessagesFromFile($locale)) {
             parent::setLocale($locale);

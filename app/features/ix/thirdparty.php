@@ -66,7 +66,7 @@ $third_parties = $this->main->get_integrated_plugins_for_import();
                             <div class="mec-options-fields">
                                 <h4><?php _e('Import Options', 'modern-events-calendar-lite'); ?></h4>
 
-                                <?php if(!in_array($this->ix['third-party'], array('event-espresso', 'events-manager-single', 'events-manager-recurring'))): ?>
+                                <?php if(!in_array($this->ix['third-party'], ['event-espresso', 'events-manager-single', 'events-manager-recurring'])): ?>
                                 <div class="mec-form-row">
                                     <label>
                                         <input type="checkbox" name="ix[import_organizers]" value="1" checked="checked" />

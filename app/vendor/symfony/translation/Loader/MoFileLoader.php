@@ -71,7 +71,7 @@ class MoFileLoader extends FileLoader
         // offsetHashes
         $this->readLong($stream, $isBigEndian);
 
-        $messages = array();
+        $messages = [];
 
         for ($i = 0; $i < $count; ++$i) {
             $pluralId = null;
@@ -89,8 +89,8 @@ class MoFileLoader extends FileLoader
             fseek($stream, $offset);
             $singularId = fread($stream, $length);
 
-            if (false !== strpos($singularId, "\000")) {
-                list($singularId, $pluralId) = explode("\000", $singularId);
+            if (str_contains($singularId, "\000")) {
+                [$singularId, $pluralId] = explode("\000", $singularId);
             }
 
             fseek($stream, $offsetTranslated + $i * 8);
@@ -104,17 +104,17 @@ class MoFileLoader extends FileLoader
             fseek($stream, $offset);
             $translated = fread($stream, $length);
 
-            if (false !== strpos($translated, "\000")) {
+            if (str_contains($translated, "\000")) {
                 $translated = explode("\000", $translated);
             }
 
-            $ids = array('singular' => $singularId, 'plural' => $pluralId);
+            $ids = ['singular' => $singularId, 'plural' => $pluralId];
             $item = compact('ids', 'translated');
 
             if (is_array($item['translated'])) {
                 $messages[$item['ids']['singular']] = stripcslashes($item['translated'][0]);
                 if (isset($item['ids']['plural'])) {
-                    $plurals = array();
+                    $plurals = [];
                     foreach ($item['translated'] as $plural => $translated) {
                         $plurals[] = sprintf('{%d} %s', $plural, $translated);
                     }

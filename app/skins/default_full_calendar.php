@@ -36,8 +36,8 @@ class MEC_skin_default_full_calendar extends MEC_skins
      */
     public function actions()
     {
-        $this->factory->action('wp_ajax_mec_full_calendar_switch_skin', array($this, 'switch_skin'));
-        $this->factory->action('wp_ajax_nopriv_mec_full_calendar_switch_skin', array($this, 'switch_skin'));
+        $this->factory->action('wp_ajax_mec_full_calendar_switch_skin', $this->switch_skin(...));
+        $this->factory->action('wp_ajax_nopriv_mec_full_calendar_switch_skin', $this->switch_skin(...));
     }
     
     /**
@@ -50,16 +50,16 @@ class MEC_skin_default_full_calendar extends MEC_skins
         $this->atts = $atts;
         
         // Skin Options
-        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : array();
+        $this->skin_options = (isset($this->atts['sk-options']) and isset($this->atts['sk-options'][$this->skin])) ? $this->atts['sk-options'][$this->skin] : [];
         
         // Search Form Options
-        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : array();
+        $this->sf_options = (isset($this->atts['sf-options']) and isset($this->atts['sf-options'][$this->skin])) ? $this->atts['sf-options'][$this->skin] : [];
         
         // Search Form Status
-        $this->sf_status = isset($this->atts['sf_status']) ? $this->atts['sf_status'] : true;
-        $this->sf_display_label = isset($this->atts['sf_display_label']) ? $this->atts['sf_display_label'] : false;
-        $this->sf_reset_button = isset($this->atts['sf_reset_button']) ? $this->atts['sf_reset_button'] : false;
-        $this->sf_refine = isset($this->atts['sf_refine']) ? $this->atts['sf_refine'] : false;
+        $this->sf_status = $this->atts['sf_status'] ?? true;
+        $this->sf_display_label = $this->atts['sf_display_label'] ?? false;
+        $this->sf_reset_button = $this->atts['sf_reset_button'] ?? false;
+        $this->sf_refine = $this->atts['sf_refine'] ?? false;
         
         // Show Only Expired Events
         $this->show_only_expired_events = (isset($this->atts['show_only_past_events']) and trim($this->atts['show_only_past_events'])) ? '1' : '0';
@@ -68,31 +68,31 @@ class MEC_skin_default_full_calendar extends MEC_skins
         $this->start_date = $this->get_start_date();
         
         // Generate an ID for the skin
-        $this->id = isset($this->atts['id']) ? $this->atts['id'] : mt_rand(100, 999);
+        $this->id = $this->atts['id'] ?? mt_rand(100, 999);
 
         // Booking Button
         $this->booking_button = isset($this->skin_options['booking_button']) ? (int) $this->skin_options['booking_button'] : 0;
         
         // SED Method
-        $this->sed_method = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
+        $this->sed_method = $this->skin_options['sed_method'] ?? '0';
 
         // Image popup
-        $this->image_popup = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
+        $this->image_popup = $this->skin_options['image_popup'] ?? '0';
         
         // Default View of Full Calendar
-        $this->default_view = isset($this->skin_options['default_view']) ? $this->skin_options['default_view'] : 'list';
+        $this->default_view = $this->skin_options['default_view'] ?? 'list';
         if(isset($this->skin_options[$this->default_view]) and !$this->skin_options[$this->default_view]) $this->default_view = 'list';
 
         // Default style for Monthly View
-        $this->monthly_style = isset($this->skin_options['monthly_style']) ? $this->skin_options['monthly_style'] : 'clean';
+        $this->monthly_style = $this->skin_options['monthly_style'] ?? 'clean';
         if(isset($this->skin_options[$this->monthly_style]) and !$this->skin_options[$this->monthly_style]) $this->monthly_style = 'clean';
 
 
-        $this->yearly = isset($this->skin_options['yearly']) ? $this->skin_options['yearly'] : true;
-        $this->monthly = isset($this->skin_options['monthly']) ? $this->skin_options['monthly'] : true;
-        $this->weekly = isset($this->skin_options['weekly']) ? $this->skin_options['weekly'] : true;
-        $this->daily = isset($this->skin_options['daily']) ? $this->skin_options['daily'] : true;
-        $this->list = isset($this->skin_options['list']) ? $this->skin_options['list'] : true;
+        $this->yearly = $this->skin_options['yearly'] ?? true;
+        $this->monthly = $this->skin_options['monthly'] ?? true;
+        $this->weekly = $this->skin_options['weekly'] ?? true;
+        $this->daily = $this->skin_options['daily'] ?? true;
+        $this->list = $this->skin_options['list'] ?? true;
         
         // If all of skins are disabled
         if(!$this->monthly and !$this->weekly and !$this->daily and !$this->list and !$this->yearly)
@@ -102,7 +102,7 @@ class MEC_skin_default_full_calendar extends MEC_skins
         }
         
         // Set the ID
-        if(!isset($this->atts['id'])) $this->atts['id'] = $this->id;
+        $this->atts['id'] ??= $this->id;
     }
     
     public function get_start_date()
@@ -147,18 +147,18 @@ class MEC_skin_default_full_calendar extends MEC_skins
 
                 $atts = $this->atts;
 
-                $start_date_type = isset($this->skin_options['start_date_type']) ? $this->skin_options['start_date_type'] : 'start_current_year';
+                $start_date_type = $this->skin_options['start_date_type'] ?? 'start_current_year';
 
                 if($start_date_type == 'start_current_month') $start_date_type = 'start_current_year';
                 elseif($start_date_type == 'start_next_month') $start_date_type = 'start_next_year';
                 else $start_date_type = 'date';
 
                 $atts['sk-options']['yearly_view']['start_date_type'] = $start_date_type;
-                $atts['sk-options']['yearly_view']['start_date'] = isset($this->skin_options['start_date']) ? $this->skin_options['start_date'] : current_time('Y-01-01');
+                $atts['sk-options']['yearly_view']['start_date'] = $this->skin_options['start_date'] ?? current_time('Y-01-01');
                 $atts['sk-options']['yearly_view']['style'] = 'modern';
-                $atts['sk-options']['yearly_view']['sed_method'] = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
-                $atts['sk-options']['yearly_view']['image_popup'] = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
-                $atts['sk-options']['yearly_view']['limit'] = isset($this->skin_options['limit']) ? $this->skin_options['limit'] : 12;
+                $atts['sk-options']['yearly_view']['sed_method'] = $this->skin_options['sed_method'] ?? '0';
+                $atts['sk-options']['yearly_view']['image_popup'] = $this->skin_options['image_popup'] ?? '0';
+                $atts['sk-options']['yearly_view']['limit'] = $this->skin_options['limit'] ?? 12;
                 $atts['sf_status'] = false;
 
                 $output = $this->render->vyear($atts);
@@ -168,12 +168,12 @@ class MEC_skin_default_full_calendar extends MEC_skins
             case 'monthly':
                 
                 $atts = $this->atts;
-                $atts['sk-options']['monthly_view']['start_date_type'] = isset($this->skin_options['start_date_type']) ? $this->skin_options['start_date_type'] : '';
-                $atts['sk-options']['monthly_view']['start_date'] = isset($this->skin_options['start_date']) ? $this->skin_options['start_date'] : '';
+                $atts['sk-options']['monthly_view']['start_date_type'] = $this->skin_options['start_date_type'] ?? '';
+                $atts['sk-options']['monthly_view']['start_date'] = $this->skin_options['start_date'] ?? '';
                 $atts['sk-options']['monthly_view']['style'] = $this->monthly_style;
-                $atts['sk-options']['monthly_view']['sed_method'] = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
-                $atts['sk-options']['monthly_view']['image_popup'] = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
-                $atts['sk-options']['monthly_view']['limit'] = isset($this->skin_options['limit']) ? $this->skin_options['limit'] : 12;
+                $atts['sk-options']['monthly_view']['sed_method'] = $this->skin_options['sed_method'] ?? '0';
+                $atts['sk-options']['monthly_view']['image_popup'] = $this->skin_options['image_popup'] ?? '0';
+                $atts['sk-options']['monthly_view']['limit'] = $this->skin_options['limit'] ?? 12;
                 $atts['sf_status'] = false;
                 
                 $output = $this->render->vmonth($atts);
@@ -183,11 +183,11 @@ class MEC_skin_default_full_calendar extends MEC_skins
             case 'weekly':
                 
                 $atts = $this->atts;
-                $atts['sk-options']['weekly_view']['start_date_type'] = isset($this->skin_options['start_date_type']) ? $this->skin_options['start_date_type'] : '';
-                $atts['sk-options']['weekly_view']['start_date'] = isset($this->skin_options['start_date']) ? $this->skin_options['start_date'] : '';
-                $atts['sk-options']['weekly_view']['sed_method'] = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
-                $atts['sk-options']['weekly_view']['image_popup'] = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
-                $atts['sk-options']['weekly_view']['limit'] = isset($this->skin_options['limit']) ? $this->skin_options['limit'] : 12;
+                $atts['sk-options']['weekly_view']['start_date_type'] = $this->skin_options['start_date_type'] ?? '';
+                $atts['sk-options']['weekly_view']['start_date'] = $this->skin_options['start_date'] ?? '';
+                $atts['sk-options']['weekly_view']['sed_method'] = $this->skin_options['sed_method'] ?? '0';
+                $atts['sk-options']['weekly_view']['image_popup'] = $this->skin_options['image_popup'] ?? '0';
+                $atts['sk-options']['weekly_view']['limit'] = $this->skin_options['limit'] ?? 12;
                 $atts['sf_status'] = false;
                 
                 $output = $this->render->vweek($atts);
@@ -197,11 +197,11 @@ class MEC_skin_default_full_calendar extends MEC_skins
             case 'daily':
                 
                 $atts = $this->atts;
-                $atts['sk-options']['daily_view']['start_date_type'] = isset($this->skin_options['start_date_type']) ? $this->skin_options['start_date_type'] : '';
-                $atts['sk-options']['daily_view']['start_date'] = isset($this->skin_options['start_date']) ? $this->skin_options['start_date'] : '';
-                $atts['sk-options']['daily_view']['sed_method'] = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
-                $atts['sk-options']['daily_view']['image_popup'] = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
-                $atts['sk-options']['daily_view']['limit'] = isset($this->skin_options['limit']) ? $this->skin_options['limit'] : 12;
+                $atts['sk-options']['daily_view']['start_date_type'] = $this->skin_options['start_date_type'] ?? '';
+                $atts['sk-options']['daily_view']['start_date'] = $this->skin_options['start_date'] ?? '';
+                $atts['sk-options']['daily_view']['sed_method'] = $this->skin_options['sed_method'] ?? '0';
+                $atts['sk-options']['daily_view']['image_popup'] = $this->skin_options['image_popup'] ?? '0';
+                $atts['sk-options']['daily_view']['limit'] = $this->skin_options['limit'] ?? 12;
                 $atts['sf_status'] = false;
                 
                 $output = $this->render->vday($atts);
@@ -212,13 +212,13 @@ class MEC_skin_default_full_calendar extends MEC_skins
             default:
                 
                 $atts = $this->atts;
-                $atts['sk-options']['list']['start_date_type'] = isset($this->skin_options['start_date_type']) ? $this->skin_options['start_date_type'] : '';
-                $atts['sk-options']['list']['start_date'] = isset($this->skin_options['start_date']) ? $this->skin_options['start_date'] : '';
+                $atts['sk-options']['list']['start_date_type'] = $this->skin_options['start_date_type'] ?? '';
+                $atts['sk-options']['list']['start_date'] = $this->skin_options['start_date'] ?? '';
                 $atts['sk-options']['list']['style'] = 'standard';
-                $atts['sk-options']['list']['sed_method'] = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : '0';
-                $atts['sk-options']['list']['image_popup'] = isset($this->skin_options['image_popup']) ? $this->skin_options['image_popup'] : '0';
-                $atts['sk-options']['list']['display_price'] = isset($this->skin_options['display_price']) ? $this->skin_options['display_price'] : 0;
-                $atts['sk-options']['list']['limit'] = isset($this->skin_options['limit']) ? $this->skin_options['limit'] : 12;
+                $atts['sk-options']['list']['sed_method'] = $this->skin_options['sed_method'] ?? '0';
+                $atts['sk-options']['list']['image_popup'] = $this->skin_options['image_popup'] ?? '0';
+                $atts['sk-options']['list']['display_price'] = $this->skin_options['display_price'] ?? 0;
+                $atts['sk-options']['list']['limit'] = $this->skin_options['limit'] ?? 12;
                 $atts['sf_status'] = false;
 
                 $output = $this->render->vlist($atts);
@@ -234,11 +234,11 @@ class MEC_skin_default_full_calendar extends MEC_skins
      * @author Webnus <info@webnus.biz>
      * @return void
      */
-    public function switch_skin()
+    public function switch_skin(): never
     {
-        $this->sf = $this->request->getVar('sf', array());
+        $this->sf = $this->request->getVar('sf', []);
         $apply_sf_date = $this->request->getVar('apply_sf_date', 1);
-        $atts = $this->sf_apply($this->request->getVar('atts', array()), $this->sf, $apply_sf_date);
+        $atts = $this->sf_apply($this->request->getVar('atts', []), $this->sf, $apply_sf_date);
         
         $skin = $this->request->getVar('skin', 'list');
         

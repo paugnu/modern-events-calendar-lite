@@ -25,7 +25,7 @@ class Event extends PostBase {
 
 	public function get_content( $content = null ) {
 
-		return is_null( $content ) ? $this->main->get_post_content( $this->ID ) : $content;
+		return $content ?? $this->main->get_post_content( $this->ID );
 	}
 
 	public function get_datetime() {
@@ -37,21 +37,21 @@ class Event extends PostBase {
 			return $date;
 		}
 
-		$types = array(
+		$types = [
 			'start',
 			'end',
-		);
+		];
 
-		$datetime = array(
+		$datetime = [
 			'hour'    => '',
 			'minutes' => '',
 			'ampm'    => '',
-		);
+		];
 
-		$datetimes = array(
+		$datetimes = [
 			'start' => $datetime,
 			'end'   => $datetime,
-		);
+		];
 
 		foreach ( $types as $type ) {
 
@@ -60,12 +60,12 @@ class Event extends PostBase {
 			$minutes = $this->get_meta(  'mec_' . $type . '_time_minutes' );
 			$ampm    = $this->get_meta(  'mec_' . $type . '_time_ampm' );
 
-			$datetime = array(
+			$datetime = [
 				'date'    => $date,
 				'hours'    => sprintf('%02d',$hours),
 				'minutes' => sprintf('%02d',$minutes),
-				'ampm'    => $ampm ? $ampm : '',
-			);
+				'ampm'    => $ampm ?: '',
+			];
 
 			$datetime['datetime'] = "{$date} {$datetime['hours']}:{$datetime['minutes']} {$datetime['ampm']}";
 			$datetime['timestamp'] = strtotime($datetime['datetime']);
@@ -118,13 +118,13 @@ class Event extends PostBase {
 		}
 
 		$end_occurrence = $this->get_occurrence_time( $timestamp );
-		$event_end_datetime = isset($end_occurrence->tend) ? $end_occurrence->tend : false;
+		$event_end_datetime = $end_occurrence->tend ?? false;
 
 		if(false === $event_end_datetime){
 
 			$start_date = date('Y-m-d',$timestamp);
 			$end_date = \MEC\Base::get_main()->get_end_date_by_occurrence( $this->ID, $start_date );
-			$datetimes = $this->get_datetime($this->ID);
+			$datetimes = $this->get_datetime();
 			$event_end_datetime = strtotime("{$end_date} {$datetimes['hours']}:{$datetimes['minutes']} {$datetimes['ampm']}");
 		}
 
@@ -149,7 +149,7 @@ class Event extends PostBase {
 		$data->ID = $event_id;
 		$data->data = $rendered;
 		$data->dates = $dates;
-		$data->date = isset($dates[0]) ? $dates[0] : $this->get_datetime($event_id);
+		$data->date = $dates[0] ?? $this->get_datetime();
 
 		$skin = new \stdClass();
 		$skin->skin = 'single_divi';
@@ -164,7 +164,7 @@ class Event extends PostBase {
 
 		if( !is_null( $group_id ) ){
 
-			return isset($notifications[$group_id]) ? $notifications[$group_id] : null;
+			return $notifications[$group_id] ?? null;
 		}
 
 		return $notifications;

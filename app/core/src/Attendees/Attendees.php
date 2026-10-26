@@ -14,7 +14,7 @@ class Attendees extends Singleton{
         $this->tbl = $wpdb->prefix.'mec_attendees';
     }
 
-    private function get_where( $conditions = array()){
+    private function get_where( $conditions = []){
 
         $where = "1";
 
@@ -40,7 +40,7 @@ class Attendees extends Singleton{
 
                             $where .= $wpdb->prepare(
                                 " AND `{$k}` IN %s",
-                                "('".implode("','".$v)."')"
+                                "('".implode('', "','".$v)."')"
                             );
                         }else{
 
@@ -70,7 +70,7 @@ class Attendees extends Singleton{
         return $wpdb->get_results($sql,ARRAY_A);
     }
 
-    public function _get_attendees( $conditions = array(), $return_by_post_and_occurrence_data = false ){
+    public function _get_attendees( $conditions = [], $return_by_post_and_occurrence_data = false ){
 
         $rows = $this->get_rows( $conditions);
 
@@ -267,7 +267,7 @@ class Attendees extends Singleton{
             $attendee['data'] = $data;
 
             $s = $this->_add_or_update( $attendee );
-            $success = !is_null($success) ? $success : true;
+            $success ??= true;
             $success = $success && $s;
         }
 

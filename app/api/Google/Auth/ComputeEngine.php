@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -29,12 +29,10 @@ class Google_Auth_ComputeEngine extends Google_Auth_Abstract
 {
   const METADATA_AUTH_URL =
       'http://metadata/computeMetadata/v1/instance/service-accounts/default/token';
-  private $client;
   private $token;
 
-  public function __construct(Google_Client $client, $config = null)
+  public function __construct(private readonly Google_Client $client, $config = null)
   {
-    $this->client = $client;
   }
 
   /**
@@ -84,9 +82,9 @@ class Google_Auth_ComputeEngine extends Google_Auth_Abstract
     $request = new Google_Http_Request(
         self::METADATA_AUTH_URL,
         'GET',
-        array(
+        [
           'Metadata-Flavor' => 'Google'
-        )
+        ]
     );
     $request->disableGzip();
     $response = $this->client->getIo()->makeRequest($request);
@@ -121,7 +119,7 @@ class Google_Auth_ComputeEngine extends Google_Auth_Abstract
     $this->client->getLogger()->debug('Compute engine service account authentication');
 
     $request->setRequestHeaders(
-        array('Authorization' => 'Bearer ' . $this->token['access_token'])
+        ['Authorization' => 'Bearer ' . $this->token['access_token']]
     );
 
     return $request;

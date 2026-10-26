@@ -9,7 +9,7 @@ include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
 if(is_plugin_active('advanced-custom-fields/acf.php')) remove_action('admin_footer', 'acf_enqueue_uploader', 5);
 if(is_plugin_active('advanced-custom-fields-pro/acf.php')) remove_action('admin_footer', 'acf_enqueue_uploader', 5);
-if(is_plugin_active('wp-recipe-maker/wp-recipe-maker.php')) remove_action('admin_footer', array('WPRM_Modal', 'add_modal_content'));
+if(is_plugin_active('wp-recipe-maker/wp-recipe-maker.php')) remove_action('admin_footer', ['WPRM_Modal', 'add_modal_content']);
 
 // Skin Options
 $skins = $this->main->get_skins();
@@ -41,7 +41,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 
             <!-- List View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_list_skin_options_container">
-                <?php $sk_options_list = isset($sk_options['list']) ? $sk_options['list'] : array(); ?>
+                <?php $sk_options_list = $sk_options['list'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_list_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][list][style]" id="mec_skin_list_style" onchange="mec_skin_style_changed('list', this.value, this); if(this.value == 'accordion'){ jQuery('.mec-sed-methode-container').hide();jQuery('.mec-toggle-month-divider').show(); }else{ jQuery('.mec-sed-methode-container').show();jQuery('.mec-toggle-month-divider').hide()}">
@@ -233,7 +233,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('list', (isset($sk_options_list['display_organizer']) ? $sk_options_list['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('list', ($sk_options_list['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
 					<div class="mec-col-4">
@@ -273,8 +273,8 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <!-- End Set Map Geolocation -->
-                <?php echo $this->booking_button_field('list', (isset($sk_options_list['booking_button']) ? $sk_options_list['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('list', (isset($sk_options_list['custom_data']) ? $sk_options_list['custom_data'] : 0)); ?>
+                <?php echo $this->booking_button_field('list', ($sk_options_list['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('list', ($sk_options_list['custom_data'] ?? 0)); ?>
                 <div class="mec-form-row mec-switcher mec-toggle-month-divider mec-not-list-fluent">
                     <div class="mec-col-4">
                         <label for="mec_skin_list_toggle_month_divider"><?php _e('Toggle for Month Divider', 'modern-events-calendar-lite'); ?></label>
@@ -286,14 +286,14 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <div class="mec-sed-methode-container">
-                    <?php echo $this->sed_method_field('list', (isset($sk_options_list['sed_method']) ? $sk_options_list['sed_method'] : 0), (isset($sk_options_list['image_popup']) ? $sk_options_list['image_popup'] : 0)); ?>
+                    <?php echo $this->sed_method_field('list', ($sk_options_list['sed_method'] ?? 0), ($sk_options_list['image_popup'] ?? 0)); ?>
                 </div>
                 <?php do_action('mec_skin_options_list_end', $sk_options_list); ?>
             </div>
 
             <!-- Grid View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_grid_skin_options_container">
-                <?php $sk_options_grid = isset($sk_options['grid']) ? $sk_options['grid'] : array(); ?>
+                <?php $sk_options_grid = $sk_options['grid'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_grid_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][grid][style]" id="mec_skin_grid_style" onchange="mec_skin_style_changed('grid', this.value);">
@@ -511,7 +511,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('grid', (isset($sk_options_grid['display_organizer']) ? $sk_options_grid['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('grid', ($sk_options_grid['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
 					<div class="mec-col-4">
@@ -551,9 +551,9 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <!-- End Set Map Geolocation -->
-                <?php echo $this->booking_button_field('grid', (isset($sk_options_grid['booking_button']) ? $sk_options_grid['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('grid', (isset($sk_options_grid['custom_data']) ? $sk_options_grid['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('grid', (isset($sk_options_grid['sed_method']) ? $sk_options_grid['sed_method'] : 0), (isset($sk_options_grid['image_popup']) ? $sk_options_grid['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('grid', ($sk_options_grid['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('grid', ($sk_options_grid['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('grid', ($sk_options_grid['sed_method'] ?? 0), ($sk_options_grid['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_grid_end', $sk_options_grid); ?>
             </div>
 
@@ -564,7 +564,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_agenda = isset($sk_options['agenda']) ? $sk_options['agenda'] : array(); ?>
+                <?php $sk_options_agenda = $sk_options['agenda'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_agenda_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][agenda][style]" id="mec_skin_agenda_style" onchange="mec_skin_style_changed('agenda', this.value);">
@@ -679,15 +679,15 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                         <label for="mec_skin_agenda_month_divider"></label>
                     </div>
                 </div>
-                <?php echo $this->booking_button_field('agenda', (isset($sk_options_agenda['booking_button']) ? $sk_options_agenda['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('agenda', (isset($sk_options_agenda['custom_data']) ? $sk_options_agenda['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('agenda', (isset($sk_options_agenda['sed_method']) ? $sk_options_agenda['sed_method'] : 0), (isset($sk_options_agenda['image_popup']) ? $sk_options_agenda['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('agenda', ($sk_options_agenda['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('agenda', ($sk_options_agenda['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('agenda', ($sk_options_agenda['sed_method'] ?? 0), ($sk_options_agenda['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_agenda_end', $sk_options_agenda); ?>
             </div>
 
             <!-- Full Calendar -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_full_calendar_skin_options_container">
-                <?php $sk_options_full_calendar = isset($sk_options['full_calendar']) ? $sk_options['full_calendar'] : array(); ?>
+                <?php $sk_options_full_calendar = $sk_options['full_calendar'] ?? []; ?>
                 <?php do_action('mec_skin_options_full_calendar_init', $sk_options_full_calendar); ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_full_calendar_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
@@ -834,7 +834,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     <?php
                         $date_format_yearly_1 = 'l';
                         $date_format_yearly_2 = 'F j';
-                        $sk_options_yearly_view = isset($sk_options['yearly_view']) ? $sk_options['yearly_view'] : array();
+                        $sk_options_yearly_view = $sk_options['yearly_view'] ?? [];
 
                         if(isset($sk_options_full_calendar['date_format_yearly_1']) and trim($sk_options_full_calendar['date_format_yearly_1']) != '') $date_format_yearly_1 = trim($sk_options_full_calendar['date_format_yearly_1']);
                         elseif(isset($sk_options_yearly_view['modern_date_format1']) and trim($sk_options_yearly_view['modern_date_format1']) != '') $date_format_yearly_1 = trim($sk_options_yearly_view['modern_date_format1']);
@@ -952,9 +952,9 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <!-- End LocalTime -->
-                <?php echo $this->booking_button_field('full_calendar', (isset($sk_options_full_calendar['booking_button']) ? $sk_options_full_calendar['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('full_calendar', (isset($sk_options_full_calendar['custom_data']) ? $sk_options_full_calendar['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('full_calendar', (isset($sk_options_full_calendar['sed_method']) ? $sk_options_full_calendar['sed_method'] : 0), (isset($sk_options_full_calendar['image_popup']) ? $sk_options_full_calendar['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('full_calendar', ($sk_options_full_calendar['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('full_calendar', ($sk_options_full_calendar['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('full_calendar', ($sk_options_full_calendar['sed_method'] ?? 0), ($sk_options_full_calendar['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_full_calendar_end', $sk_options_full_calendar); ?>
             </div>
 
@@ -965,7 +965,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_yearly_view = isset($sk_options['yearly_view']) ? $sk_options['yearly_view'] : array(); ?>
+                <?php $sk_options_yearly_view = $sk_options['yearly_view'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_yearly_view_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][yearly_view][style]" id="mec_skin_yearly_view_style" onchange="mec_skin_style_changed('yearly_view', this.value);">
@@ -1060,15 +1060,15 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Reason for Cancellation -->
                 <p class="description"><?php _e('For showing next/previous year navigation.', 'modern-events-calendar-lite'); ?></p>
-                <?php echo $this->booking_button_field('yearly_view', (isset($sk_options_yearly_view['booking_button']) ? $sk_options_yearly_view['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('yearly_view', (isset($sk_options_yearly_view['custom_data']) ? $sk_options_yearly_view['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('yearly_view', (isset($sk_options_yearly_view['sed_method']) ? $sk_options_yearly_view['sed_method'] : 0), (isset($sk_options_yearly_view['image_popup']) ? $sk_options_yearly_view['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('yearly_view', ($sk_options_yearly_view['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('yearly_view', ($sk_options_yearly_view['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('yearly_view', ($sk_options_yearly_view['sed_method'] ?? 0), ($sk_options_yearly_view['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_yearly_view_end', $sk_options_yearly_view); ?>
             </div>
 
             <!-- Monthly View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_monthly_view_skin_options_container">
-                <?php $sk_options_monthly_view = isset($sk_options['monthly_view']) ? $sk_options['monthly_view'] : array(); ?>
+                <?php $sk_options_monthly_view = $sk_options['monthly_view'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_monthly_view_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][monthly_view][style]" id="mec_skin_monthly_view_style" onchange="mec_skin_style_changed('monthly_view', this.value);">
@@ -1183,10 +1183,10 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 						<label for="mec_skin_monthly_view_uppercase_text"></label>
 					</div>
 				</div> -->
-                <?php echo $this->booking_button_field('monthly_view', (isset($sk_options_monthly_view['booking_button']) ? $sk_options_monthly_view['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('monthly_view', (isset($sk_options_monthly_view['custom_data']) ? $sk_options_monthly_view['custom_data'] : 0)); ?>
-                <?php echo $this->display_detailed_time_field('monthly_view', (isset($sk_options_monthly_view['detailed_time']) ? $sk_options_monthly_view['detailed_time'] : 0)); ?>
-                <?php echo $this->sed_method_field('monthly_view', (isset($sk_options_monthly_view['sed_method']) ? $sk_options_monthly_view['sed_method'] : 0), (isset($sk_options_monthly_view['image_popup']) ? $sk_options_monthly_view['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('monthly_view', ($sk_options_monthly_view['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('monthly_view', ($sk_options_monthly_view['custom_data'] ?? 0)); ?>
+                <?php echo $this->display_detailed_time_field('monthly_view', ($sk_options_monthly_view['detailed_time'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('monthly_view', ($sk_options_monthly_view['sed_method'] ?? 0), ($sk_options_monthly_view['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_monthly_view_end', $sk_options_monthly_view); ?>
             </div>
 
@@ -1197,7 +1197,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_map = isset($sk_options['map']) ? $sk_options['map'] : array(); ?>
+                <?php $sk_options_map = $sk_options['map'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_map_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][map][start_date_type]" id="mec_skin_map_start_date_type" onchange="if(this.value == 'date') jQuery('#mec_skin_map_start_date_container').show(); else jQuery('#mec_skin_map_start_date_container').hide();">
@@ -1215,7 +1215,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 				</div>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_map_limit"><?php _e('Maximum events', 'modern-events-calendar-lite'); ?></label>
-                    <input class="mec-col-4" type="number" name="mec[sk-options][map][limit]" id="mec_skin_map_limit" placeholder="<?php _e('eg. 200', 'modern-events-calendar-lite'); ?>" value="<?php echo (isset($sk_options_map['limit']) ? $sk_options_map['limit'] : 200); ?>" />
+                    <input class="mec-col-4" type="number" name="mec[sk-options][map][limit]" id="mec_skin_map_limit" placeholder="<?php _e('eg. 200', 'modern-events-calendar-lite'); ?>" value="<?php echo ($sk_options_map['limit'] ?? 200); ?>" />
                 </div>
                 <div class="mec-form-row mec-switcher">
                     <div class="mec-col-4">
@@ -1243,7 +1243,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 
             <!-- Daily View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_daily_view_skin_options_container">
-                <?php $sk_options_daily_view = isset($sk_options['daily_view']) ? $sk_options['daily_view'] : array(); ?>
+                <?php $sk_options_daily_view = $sk_options['daily_view'] ?? []; ?>
                 <?php do_action('mec_skin_options_daily_init', $sk_options_daily_view); ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_daily_view_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
@@ -1325,18 +1325,18 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('daily_view', (isset($sk_options_daily_view['display_organizer']) ? $sk_options_daily_view['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('daily_view', ($sk_options_daily_view['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
-                <?php echo $this->booking_button_field('daily_view', (isset($sk_options_daily_view['booking_button']) ? $sk_options_daily_view['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('daily_view', (isset($sk_options_daily_view['custom_data']) ? $sk_options_daily_view['custom_data'] : 0)); ?>
-                <?php echo $this->display_detailed_time_field('daily_view', (isset($sk_options_daily_view['detailed_time']) ? $sk_options_daily_view['detailed_time'] : 0)); ?>
-                <?php echo $this->sed_method_field('daily_view', (isset($sk_options_daily_view['sed_method']) ? $sk_options_daily_view['sed_method'] : 0), (isset($sk_options_daily_view['image_popup']) ? $sk_options_daily_view['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('daily_view', ($sk_options_daily_view['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('daily_view', ($sk_options_daily_view['custom_data'] ?? 0)); ?>
+                <?php echo $this->display_detailed_time_field('daily_view', ($sk_options_daily_view['detailed_time'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('daily_view', ($sk_options_daily_view['sed_method'] ?? 0), ($sk_options_daily_view['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_daily_view_end', $sk_options_daily_view); ?>
             </div>
 
             <!-- Weekly View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_weekly_view_skin_options_container">
-                <?php $sk_options_weekly_view = isset($sk_options['weekly_view']) ? $sk_options['weekly_view'] : array(); ?>
+                <?php $sk_options_weekly_view = $sk_options['weekly_view'] ?? []; ?>
                 <?php do_action('mec_skin_options_weekly_init', $sk_options_weekly_view); ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_weekly_view_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
@@ -1406,7 +1406,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('weekly_view', (isset($sk_options_weekly_view['display_organizer']) ? $sk_options_weekly_view['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('weekly_view', ($sk_options_weekly_view['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
 					<div class="mec-col-4">
@@ -1419,10 +1419,10 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 					</div>
                 </div>
                 <p class="description"><?php _e('For showing next/previous month navigation.', 'modern-events-calendar-lite'); ?></p>
-                <?php echo $this->booking_button_field('weekly_view', (isset($sk_options_weekly_view['booking_button']) ? $sk_options_weekly_view['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('weekly_view', (isset($sk_options_weekly_view['custom_data']) ? $sk_options_weekly_view['custom_data'] : 0)); ?>
-                <?php echo $this->display_detailed_time_field('weekly_view', (isset($sk_options_weekly_view['detailed_time']) ? $sk_options_weekly_view['detailed_time'] : 0)); ?>
-                <?php echo $this->sed_method_field('weekly_view', (isset($sk_options_weekly_view['sed_method']) ? $sk_options_weekly_view['sed_method'] : 0), (isset($sk_options_weekly_view['image_popup']) ? $sk_options_weekly_view['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('weekly_view', ($sk_options_weekly_view['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('weekly_view', ($sk_options_weekly_view['custom_data'] ?? 0)); ?>
+                <?php echo $this->display_detailed_time_field('weekly_view', ($sk_options_weekly_view['detailed_time'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('weekly_view', ($sk_options_weekly_view['sed_method'] ?? 0), ($sk_options_weekly_view['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_weekly_view_end', $sk_options_weekly_view); ?>
             </div>
 
@@ -1433,7 +1433,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_timetable = isset($sk_options['timetable']) ? $sk_options['timetable'] : array(); ?>
+                <?php $sk_options_timetable = $sk_options['timetable'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_timetable_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][timetable][style]" id="mec_skin_timetable_style" onchange="mec_skin_style_changed('timetable', this.value); if(this.value == 'clean' || this.value == 'fluent'){ jQuery('.mec-timetable-clean-style-depended').show(); jQuery('.mec-timetable-classic-style-depended').hide(); jQuery('.mec-timetable-modern-style-depended').hide(); } else if ( this.value == 'classic' ) { jQuery('.mec-timetable-classic-style-depended').show(); jQuery('.mec-timetable-clean-style-depended').show(); jQuery('.mec-timetable-modern-style-depended').hide(); } else { jQuery('.mec-timetable-clean-style-depended').hide(); jQuery('.mec-timetable-classic-style-depended').hide(); jQuery('.mec-timetable-modern-style-depended').show(); }">
@@ -1578,9 +1578,9 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     <p class="description"><?php _e('For showing next/previous month navigation.', 'modern-events-calendar-lite'); ?></p>
                 </div>
                 <div class="mec-timetable-sed-methode-container">
-                    <?php echo $this->booking_button_field('timetable', (isset($sk_options_timetable['booking_button']) ? $sk_options_timetable['booking_button'] : 0)); ?>
-                    <?php echo $this->display_custom_data_field('timetable', (isset($sk_options_timetable['custom_data']) ? $sk_options_timetable['custom_data'] : 0)); ?>
-                    <?php echo $this->sed_method_field('timetable', (isset($sk_options_timetable['sed_method']) ? $sk_options_timetable['sed_method'] : 0), (isset($sk_options_timetable['image_popup']) ? $sk_options_timetable['image_popup'] : 0)); ?>
+                    <?php echo $this->booking_button_field('timetable', ($sk_options_timetable['booking_button'] ?? 0)); ?>
+                    <?php echo $this->display_custom_data_field('timetable', ($sk_options_timetable['custom_data'] ?? 0)); ?>
+                    <?php echo $this->sed_method_field('timetable', ($sk_options_timetable['sed_method'] ?? 0), ($sk_options_timetable['image_popup'] ?? 0)); ?>
                 </div>
                 <?php do_action('mec_skin_options_timetable_end', $sk_options_timetable); ?>
             </div>
@@ -1591,7 +1591,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_masonry = isset($sk_options['masonry']) ? $sk_options['masonry'] : array(); ?>
+                <?php $sk_options_masonry = $sk_options['masonry'] ?? []; ?>
                 <?php do_action('mec_skin_options_masonry_init', $sk_options_masonry); ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_masonry_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
@@ -1703,7 +1703,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('masonry', (isset($sk_options_masonry['display_organizer']) ? $sk_options_masonry['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('masonry', ($sk_options_masonry['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
                     <div class="mec-col-4">
@@ -1737,15 +1737,15 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                         <label for="mec_skin_masonry_load_more_button"></label>
                     </div>
                 </div>
-                <?php echo $this->booking_button_field('masonry', (isset($sk_options_masonry['booking_button']) ? $sk_options_masonry['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('masonry', (isset($sk_options_masonry['custom_data']) ? $sk_options_masonry['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('masonry', (isset($sk_options_masonry['sed_method']) ? $sk_options_masonry['sed_method'] : 0), (isset($sk_options_masonry['image_popup']) ? $sk_options_masonry['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('masonry', ($sk_options_masonry['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('masonry', ($sk_options_masonry['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('masonry', ($sk_options_masonry['sed_method'] ?? 0), ($sk_options_masonry['image_popup'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_masonry_end', $sk_options_masonry); ?>
             </div>
 
             <!-- Cover -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_cover_skin_options_container">
-                <?php $sk_options_cover = isset($sk_options['cover']) ? $sk_options['cover'] : array(); ?>
+                <?php $sk_options_cover = $sk_options['cover'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_cover_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][cover][style]" id="mec_skin_cover_style" onchange="mec_skin_style_changed('cover', this.value);">
@@ -1840,7 +1840,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 
             <!-- CountDown -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_countdown_skin_options_container">
-                <?php $sk_options_countdown = isset($sk_options['countdown']) ? $sk_options['countdown'] : array(); ?>
+                <?php $sk_options_countdown = $sk_options['countdown'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_countdown_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][countdown][style]" id="mec_skin_countdown_style" onchange="mec_skin_style_changed('countdown', this.value);">
@@ -1944,7 +1944,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 <div class="info-msg"><?php echo sprintf(__("%s is required to use this skin.", 'modern-events-calendar-lite'), '<a href="'.$this->main->get_pro_link().'" target="_blank">'.__('Pro version of Modern Events Calendar', 'modern-events-calendar-lite').'</a>'); ?></div>
                 <?php endif; ?>
 
-                <?php $sk_options_available_spot = isset($sk_options['available_spot']) ? $sk_options['available_spot'] : array(); ?>
+                <?php $sk_options_available_spot = $sk_options['available_spot'] ?? []; ?>
                 <?php do_action('mec_skin_options_available_spot_init', $sk_options_available_spot); ?>
                 <div class="mec-form-row mec-skin-available-spot-date-format-container mec-not-available_spot-fluent">
                     <label class="mec-col-4" for="mec_skin_available_spot_date_format1"><?php _e('Date Formats', 'modern-events-calendar-lite'); ?></label>
@@ -2008,7 +2008,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 
             <!-- Carousel View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_carousel_skin_options_container">
-                <?php $sk_options_carousel = isset($sk_options['carousel']) ? $sk_options['carousel'] : array(); ?>
+                <?php $sk_options_carousel = $sk_options['carousel'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_carousel_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][carousel][style]" id="mec_skin_carousel_style" onchange="mec_skin_style_changed('carousel', this.value); if(this.value == 'type4'){ jQuery('.mec-carousel-archive-link').show();jQuery('.mec-carousel-head-text').show();} else { jQuery('.mec-carousel-archive-link').hide(); jQuery('.mec-carousel-head-text').hide();  }">
@@ -2106,8 +2106,8 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                         <label for="mec_skin_carousel_loop_status"></label>
                     </div>
                 </div>
-                <?php echo $this->booking_button_field('carousel', (isset($sk_options_carousel['booking_button']) ? $sk_options_carousel['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('carousel', (isset($sk_options_carousel['custom_data']) ? $sk_options_carousel['custom_data'] : 0)); ?>
+                <?php echo $this->booking_button_field('carousel', ($sk_options_carousel['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('carousel', ($sk_options_carousel['custom_data'] ?? 0)); ?>
                 <div class="mec-form-row mec-carousel-archive-link">
                     <label class="mec-col-4" for="mec_skin_carousel_archive_link"><?php _e('Archive Link', 'modern-events-calendar-lite'); ?></label>
                     <input type="text" class="mec-col-4" name="mec[sk-options][carousel][archive_link]" id="mec_skin_carousel_archive_link" value="<?php echo ((isset($sk_options_carousel['archive_link']) and trim($sk_options_carousel['archive_link']) != '') ? $sk_options_carousel['archive_link'] : ''); ?>" />
@@ -2164,7 +2164,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <div class="mec-sed-methode-container">
-                    <?php echo $this->sed_method_field('carousel', (isset($sk_options_carousel['sed_method']) ? $sk_options_carousel['sed_method'] : 0), (isset($sk_options_carousel['image_popup']) ? $sk_options_carousel['image_popup'] : 0)); ?>
+                    <?php echo $this->sed_method_field('carousel', ($sk_options_carousel['sed_method'] ?? 0), ($sk_options_carousel['image_popup'] ?? 0)); ?>
                 </div>
                 <!-- End Display Reason for Cancellation -->
                 <?php do_action('mec_skin_options_carousel_end', $sk_options_carousel); ?>
@@ -2172,7 +2172,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
 
             <!-- Slider View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_slider_skin_options_container">
-                <?php $sk_options_slider = isset($sk_options['slider']) ? $sk_options['slider'] : array(); ?>
+                <?php $sk_options_slider = $sk_options['slider'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_slider_style"><?php _e('Style', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][slider][style]" id="mec_skin_slider_style" onchange="mec_skin_style_changed('slider', this.value);">
@@ -2312,14 +2312,14 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                     </div>
                 </div>
                 <!-- End Display Reason for Cancellation -->
-                <?php echo $this->display_custom_data_field('slider', (isset($sk_options_slider['custom_data']) ? $sk_options_slider['custom_data'] : 0)); ?>
+                <?php echo $this->display_custom_data_field('slider', ($sk_options_slider['custom_data'] ?? 0)); ?>
                 <?php do_action('mec_skin_options_slider_end', $sk_options_slider); ?>
             </div>
 
             <!-- Timeline View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_timeline_skin_options_container">
 
-                <?php $sk_options_timeline = isset($sk_options['timeline']) ? $sk_options['timeline'] : array(); ?>
+                <?php $sk_options_timeline = $sk_options['timeline'] ?? []; ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_timeline_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
                     <select class="mec-col-4 wn-mec-select" name="mec[sk-options][timeline][start_date_type]" id="mec_skin_timeline_start_date_type" onchange="if(this.value == 'date') jQuery('#mec_skin_timeline_start_date_container').show(); else jQuery('#mec_skin_timeline_start_date_container').hide();">
@@ -2419,7 +2419,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('timeline', (isset($sk_options_timeline['display_organizer']) ? $sk_options_timeline['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('timeline', ($sk_options_timeline['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
                     <div class="mec-col-4">
@@ -2441,14 +2441,14 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                         <label for="mec_skin_timeline_month_divider"></label>
                     </div>
                 </div>
-                <?php echo $this->booking_button_field('timeline', (isset($sk_options_timeline['booking_button']) ? $sk_options_timeline['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('timeline', (isset($sk_options_timeline['custom_data']) ? $sk_options_timeline['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('timeline', (isset($sk_options_timeline['sed_method']) ? $sk_options_timeline['sed_method'] : 0), (isset($sk_options_timeline['image_popup']) ? $sk_options_timeline['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('timeline', ($sk_options_timeline['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('timeline', ($sk_options_timeline['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('timeline', ($sk_options_timeline['sed_method'] ?? 0), ($sk_options_timeline['image_popup'] ?? 0)); ?>
             </div>
 
             <!-- Tile View -->
             <div class="mec-skin-options-container mec-util-hidden" id="mec_tile_skin_options_container">
-                <?php $sk_options_tile = isset($sk_options['tile']) ? $sk_options['tile'] : array(); ?>
+                <?php $sk_options_tile = $sk_options['tile'] ?? []; ?>
                 <?php do_action('mec_skin_options_tile_init', $sk_options_tile); ?>
                 <div class="mec-form-row">
                     <label class="mec-col-4" for="mec_skin_tile_start_date_type"><?php _e('Start Date', 'modern-events-calendar-lite'); ?></label>
@@ -2519,7 +2519,7 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                 </div>
                 <!-- End Display Categories -->
                 <!-- Start Display Organizer -->
-                <?php echo $this->display_organizer_field('tile', (isset($sk_options_tile['display_organizer']) ? $sk_options_tile['display_organizer'] : 0)); ?>
+                <?php echo $this->display_organizer_field('tile', ($sk_options_tile['display_organizer'] ?? 0)); ?>
                 <!-- End Display Organizer -->
                 <div class="mec-form-row mec-switcher">
                     <div class="mec-col-4">
@@ -2548,9 +2548,9 @@ $upcoming_event_ids = $this->main->get_upcoming_event_ids();
                         </div>
                     </div>
                 </div>
-                <?php echo $this->booking_button_field('tile', (isset($sk_options_tile['booking_button']) ? $sk_options_tile['booking_button'] : 0)); ?>
-                <?php echo $this->display_custom_data_field('tile', (isset($sk_options_tile['custom_data']) ? $sk_options_tile['custom_data'] : 0)); ?>
-                <?php echo $this->sed_method_field('tile', (isset($sk_options_tile['sed_method']) ? $sk_options_tile['sed_method'] : 0), (isset($sk_options_tile['image_popup']) ? $sk_options_tile['image_popup'] : 0)); ?>
+                <?php echo $this->booking_button_field('tile', ($sk_options_tile['booking_button'] ?? 0)); ?>
+                <?php echo $this->display_custom_data_field('tile', ($sk_options_tile['custom_data'] ?? 0)); ?>
+                <?php echo $this->sed_method_field('tile', ($sk_options_tile['sed_method'] ?? 0), ($sk_options_tile['image_popup'] ?? 0)); ?>
             </div>
 
             <!-- Custom Skins -->

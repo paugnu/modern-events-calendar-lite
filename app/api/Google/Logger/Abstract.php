@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -87,7 +87,7 @@ abstract class Google_Logger_Abstract
   /**
    * @var array $levels Logging levels
    */
-  protected static $levels = array(
+  protected static $levels = [
       self::EMERGENCY  => 600,
       self::ALERT => 550,
       self::CRITICAL => 500,
@@ -96,7 +96,7 @@ abstract class Google_Logger_Abstract
       self::NOTICE => 250,
       self::INFO => 200,
       self::DEBUG => 100,
-  );
+  ];
 
   /**
    * @var integer $level The minimum logging level
@@ -127,10 +127,10 @@ abstract class Google_Logger_Abstract
     );
 
     $format = $client->getClassConfig('Google_Logger_Abstract', 'log_format');
-    $this->logFormat = $format ? $format : self::DEFAULT_LOG_FORMAT;
+    $this->logFormat = $format ?: self::DEFAULT_LOG_FORMAT;
 
     $format = $client->getClassConfig('Google_Logger_Abstract', 'date_format');
-    $this->dateFormat = $format ? $format : self::DEFAULT_DATE_FORMAT;
+    $this->dateFormat = $format ?: self::DEFAULT_DATE_FORMAT;
 
     $this->allowNewLines = (bool) $client->getClassConfig(
         'Google_Logger_Abstract',
@@ -165,7 +165,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function emergency($message, array $context = array())
+  public function emergency($message, array $context = [])
   {
     $this->log(self::EMERGENCY, $message, $context);
   }
@@ -179,7 +179,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function alert($message, array $context = array())
+  public function alert($message, array $context = [])
   {
     $this->log(self::ALERT, $message, $context);
   }
@@ -192,7 +192,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function critical($message, array $context = array())
+  public function critical($message, array $context = [])
   {
     $this->log(self::CRITICAL, $message, $context);
   }
@@ -204,7 +204,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function error($message, array $context = array())
+  public function error($message, array $context = [])
   {
     $this->log(self::ERROR, $message, $context);
   }
@@ -218,7 +218,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function warning($message, array $context = array())
+  public function warning($message, array $context = [])
   {
     $this->log(self::WARNING, $message, $context);
   }
@@ -229,7 +229,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function notice($message, array $context = array())
+  public function notice($message, array $context = [])
   {
     $this->log(self::NOTICE, $message, $context);
   }
@@ -242,7 +242,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function info($message, array $context = array())
+  public function info($message, array $context = [])
   {
     $this->log(self::INFO, $message, $context);
   }
@@ -253,7 +253,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function debug($message, array $context = array())
+  public function debug($message, array $context = [])
   {
     $this->log(self::DEBUG, $message, $context);
   }
@@ -265,7 +265,7 @@ abstract class Google_Logger_Abstract
    * @param string $message The log message
    * @param array $context  The log context
    */
-  public function log($level, $message, array $context = array())
+  public function log($level, $message, array $context = [])
   {
     if (!$this->shouldHandle($level)) {
       return false;
@@ -273,12 +273,12 @@ abstract class Google_Logger_Abstract
 
     $levelName = is_int($level) ? array_search($level, self::$levels) : $level;
     $message = $this->interpolate(
-        array(
+        [
             'message' => $message,
             'context' => $context,
             'level' => strtoupper($levelName),
             'datetime' => new DateTime(),
-        )
+        ]
     );
 
     $this->write($message);
@@ -290,7 +290,7 @@ abstract class Google_Logger_Abstract
    * @param  array $variables The log variables.
    * @return string
    */
-  protected function interpolate(array $variables = array())
+  protected function interpolate(array $variables = [])
   {
     $template = $this->logFormat;
 
@@ -302,7 +302,7 @@ abstract class Google_Logger_Abstract
     }
 
     foreach ($variables as $key => $value) {
-      if (strpos($template, '%'. $key .'%') !== false) {
+      if (str_contains($template, '%'. $key .'%')) {
         $template = str_replace(
             '%' . $key . '%',
             $this->export($value),

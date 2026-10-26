@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -26,11 +26,8 @@ if (!class_exists('Google_Client')) {
  */
 class Google_Auth_Simple extends Google_Auth_Abstract
 {
-  private $client;
-
-  public function __construct(Google_Client $client, $config = null)
+  public function __construct(private readonly Google_Client $client, $config = null)
   {
-    $this->client = $client;
   }
 
   /**

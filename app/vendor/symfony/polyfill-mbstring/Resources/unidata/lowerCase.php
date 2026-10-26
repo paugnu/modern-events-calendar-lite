@@ -1,6 +1,6 @@
 <?php
 
-static $data = array (
+static $data =  [
   'A' => 'a',
   'B' => 'b',
   'C' => 'c',
@@ -1093,7 +1093,7 @@ static $data = array (
   '𑢽' => '𑣝',
   '𑢾' => '𑣞',
   '𑢿' => '𑣟',
-);
+];
 
 $result =& $data;
 unset($data);

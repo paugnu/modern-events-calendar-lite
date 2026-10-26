@@ -19,9 +19,7 @@ abstract class ApiResource extends StripeObject
     public static function getSavedNestedResources()
     {
         static $savedNestedResources = null;
-        if (null === $savedNestedResources) {
-            $savedNestedResources = new Util\Set();
-        }
+        $savedNestedResources ??= new Util\Set();
 
         return $savedNestedResources;
     }
@@ -55,7 +53,7 @@ abstract class ApiResource extends StripeObject
         $requestor = new ApiRequestor($this->_opts->apiKey, static::baseUrl());
         $url = $this->instanceUrl();
 
-        list($response, $this->_opts->apiKey) = $requestor->request(
+        [$response, $this->_opts->apiKey] = $requestor->request(
             'get',
             $url,
             $this->_retrieveOptions,

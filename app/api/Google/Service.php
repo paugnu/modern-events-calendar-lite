@@ -23,11 +23,9 @@ class Google_Service
   public $servicePath;
   public $availableScopes;
   public $resource;
-  private $client;
 
-  public function __construct(Google_Client $client)
+  public function __construct(private readonly Google_Client $client)
   {
-    $this->client = $client;
   }
 
   /**

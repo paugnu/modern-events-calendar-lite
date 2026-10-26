@@ -11,7 +11,7 @@ $settings = $this->get_settings();
 if(!isset($settings['next_event_module_status']) or (isset($settings['next_event_module_status']) and !$settings['next_event_module_status'])) return;
 
 // Next Event Method
-$method = isset($settings['next_event_module_method']) ? $settings['next_event_module_method'] : 'occurrence';
+$method = $settings['next_event_module_method'] ?? 'occurrence';
 
 // Multiple Occurrences
 if($method == 'multiple')
@@ -21,16 +21,16 @@ if($method == 'multiple')
 }
 
 // Date Format
-$date_format1 = isset($settings['next_event_module_date_format1']) ? $settings['next_event_module_date_format1'] : 'M d Y';
+$date_format1 = $settings['next_event_module_date_format1'] ?? 'M d Y';
 
-$date = array();
+$date = [];
 if(!empty($event->date)) $date = $event->date;
 
 $start_date = (isset($date['start']) and isset($date['start']['date'])) ? $date['start']['date'] : date('Y-m-d');
 if(isset($_GET['occurrence']) and trim($_GET['occurrence'])) $start_date = sanitize_text_field($_GET['occurrence']);
 
-$next_date = array();
-$next_time = array();
+$next_date = [];
+$next_time = [];
 
 // Show next occurrence from other events
 if($method == 'event')
@@ -39,23 +39,23 @@ if($method == 'event')
     $start_minutes = (isset($date['start']) and isset($date['start']['minutes'])) ? $date['start']['minutes'] : 0;
     $start_ampm = (isset($date['start']) and isset($date['start']['ampm'])) ? $date['start']['ampm'] : 'AM';
 
-    $next = $this->get_next_event(array
-    (
+    $next = $this->get_next_event(
+    [
         'show_past_events'=>0,
-        'sk-options'=>array
-        (
-            'list'=>array
-            (
+        'sk-options'=>
+        [
+            'list'=>
+            [
                 'start_date_type'=>'date',
                 'start_date'=>($method == 'occurrence' ? date('Y-m-d', strtotime('+1 Day', strtotime($start_date))) : $start_date),
                 'limit'=>1,
-            )
-        ),
+            ]
+        ],
         'seconds_date'=>($method == 'occurrence' ? date('Y-m-d', strtotime('+1 Day', strtotime($start_date))) : $start_date),
         'seconds'=>$this->time_to_seconds($this->to_24hours($start_hour, $start_ampm), $start_minutes),
-        'exclude'=>($method == 'event' ? array($event->ID) : NULL),
+        'exclude'=>($method == 'event' ? [$event->ID] : NULL),
         'include'=>NULL,
-    ));
+    ]);
 
     // Nothing Found!
     if(!isset($next->data)) return false;
@@ -109,12 +109,12 @@ else
                 $end_time = sprintf("%02d", $e_hour).':'.sprintf("%02d", $occ['end']['minutes']).' '.$occ['end']['ampm'];
                 $end_datetime .= ' '.$end_time;
 
-                $next_time = array(
+                $next_time = [
                     'start' => $this->get_time(strtotime($start_datetime)),
                     'end' => $this->get_time(strtotime($end_datetime)),
                     'start_raw' => $start_time,
                     'end_raw' => $end_time,
-                );
+                ];
             }
 
             break;
@@ -125,8 +125,8 @@ else
     if(!$found) return false;
 }
 
-$time_comment = isset($next->data->meta['mec_comment']) ? $next->data->meta['mec_comment'] : '';
-$allday = isset($next->data->meta['mec_allday']) ? $next->data->meta['mec_allday'] : 0;
+$time_comment = $next->data->meta['mec_comment'] ?? '';
+$allday = $next->data->meta['mec_allday'] ?? 0;
 
 $midnight_event = $this->is_midnight_event($next);
 if($midnight_event) $next_date['end']['date'] = date('Y-m-d', strtotime('-1 Day', strtotime($next_date['end']['date'])));
@@ -141,12 +141,12 @@ if($midnight_event) $next_date['end']['date'] = date('Y-m-d', strtotime('-1 Day'
             <li>
                 <i class="mec-sl-calendar"></i>
                 <h6><?php _e('Date', 'modern-events-calendar-lite'); ?></h6>
-                <dl><dd><abbr class="mec-events-abbr"><?php echo $this->date_label($next_date['start'], (isset($next_date['end']) ? $next_date['end'] : NULL), $date_format1); ?></abbr></dd></dl>
+                <dl><dd><abbr class="mec-events-abbr"><?php echo $this->date_label($next_date['start'], ($next_date['end'] ?? NULL), $date_format1); ?></abbr></dd></dl>
             </li>
             <li>
                 <i class="mec-sl-clock"></i>
                 <h6><?php _e('Time', 'modern-events-calendar-lite'); ?></h6>
-                <i class="mec-time-comment"><?php echo (isset($time_comment) ? $time_comment : ''); ?></i>
+                <i class="mec-time-comment"><?php echo ($time_comment ?? ''); ?></i>
                 <dl>
                 <?php if($allday == '0' and isset($next->data->time) and trim($next->data->time['start'])): ?>
                 <dd><abbr class="mec-events-abbr"><?php echo $next_time['start']; ?><?php echo (trim($next_time['end']) ? ' - '.$next_time['end'] : ''); ?></abbr></dd>
