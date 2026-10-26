@@ -12,8 +12,8 @@ function mec_dyn_hex2rgb($cc)
 {
 	if($cc[0] == '#') $cc = substr($cc, 1);
 
-	if(strlen($cc) == 6) list($r, $g, $b) = array($cc[0] . $cc[1], $cc[2] . $cc[3], $cc[4] . $cc[5]);
-	elseif(strlen($cc) == 3) list($r, $g, $b) = array($cc[0] . $cc[0], $cc[1] . $cc[1], $cc[2] . $cc[2]);
+	if(strlen($cc) == 6) [$r, $g, $b] = [$cc[0] . $cc[1], $cc[2] . $cc[3], $cc[4] . $cc[5]];
+	elseif(strlen($cc) == 3) [$r, $g, $b] = [$cc[0] . $cc[0], $cc[1] . $cc[1], $cc[2] . $cc[2]];
 	else return false;
 
 	$r = ((!function_exists('ctype_xdigit') or (function_exists('ctype_xdigit') and ctype_xdigit($r))) ? hexdec($r) : NULL);
@@ -21,7 +21,7 @@ function mec_dyn_hex2rgb($cc)
 	$b = ((!function_exists('ctype_xdigit') or (function_exists('ctype_xdigit') and ctype_xdigit($b))) ? hexdec($b) : NULL);
 
 	if(is_null($r) or is_null($g) or is_null($b)) return false;
-	else return array('red' => $r, 'green' => $g, 'blue' => $b);
+	else return ['red' => $r, 'green' => $g, 'blue' => $b];
 }
 
 if(isset($styling['color']) && $styling['color']) $color = $styling['color'];
@@ -52,7 +52,7 @@ if(isset($styling['mec_p_fontfamily']) && $styling['mec_p_fontfamily'])
 if((is_array($mec_h_fontfamily_arr) && $mec_h_fontfamily_arr) || (is_array($mec_p_fontfamily_arr) && $mec_p_fontfamily_arr))
 {
 	//Google font
-	$font_families  = array();
+	$font_families  = [];
 	$subsets    	= 'latin,latin-ext';
 	$variant_h		= '';
 	$variant_p		= '';
@@ -74,10 +74,10 @@ if((is_array($mec_h_fontfamily_arr) && $mec_h_fontfamily_arr) || (is_array($mec_
     
 	if($font_families)
     {
-		$fonts_url = add_query_arg(array(
+		$fonts_url = add_query_arg([
             'family'=>urlencode(implode('|', $font_families)),
             'subset'=>urlencode($subsets),
-		), 'https://fonts.googleapis.com/css');
+		], 'https://fonts.googleapis.com/css');
     }
 }
 
@@ -241,7 +241,7 @@ if (isset($styling['disable_fluent_height_limitation']) && $styling['disable_flu
 $fes_main_color = '#40d9f1';
 if (isset($styling['fes_color']) && $styling['fes_color']) {
 	$fes_main_color = $styling['fes_color'];
-	list($fes_main_color_r, $fes_main_color_g, $fes_main_color_b) = sscanf($fes_main_color, "#%02x%02x%02x");
+	[$fes_main_color_r, $fes_main_color_g, $fes_main_color_b] = sscanf($fes_main_color, "#%02x%02x%02x");
 	?>
 	/* FES Main Color  */
 	.mec-fes-form #mec_bfixed_form_field_types .button:before, .mec-fes-form #mec_reg_form_field_types .button:before, .mec-fes-form #mec_bfixed_form_field_types .button, .mec-fes-form #mec_reg_form_field_types .button, .mec-fes-form #mec_meta_box_tickets_form [id^=mec_ticket_row] .mec_add_price_date_button, .mec-fes-form .mec-meta-box-fields h4, .mec-fes-form .html-active .switch-html, .mec-fes-form .tmce-active .switch-tmce, .mec-fes-form .wp-editor-tabs .wp-switch-editor:active, .mec-fes-form .mec-form-row .button:not(.wp-color-result), .mec-fes-form .mec-title span.mec-dashicons, .mec-fes-form .mec-form-row .quicktags-toolbar input.button.button-small, .mec-fes-list ul li a:hover, .mec-fes-form input[type=file], .mec-fes-form .mec-attendees-wrapper .mec-attendees-list .mec-booking-attendees-tooltip:before {
@@ -336,7 +336,7 @@ if (isset($styling['fes_color']) && $styling['fes_color']) {
 $fluent_main_color = '#ade7ff';
 if (isset($styling['fluent_main_color']) && $styling['fluent_main_color']) {
 	$fluent_main_color = $styling['fluent_main_color'];
-	list($fluent_main_color_r, $fluent_main_color_g, $fluent_main_color_b) = sscanf($fluent_main_color, "#%02x%02x%02x");
+	[$fluent_main_color_r, $fluent_main_color_g, $fluent_main_color_b] = sscanf($fluent_main_color, "#%02x%02x%02x");
 	?>
 	/* MAIN COLOR */
 	.mec-more-events-icon, .mec-single-fluent-wrap .mec-next-event-details a, .mec-wrap.colorskin-custom .mec-color-before *:before, .mec-single-fluent-wrap .mec-marker-infowindow-wp .mec-marker-infowindow-count, .mec-single-fluent-body .lity-content .mec-events-meta-group-booking .nice-select .list li, .mec-single-fluent-wrap .mec-events-meta-group-booking .nice-select .list li, .mec-single-fluent-wrap .mec-single-event-organizer dd i, .mec-single-fluent-wrap .mec-single-event-additional-organizers dd i, .mec-single-fluent-wrap .mec-next-event-details i:before, .mec-single-fluent-wrap .mec-next-event-details i:before, .mec-single-fluent-wrap .mec-single-event-location i, .mec-single-fluent-wrap .mec-single-event-organizer dd.mec-organizer-description:before, .mec-single-fluent-wrap .mec-single-event-additional-organizers dd.mec-organizer-description:before, .mec-single-fluent-wrap .mec-event-schedule-content dl dt.mec-schedule-time:before, .mec-single-fluent-wrap .mec-event-schedule-content dl dt.mec-schedule-time:before,  .mec-single-fluent-wrap .mec-single-event-bar>div i, .mec-single-fluent-wrap .mec-single-event-category a, .mec-fluent-wrap .mec-daily-view-events-left-side .mec-daily-view-events-item>span.mec-time, .mec-fluent-wrap .mec-daily-view-events-left-side .mec-daily-view-events-item>span.mec-time-end, .mec-fluent-wrap .mec-calendar.mec-calendar-daily .mec-calendar-d-table.mec-date-labels-container span, .mec-fluent-wrap .mec-calendar .mec-week-events-container dl>span, .mec-fluent-current-time-text, .mec-fluent-wrap.mec-timetable-wrap .mec-cell .mec-time, .mec-fluent-wrap.mec-skin-masonry-container .mec-events-masonry-cats a:hover, .mec-fluent-wrap.mec-skin-masonry-container .mec-events-masonry-cats a.mec-masonry-cat-selected, .mec-fluent-wrap .mec-date-details i:before, .mec-fluent-wrap .mec-event-location i:before, .mec-fluent-wrap .mec-event-carousel-type2 .owl-next i, .mec-fluent-wrap .mec-event-carousel-type2 .owl-prev i, .mec-fluent-wrap .mec-slider-t1-wrap .mec-owl-theme .owl-nav .owl-next i, .mec-fluent-wrap .mec-slider-t1-wrap .mec-owl-theme .owl-nav .owl-prev i, .mec-fluent-wrap .mec-slider-t1-wrap .mec-owl-theme .owl-nav .owl-next, .mec-fluent-wrap .mec-slider-t1-wrap .mec-owl-theme .owl-nav .owl-prev, .mec-fluent-wrap .mec-date-wrap i, .mec-fluent-wrap .mec-calendar.mec-yearly-calendar .mec-calendar-table-head dl dt:first-letter, .mec-event-sharing-wrap .mec-event-sharing li:hover a, .mec-fluent-wrap .mec-agenda-event>i, .mec-fluent-wrap .mec-totalcal-box .nice-select:after, .mec-fluent-wrap .mec-totalcal-box .mec-totalcal-view span, .mec-fluent-wrap .mec-totalcal-box input, .mec-fluent-wrap .mec-totalcal-box select, .mec-fluent-wrap .mec-totalcal-box .nice-select, .mec-fluent-wrap .mec-totalcal-box .nice-select .list li, .mec-fluent-wrap .mec-text-input-search i, .mec-fluent-wrap .mec-event-location i, .mec-fluent-wrap .mec-event-article .mec-event-title a:hover, .mec-fluent-wrap .mec-date-details:before, .mec-fluent-wrap .mec-time-details:before, .mec-fluent-wrap .mec-venue-details:before, .mec-fluent-wrap .mec-price-details i:before, .mec-fluent-wrap .mec-available-tickets-details i:before, .mec-fluent-wrap .mec-booking-button, .mec-single-fluent-wrap .mec-local-time-details li:first-child:before, .mec-single-fluent-wrap .mec-local-time-details li:nth-of-type(2):before, .mec-single-fluent-wrap .mec-local-time-details li:last-child:before {
@@ -534,7 +534,7 @@ $out = ob_get_clean();
 
 // minify css
 $out = preg_replace('!/\*[^*]*\*+([^/][^*]*\*+)*/!', '', $out);
-$out = str_replace(array("\r\n", "\r", "\n", "\t", '    '), '', $out);
+$out = str_replace(["\r\n", "\r", "\n", "\t", '    '], '', $out);
 
 update_option('mec_gfont', $fonts_url);
 update_option('mec_dyncss', $out);

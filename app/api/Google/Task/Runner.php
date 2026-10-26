@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -59,19 +59,10 @@ class Google_Task_Runner
    * @var Google_Client $client The current API client.
    */
   private $client;
-
-  /**
-   * @var string $name The name of the current task (used for logging).
-   */
-  private $name;
   /**
    * @var callable $action The task to run and possibly retry.
    */
   private $action;
-  /**
-   * @var array $arguments The task arguments.
-   */
-  private $arguments;
 
   /**
    * Creates a new task runner with exponential backoff support.
@@ -84,9 +75,9 @@ class Google_Task_Runner
    */
   public function __construct(
       Google_Client $client,
-      $name,
+      private $name,
       $action,
-      array $arguments = array()
+      private readonly array $arguments = []
   ) {
     $config = (array) $client->getClassConfig('Google_Task_Runner');
 
@@ -144,11 +135,8 @@ class Google_Task_Runner
             'Task argument `$action` must be a valid callable.'
         );
     }
-
-    $this->name = $name;
     $this->client = $client;
     $this->action = $action;
-    $this->arguments = $arguments;
   }
 
   /**
@@ -221,11 +209,11 @@ class Google_Task_Runner
 
     $this->client->getLogger()->debug(
         'Retrying task with backoff',
-        array(
+        [
             'request' => $this->name,
             'retry' => $this->attempts,
             'backoff_seconds' => $delay
-        )
+        ]
     );
 
     usleep($delay * 1000000);

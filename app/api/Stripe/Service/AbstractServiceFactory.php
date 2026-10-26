@@ -14,18 +14,14 @@ namespace Stripe\Service;
  */
 abstract class AbstractServiceFactory
 {
-    /** @var \Stripe\StripeClientInterface */
-    private $client;
-
     /** @var array<string, AbstractService|AbstractServiceFactory> */
     private $services;
 
     /**
      * @param \Stripe\StripeClientInterface $client
      */
-    public function __construct($client)
+    public function __construct(private $client)
     {
-        $this->client = $client;
         $this->services = [];
     }
 

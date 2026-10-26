@@ -42,7 +42,7 @@ abstract class OAuth
     {
         $base = ($opts && \array_key_exists('connect_base', $opts)) ? $opts['connect_base'] : Stripe::$connectBase;
         $requestor = new ApiRequestor(null, $base);
-        list($response, $apiKey) = $requestor->request(
+        [$response, $apiKey] = $requestor->request(
             'post',
             '/oauth/token',
             $params,
@@ -68,7 +68,7 @@ abstract class OAuth
         $base = ($opts && \array_key_exists('connect_base', $opts)) ? $opts['connect_base'] : Stripe::$connectBase;
         $requestor = new ApiRequestor(null, $base);
         $params['client_id'] = self::_getClientId($params);
-        list($response, $apiKey) = $requestor->request(
+        [$response, $apiKey] = $requestor->request(
             'post',
             '/oauth/deauthorize',
             $params,
@@ -81,9 +81,7 @@ abstract class OAuth
     private static function _getClientId($params = null)
     {
         $clientId = ($params && \array_key_exists('client_id', $params)) ? $params['client_id'] : null;
-        if (null === $clientId) {
-            $clientId = Stripe::getClientId();
-        }
+        $clientId ??= Stripe::getClientId();
         if (null === $clientId) {
             $msg = 'No client_id provided.  (HINT: set your client_id using '
               . '"Stripe::setClientId(<CLIENT-ID>)".  You can find your client_ids '

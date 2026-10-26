@@ -23,7 +23,7 @@
 use google\appengine\api\app_identity\AppIdentityService;
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -32,13 +32,11 @@ if (!class_exists('Google_Client')) {
 class Google_Auth_AppIdentity extends Google_Auth_Abstract
 {
   const CACHE_PREFIX = "Google_Auth_AppIdentity::";
-  private $client;
   private $token = false;
   private $tokenScopes = false;
 
-  public function __construct(Google_Client $client, $config = null)
+  public function __construct(private readonly Google_Client $client, $config = null)
   {
-    $this->client = $client;
   }
 
   /**
@@ -112,7 +110,7 @@ class Google_Auth_AppIdentity extends Google_Auth_Abstract
 
     // Add the OAuth2 header to the request
     $request->setRequestHeaders(
-        array('Authorization' => 'Bearer ' . $this->token['access_token'])
+        ['Authorization' => 'Bearer ' . $this->token['access_token']]
     );
 
     return $request;

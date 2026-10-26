@@ -16,8 +16,8 @@ $timezone = $this->get_timezone_by_ip();
 // Timezone is not detected!
 if(!$timezone) return;
 
-$start_time = isset($event->data->time['start_raw']) ? $event->data->time['start_raw'] : '';
-$end_time = isset($event->data->time['end_raw']) ? $event->data->time['end_raw'] : '';
+$start_time = $event->data->time['start_raw'] ?? '';
+$end_time = $event->data->time['end_raw'] ?? '';
 
 // Date Formats
 $date_format1 = (isset($settings['single_date_format1']) and trim($settings['single_date_format1'])) ? $settings['single_date_format1'] : 'M d Y';
@@ -36,13 +36,13 @@ $offset = $user_timezone->getOffset($gmt_datetime);
 $user_start_time = $gmt_start_time + $offset;
 $user_end_time = $gmt_end_time + $offset;
 
-$allday = isset($event->data->meta['mec_allday']) ? $event->data->meta['mec_allday'] : 0;
-$hide_time = isset($event->data->meta['mec_hide_time']) ? $event->data->meta['mec_hide_time'] : 0;
-$hide_end_time = isset($event->data->meta['mec_hide_end_time']) ? $event->data->meta['mec_hide_end_time'] : 0;
+$allday = $event->data->meta['mec_allday'] ?? 0;
+$hide_time = $event->data->meta['mec_hide_time'] ?? 0;
+$hide_end_time = $event->data->meta['mec_hide_end_time'] ?? 0;
 ?>
 <div class="mec-localtime-details" id="mec_localtime_details">
     <div class="mec-localtime-wrap">
-        <div class="mec-localdate"><?php echo sprintf(__('Local Date: %s |', 'modern-events-calendar-lite'), $this->date_label(array('date'=>date('Y-m-d', $user_start_time)), array('date'=>date('Y-m-d', $user_end_time)), $date_format1)); ?></div>
+        <div class="mec-localdate"><?php echo sprintf(__('Local Date: %s |', 'modern-events-calendar-lite'), $this->date_label(['date'=>date('Y-m-d', $user_start_time)], ['date'=>date('Y-m-d', $user_end_time)], $date_format1)); ?></div>
         <?php if(!$hide_time and trim($time_format)): ?>
         <div class="mec-localtime"><?php echo sprintf(__('Local Time: %s', 'modern-events-calendar-lite'), '<span>'.($allday ? $this->m('all_day', __('All Day' , 'modern-events-calendar-lite')) : ($hide_end_time ? date($time_format, $user_start_time) : date($time_format, $user_start_time).' - '.date($time_format, $user_end_time))).'</span>'); ?></div>
         <?php endif; ?>

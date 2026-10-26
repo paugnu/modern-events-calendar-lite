@@ -41,7 +41,7 @@ class MEC_feature_notifications extends MEC_base
         // Module is disabled
         if(!isset($this->settings['notif_per_event']) or (isset($this->settings['notif_per_event']) and !$this->settings['notif_per_event'])) return;
 
-        $this->factory->action('mec_metabox_details', array($this, 'meta_box_notifications'), 30);
+        $this->factory->action('mec_metabox_details', $this->meta_box_notifications(...), 30);
     }
 
     /**
@@ -52,7 +52,7 @@ class MEC_feature_notifications extends MEC_base
     public function meta_box_notifications($post)
     {
         $values = get_post_meta($post->ID, 'mec_notifications', true);
-        if(!is_array($values)) $values = array();
+        if(!is_array($values)) $values = [];
 
         $notifications = $this->get_notifications();
     ?>
@@ -80,7 +80,7 @@ class MEC_feature_notifications extends MEC_base
                             <label for="mec_notifications_<?php echo $key; ?>_content"><?php esc_html_e('Email Content', 'modern-events-calendar-lite'); ?></label>
                         </div>
                         <div class="mec-col-10">
-                            <?php wp_editor(((isset($values[$key]) and isset($values[$key]['content']) and trim($values[$key]['content'])) ? stripslashes($values[$key]['content']) : ((isset($this->notif_settings[$key]) and isset($this->notif_settings[$key]['content']) and trim($this->notif_settings[$key]['content'])) ? stripslashes($this->notif_settings[$key]['content']) : '')), 'mec_notifications_'.$key.'_content', array('textarea_name'=>'mec[notifications]['.$key.'][content]')); ?>
+                            <?php wp_editor(((isset($values[$key]) and isset($values[$key]['content']) and trim($values[$key]['content'])) ? stripslashes($values[$key]['content']) : ((isset($this->notif_settings[$key]) and isset($this->notif_settings[$key]['content']) and trim($this->notif_settings[$key]['content'])) ? stripslashes($this->notif_settings[$key]['content']) : '')), 'mec_notifications_'.$key.'_content', ['textarea_name'=>'mec[notifications]['.$key.'][content]']); ?>
                         </div>
                     </div>
 
@@ -160,35 +160,35 @@ class MEC_feature_notifications extends MEC_base
 
     public function get_notifications()
     {
-        $notifications = array(
-            'booking_notification' => array(
+        $notifications = [
+            'booking_notification' => [
                 'label' => __('Booking Notification', 'modern-events-calendar-lite')
-            ),
-            'booking_confirmation' => array(
+            ],
+            'booking_confirmation' => [
                 'label' => __('Booking Confirmation', 'modern-events-calendar-lite')
-            ),
-            'booking_rejection' => array(
+            ],
+            'booking_rejection' => [
                 'label' => __('Booking Rejection', 'modern-events-calendar-lite')
-            ),
-            'email_verification' => array(
+            ],
+            'email_verification' => [
                 'label' => __('Email Verification', 'modern-events-calendar-lite')
-            ),
-            'cancellation_notification' => array(
+            ],
+            'cancellation_notification' => [
                 'label' => __('Booking Cancellation', 'modern-events-calendar-lite')
-            ),
-            'booking_reminder' => array(
+            ],
+            'booking_reminder' => [
                 'label' => __('Booking Reminder', 'modern-events-calendar-lite')
-            ),
-            'event_finished' => array(
+            ],
+            'event_finished' => [
                 'label' => __('Event Finished', 'modern-events-calendar-lite')
-            ),
-            'event_soldout' => array(
+            ],
+            'event_soldout' => [
                 'label' => __('Event Soldout', 'modern-events-calendar-lite')
-            ),
-            'admin_notification' => array(
+            ],
+            'admin_notification' => [
                 'label' => __('Admin Notification', 'modern-events-calendar-lite')
-            ),
-        );
+            ],
+        ];
 
         return apply_filters( 'mec_event_notifications', $notifications );
     }

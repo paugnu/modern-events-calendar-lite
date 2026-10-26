@@ -49,7 +49,7 @@ class MEC_feature_wc extends MEC_base
         if(!$this->getPRO()) return false;
 
         // WC Hooks
-        $this->factory->action('init', array($this, 'hooks'));
+        $this->factory->action('init', [$this, 'hooks']);
     }
 
     public function hooks()
@@ -64,17 +64,17 @@ class MEC_feature_wc extends MEC_base
         $wc = $this->getWC();
 
         // WooCommerce
-        $this->factory->action('woocommerce_order_status_completed', array($wc, 'completed'), 10, 1);
-        $this->factory->action('woocommerce_thankyou', array($wc, 'paid'), 10, 1);
-        $this->factory->action('woocommerce_new_order_item', array($wc, 'meta'), 10, 2);
-        $this->factory->action('woocommerce_order_status_cancelled', array($wc, 'cancelled'), 10, 1);
-        $this->factory->action('woocommerce_order_status_refunded', array($wc, 'cancelled'), 10, 1);
-        $this->factory->action('woocommerce_after_checkout_validation', array($this, 'validate'),10,2);
+        $this->factory->action('woocommerce_order_status_completed', [$wc, 'completed'], 10, 1);
+        $this->factory->action('woocommerce_thankyou', [$wc, 'paid'], 10, 1);
+        $this->factory->action('woocommerce_new_order_item', [$wc, 'meta'], 10, 2);
+        $this->factory->action('woocommerce_order_status_cancelled', [$wc, 'cancelled'], 10, 1);
+        $this->factory->action('woocommerce_order_status_refunded', [$wc, 'cancelled'], 10, 1);
+        $this->factory->action('woocommerce_after_checkout_validation', [$this, 'validate'],10,2);
 
-        $this->factory->filter('woocommerce_order_item_display_meta_key', array($this, 'display_key'), 10, 2);
-        $this->factory->filter('woocommerce_order_item_display_meta_value', array($this, 'display_value'), 10, 2);
-        $this->factory->filter('woocommerce_cart_item_name', array($this, 'display_name'), 10, 2);
-        $this->factory->filter('woocommerce_cart_item_thumbnail', array($this, 'display_thumbnail'), 10, 2);
+        $this->factory->filter('woocommerce_order_item_display_meta_key', [$this, 'display_key'], 10, 2);
+        $this->factory->filter('woocommerce_order_item_display_meta_value', [$this, 'display_value'], 10, 2);
+        $this->factory->filter('woocommerce_cart_item_name', [$this, 'display_name'], 10, 2);
+        $this->factory->filter('woocommerce_cart_item_thumbnail', [$this, 'display_thumbnail'], 10, 2);
     }
 
     public function display_key($display_key, $meta)
@@ -95,7 +95,7 @@ class MEC_feature_wc extends MEC_base
             $date_format = (isset($this->settings['booking_date_format1']) and trim($this->settings['booking_date_format1'])) ? $this->settings['booking_date_format1'] : 'Y-m-d';
             $time_format = get_option('time_format');
 
-            if(strpos($date_format, 'h') !== false or strpos($date_format, 'H') !== false or strpos($date_format, 'g') !== false or strpos($date_format, 'G') !== false) $datetime_format = $date_format;
+            if(str_contains($date_format, 'h') or str_contains($date_format, 'H') or str_contains($date_format, 'g') or str_contains($date_format, 'G')) $datetime_format = $date_format;
             else $datetime_format = $date_format.' '.$time_format;
 
             $dates = explode(':', $meta->value);
@@ -146,27 +146,27 @@ class MEC_feature_wc extends MEC_base
         $book = $this->getBook();
 
         $printed = false;
-        $all_items = array();
+        $all_items = [];
         foreach($items as $key => $item)
         {
-            $event_id = (isset($item['mec_event_id']) ? $item['mec_event_id'] : NULL);
+            $event_id = ($item['mec_event_id'] ?? NULL);
             if(!$event_id) continue;
 
-            $product_id = (isset($item['product_id']) ? $item['product_id'] : NULL);
+            $product_id = ($item['product_id'] ?? NULL);
             $mec_ticket = get_post_meta($product_id, 'mec_ticket', true);
 
             $ex = explode(':', $mec_ticket);
-            $ticket_id = (isset($ex[1]) ? $ex[1] : NULL);
+            $ticket_id = ($ex[1] ?? NULL);
             if(!$ticket_id) continue;
 
-            $quantity = (isset($item['quantity']) ? $item['quantity'] : 1);
+            $quantity = ($item['quantity'] ?? 1);
 
-            $date = (isset($item['mec_date']) ? $item['mec_date'] : NULL);
+            $date = ($item['mec_date'] ?? NULL);
             $timestamps = explode(':', $date);
             $timestamp = $timestamps[0];
 
-            if(!isset($all_items[$event_id])) $all_items[$event_id] = array();
-            if(!isset($all_items[$event_id][$ticket_id])) $all_items[$event_id][$ticket_id] = array();
+            $all_items[$event_id] ??= [];
+            $all_items[$event_id][$ticket_id] ??= [];
 
             if(!isset($all_items[$event_id][$ticket_id][$timestamp])) $all_items[$event_id][$ticket_id][$timestamp] = $quantity;
             else $all_items[$event_id][$ticket_id][$timestamp] += $quantity;
@@ -189,7 +189,7 @@ class MEC_feature_wc extends MEC_base
         foreach($all_items as $event_id => $tickets)
         {
             // User Booking Limits
-            list($limit, $unlimited) = $book->get_user_booking_limit($event_id);
+            [$limit, $unlimited] = $book->get_user_booking_limit($event_id);
 
             $total_quantity = 0;
             foreach($tickets as $ticket_id => $timestamps)

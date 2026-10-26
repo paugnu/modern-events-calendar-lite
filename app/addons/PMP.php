@@ -46,10 +46,10 @@ class MEC_addon_PMP extends MEC_base
         if(!isset($this->settings['pmp_status']) or (isset($this->settings['pmp_status']) and !$this->settings['pmp_status'])) return false;
 
         // Metabox
-        add_action('admin_menu', array($this, 'metabox'));
+        add_action('admin_menu', $this->metabox(...));
 
         // Display Access Error
-        add_filter('mec_show_event_details_page', array($this, 'check'), 10, 2);
+        add_filter('mec_show_event_details_page', $this->check(...), 10, 2);
 
         return true;
     }
@@ -70,7 +70,7 @@ class MEC_addon_PMP extends MEC_base
         if(function_exists('pmpro_has_membership_access'))
         {
             $response = pmpro_has_membership_access($event_id, NULL, true);
-            $available = (isset($response[0]) ? $response[0] : true);
+            $available = ($response[0] ?? true);
 
             if(!$available)
             {

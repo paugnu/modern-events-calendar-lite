@@ -85,7 +85,7 @@ abstract class Util
         }
 
         if (\is_string($value) && self::$isMbstringAvailable && 'UTF-8' !== \mb_detect_encoding($value, 'UTF-8', true)) {
-            return \utf8_encode($value);
+            return mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
         }
 
         return $value;
@@ -102,9 +102,7 @@ abstract class Util
      */
     public static function secureCompare($a, $b)
     {
-        if (null === self::$isHashEqualsAvailable) {
-            self::$isHashEqualsAvailable = \function_exists('hash_equals');
-        }
+        self::$isHashEqualsAvailable ??= \function_exists('hash_equals');
 
         if (self::$isHashEqualsAvailable) {
             return \hash_equals($a, $b);
@@ -168,7 +166,7 @@ abstract class Util
         $flattenedParams = self::flattenParams($params);
         $pieces = [];
         foreach ($flattenedParams as $param) {
-            list($k, $v) = $param;
+            [$k, $v] = $param;
             $pieces[] = self::urlEncode($k) . '=' . self::urlEncode($v);
         }
 

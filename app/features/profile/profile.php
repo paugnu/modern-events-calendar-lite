@@ -15,29 +15,29 @@ $datetime_format = get_option('date_format').' '.get_option('time_format');
 $render = $this->getRender();
 
 // Query
-$q = array(
+$q = [
     'post_type'=>$this->PT,
     'author'=>get_current_user_id(),
     'posts_per_page'=>'-1',
-    'post_status'=>array('pending', 'draft', 'future', 'publish'),
-    'meta_query'=>array(),
-    'date_query'=>array(),
+    'post_status'=>['pending', 'draft', 'future', 'publish'],
+    'meta_query'=>[],
+    'date_query'=>[],
     'orderby'=>'post_date',
     'order'=>'DESC',
-);
+];
 
 // Hide Canceled Bookings
 if($hide_canceleds)
 {
-    $q['meta_query'][] = array('key'=>'mec_verified', 'value'=>'-1', 'compare'=>'!=');
+    $q['meta_query'][] = ['key'=>'mec_verified', 'value'=>'-1', 'compare'=>'!='];
 }
 
 // Show Only Upcoming Bookings
 if($upcomings)
 {
-    $q['date_query'] = array(
+    $q['date_query'] = [
         'after' => current_time('Y-m-d H:i:s'),
-    );
+    ];
 }
 
 // The Query
@@ -92,7 +92,7 @@ $id = 1;
             $end_time = $timestamps[1];
 
             $booking_options = get_post_meta($event_id, 'mec_booking', true);
-            $bookings_all_occurrences = isset($booking_options['bookings_all_occurrences']) ? $booking_options['bookings_all_occurrences'] : 0;
+            $bookings_all_occurrences = $booking_options['bookings_all_occurrences'] ?? 0;
 
             if($bookings_all_occurrences)
             {
@@ -108,7 +108,7 @@ $id = 1;
             $db = $this->getDB();
             $check_event_exist = $db->select("SELECT `ID` FROM `#__posts` WHERE `ID`={$event_id}", 'loadResult');
 
-            $event = trim($check_event_exist) ? $render->data($event_id) : array();
+            $event = trim($check_event_exist) ? $render->data($event_id) : [];
         ?>
         <tr id="mec_profile_booking_<?php echo $ID; ?>">
             <td>
@@ -155,8 +155,8 @@ $id = 1;
                 if(isset($event->ID))
                 {
                     $location_id = $this->main->get_master_location_id($event);
-                    $location_latitude = isset($event->locations[$location_id]['latitude']) ? $event->locations[$location_id]['latitude'] : NULL;
-                    $location_longitude = isset($event->locations[$location_id]['longitude']) ? $event->locations[$location_id]['longitude'] : NULL;
+                    $location_latitude = $event->locations[$location_id]['latitude'] ?? NULL;
+                    $location_longitude = $event->locations[$location_id]['longitude'] ?? NULL;
                 }
                 ?>
                 <span class="mec-profile-bookings-view-google-map">
@@ -208,7 +208,7 @@ $id = 1;
 
                         echo '<div class="mec-booking-attendees-head-content">';
                         echo '<span class="mec-booking-attendee-id">'.$person_id.'</span>';
-                        echo '<span class="mec-booking-attendee-name">'. ( isset($attendee['_name']) ? $attendee['_name'] : $attendee['name'] ).'</span>';
+                        echo '<span class="mec-booking-attendee-name">'. ( $attendee['_name'] ?? $attendee['name'] ).'</span>';
                         echo '<span class="mec-booking-attendee-email">'.$attendee['email'].'</span>';
                         echo '<span class="mec-booking-attendee-ticket">'.((isset($event->tickets[$attendee['id']]) ? $event->tickets[$attendee['id']]['name'] : '').' '.(isset($event->tickets[$attendee['id']]) ? $event->tickets[$attendee['id']]['price_label'] : '')).'</span>';
 

@@ -8,7 +8,7 @@ defined('MECEXEC') or die();
 $render_path = $this->get_render_path();
 $styling = $this->main->get_styling();
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 
@@ -37,7 +37,7 @@ jQuery(document).ready(function()
         autoplay: "'.$this->autoplay.'",
         loop: '. json_encode($loop) .',
         style: "'.$this->style.'",
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",

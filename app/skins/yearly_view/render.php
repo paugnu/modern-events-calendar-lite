@@ -16,9 +16,9 @@ for($i = 1; $i <= 12; $i++)
 }
 
 $settings = $this->main->get_settings();
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 ?>
 <div class="mec-yearly-calendar-sec">
     <?php echo $months_html ?>
@@ -64,7 +64,7 @@ $reason_for_cancellation = isset($this->skin_options['reason_for_cancellation'])
                             <?php echo $event_color; ?>
                             <?php echo $this->main->get_normal_labels($event, $display_label).$this->main->display_cancellation_reason($event, $reason_for_cancellation); ?><?php do_action('mec_shortcode_virtual_badge', $event->data->ID ); ?>
                             <?php echo $this->booking_button($event); ?>
-                            <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                            <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                         </span>
                         <?php echo $this->display_custom_data($event); ?>
                         <?php echo $this->get_label_captions($event,'mec-fc-style'); ?>

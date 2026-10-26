@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/../autoload.php';
+  require_once __DIR__ . '/../autoload.php';
 }
 
 /**
@@ -28,23 +28,19 @@ class Google_Http_Batch
   private $boundary;
 
   /** @var array service requests to be executed. */
-  private $requests = array();
+  private $requests = [];
 
-  /** @var Google_Client */
-  private $client;
-
-  private $expected_classes = array();
+  private $expected_classes = [];
 
   private $root_url;
 
   private $batch_path;
 
-  public function __construct(Google_Client $client, $boundary = false, $rootUrl = '', $batchPath = '')
+  public function __construct(private readonly Google_Client $client, $boundary = false, $rootUrl = '', $batchPath = '')
   {
-    $this->client = $client;
-    $this->root_url = rtrim($rootUrl ? $rootUrl : $this->client->getBasePath(), '/');
-    $this->batch_path = $batchPath ? $batchPath : 'batch';
-    $this->expected_classes = array();
+    $this->root_url = rtrim($rootUrl ?: $this->client->getBasePath(), '/');
+    $this->batch_path = $batchPath ?: 'batch';
+    $this->expected_classes = [];
     $boundary = (false == $boundary) ? mt_rand() : $boundary;
     $this->boundary = str_replace('"', '', $boundary);
   }
@@ -74,7 +70,7 @@ class Google_Http_Batch
     $url = $this->root_url . '/' . $this->batch_path;
     $httpRequest = new Google_Http_Request($url, 'POST');
     $httpRequest->setRequestHeaders(
-        array('Content-Type' => 'multipart/mixed; boundary=' . $this->boundary)
+        ['Content-Type' => 'multipart/mixed; boundary=' . $this->boundary]
     );
 
     $httpRequest->setPostBody($body);
@@ -99,19 +95,19 @@ class Google_Http_Batch
     if ($body) {
       $body = str_replace("--$boundary--", "--$boundary", $body);
       $parts = explode("--$boundary", $body);
-      $responses = array();
+      $responses = [];
 
       foreach ($parts as $part) {
         $part = trim($part);
         if (!empty($part)) {
-          list($metaHeaders, $part) = explode("\r\n\r\n", $part, 2);
+          [$metaHeaders, $part] = explode("\r\n\r\n", $part, 2);
           $metaHeaders = $this->client->getIo()->getHttpResponseHeaders($metaHeaders);
 
           $status = substr($part, 0, strpos($part, "\n"));
           $status = explode(" ", $status);
           $status = $status[1];
 
-          list($partHeaders, $partBody) = $this->client->getIo()->ParseHttpResponse($part, false);
+          [$partHeaders, $partBody] = $this->client->getIo()->ParseHttpResponse($part, false);
           $response = new Google_Http_Request("");
           $response->setResponseHttpCode($status);
           $response->setResponseHeaders($partHeaders);

@@ -7,23 +7,23 @@ $current_user = wp_get_current_user();
 
 // user event created
 $count_events = wp_count_posts($this->get_main_post_type());
-$user_post_count = isset($count_events->publish) ? $count_events->publish : '0';
+$user_post_count = $count_events->publish ?? '0';
 
 // user calendar created
 $count_calendars = wp_count_posts('mec_calendars');
-$user_post_count_c = isset($count_calendars->publish) ? $count_calendars->publish : '0';
+$user_post_count_c = $count_calendars->publish ?? '0';
 
 // mec location
-$user_location_count_l = wp_count_terms('mec_location', array(
+$user_location_count_l = wp_count_terms('mec_location', [
     'hide_empty'=>false,
     'parent'=>0
-));
+]);
 
 // mec orgnizer
-$user_organizer_count_l = wp_count_terms('mec_organizer', array(
+$user_organizer_count_l = wp_count_terms('mec_organizer', [
     'hide_empty'=>false,
     'parent'=>0
-));
+]);
 
 $version = $verify = NULL;
 
@@ -33,7 +33,7 @@ if($this->getPRO())
     $envato = $this->getEnvato();
 
     $v = $envato->get_MEC_info('version');
-    $version = isset($v->version) ? $v->version : NULL;
+    $version = $v->version ?? NULL;
     //$verify = $envato->get_MEC_info('activate');
 
     $mec_license_status = get_option( 'mec_license_status');
@@ -79,7 +79,7 @@ $box_stats = apply_filters('mec_dashboard_box_stats', true);
                 </div>
             </div>
             <div class="w-col-sm-3">
-                <?php $styling = $this->get_styling(); $darkadmin_mode = ( isset($styling['dark_mode']) ) ? $styling['dark_mode'] : ''; if ($darkadmin_mode == 1): $darklogo = plugin_dir_url(__FILE__ ) . '../../../assets/img/mec-logo-w2.png'; else: $darklogo = plugin_dir_url(__FILE__ ) . '../../../assets/img/mec-logo-w.png'; endif; ?>
+                <?php $styling = $this->get_styling(); $darkadmin_mode = $styling['dark_mode'] ?? ''; if ($darkadmin_mode == 1): $darklogo = plugin_dir_url(__FILE__ ) . '../../../assets/img/mec-logo-w2.png'; else: $darklogo = plugin_dir_url(__FILE__ ) . '../../../assets/img/mec-logo-w.png'; endif; ?>
                 <img src="<?php echo $darklogo; ?>" />
                 <span class="w-theme-version"><?php echo __('Version', 'modern-events-calendar-lite'); ?> <?php echo MEC_VERSION; ?></span>
             </div>
@@ -301,17 +301,17 @@ $box_stats = apply_filters('mec_dashboard_box_stats', true);
                     <div class="w-box-content">
                         <?php
                             $render = $this->getRender();
-                            echo $render->skin('list', array
-                            (
-                                'sk-options'=>array('list'=>array
-                                (
+                            echo $render->skin('list', 
+                            [
+                                'sk-options'=>['list'=>
+                                [
                                     'style'=>'minimal',
                                     'start_date_type'=>'today',
                                     'load_more_button'=>'0',
                                     'limit'=>'6',
                                     'month_divider'=>'0'
-                                ))
-                            ));
+                                ]]
+                            ]);
                         ?>
                     </div>
                 </div>
@@ -337,7 +337,7 @@ $box_stats = apply_filters('mec_dashboard_box_stats', true);
                                 }
 
                                 $gateway = new $result['gateway'];
-                                $stats[] = array('label'=>$gateway->title(), 'count'=>$result['count']);
+                                $stats[] = ['label'=>$gateway->title(), 'count'=>$result['count']];
 
                                 $labels .= '"'.$gateway->title().'",';
                                 $data .= ((int) $result['count']).',';
@@ -369,10 +369,10 @@ $box_stats = apply_filters('mec_dashboard_box_stats', true);
             </div>
             <?php endif; ?>
         </div>
-        <?php if($booking_status) echo (new MEC_feature_mec())->widget_total_bookings(); ?>
+        <?php if($booking_status) echo new MEC_feature_mec()->widget_total_bookings(); ?>
         <?php endif; ?>
 
-        <?php if($this->getPRO()) echo (new MEC_feature_mec())->widget_print(); ?>
+        <?php if($this->getPRO()) echo new MEC_feature_mec()->widget_print(); ?>
 
         <div class="w-row">
             <div class="w-col-sm-12">

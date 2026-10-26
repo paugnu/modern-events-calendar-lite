@@ -16,7 +16,7 @@
  */
 
 if (!class_exists('Google_Client')) {
-  require_once dirname(__FILE__) . '/autoload.php';
+  require_once __DIR__ . '/autoload.php';
 }
 
 /**
@@ -59,10 +59,10 @@ class Google_Client
 
   /** @var array $scopes */
   // Scopes requested by the client
-  protected $requestedScopes = array();
+  protected $requestedScopes = [];
 
   // definitions of services that are discovered.
-  protected $services = array();
+  protected $services = [];
 
   // Used to track authenticated state, can't discover services after doing authenticate()
   private $authenticated = false;
@@ -226,7 +226,7 @@ class Google_Client
    */
   public function setAuth(Google_Auth_Abstract $auth)
   {
-    $this->config->setAuthClass(get_class($auth));
+    $this->config->setAuthClass($auth::class);
     $this->auth = $auth;
   }
 
@@ -236,7 +236,7 @@ class Google_Client
    */
   public function setIo(Google_IO_Abstract $io)
   {
-    $this->config->setIoClass(get_class($io));
+    $this->config->setIoClass($io::class);
     $this->io = $io;
   }
 
@@ -246,7 +246,7 @@ class Google_Client
    */
   public function setCache(Google_Cache_Abstract $cache)
   {
-    $this->config->setCacheClass(get_class($cache));
+    $this->config->setCacheClass($cache::class);
     $this->cache = $cache;
   }
 
@@ -256,7 +256,7 @@ class Google_Client
    */
   public function setLogger(Google_Logger_Abstract $logger)
   {
-    $this->config->setLoggerClass(get_class($logger));
+    $this->config->setLoggerClass($logger::class);
     $this->logger = $logger;
   }
 
@@ -515,7 +515,7 @@ class Google_Client
    */
   public function setScopes($scopes)
   {
-    $this->requestedScopes = array();
+    $this->requestedScopes = [];
     $this->addScope($scopes);
   }
 
@@ -664,7 +664,7 @@ class Google_Client
   public function getClassConfig($class, $key = null)
   {
     if (!is_string($class)) {
-      $class = get_class($class);
+      $class = $class::class;
     }
     return $this->config->getClassConfig($class, $key);
   }
@@ -681,7 +681,7 @@ class Google_Client
   public function setClassConfig($class, $config, $value = null)
   {
     if (!is_string($class)) {
-      $class = get_class($class);
+      $class = $class::class;
     }
     $this->config->setClassConfig($class, $config, $value);
 
@@ -710,6 +710,6 @@ class Google_Client
   public function isAppEngine()
   {
     return (isset($_SERVER['SERVER_SOFTWARE']) &&
-        strpos($_SERVER['SERVER_SOFTWARE'], 'Google App Engine') !== false);
+        str_contains($_SERVER['SERVER_SOFTWARE'], 'Google App Engine'));
   }
 }

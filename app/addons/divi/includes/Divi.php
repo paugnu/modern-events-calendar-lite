@@ -34,7 +34,7 @@ class MECDIVI_Divi extends DiviExtension {
 	 * @param string $name
 	 * @param array  $args
 	 */
-	public function __construct( $name = 'divi', $args = array() ) {
+	public function __construct( $name = 'divi', $args = [] ) {
 		$this->plugin_dir     = plugin_dir_path( __FILE__ );
 		$this->plugin_dir_url = plugin_dir_url( $this->plugin_dir );
 

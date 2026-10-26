@@ -17,8 +17,8 @@ $uniqueid = apply_filters('mec_booking_uniqueid_value', $uniqueid);
 $event = $event[0];
 $uniqueid = (isset($uniqueid) && !empty($uniqueid) ? $uniqueid : $event->data->ID);
 
-$tickets = isset($event->data->tickets) ? $event->data->tickets : array();
-$dates = isset($event->dates) ? $event->dates : $event->date;
+$tickets = $event->data->tickets ?? [];
+$dates = $event->dates ?? $event->date;
 
 // No Dates
 if(!count($dates)) return;
@@ -27,8 +27,8 @@ if(!count($dates)) return;
 if(!count($tickets)) return;
 
 // Shortcode Options
-if(!isset($from_shortcode)) $from_shortcode = false;
-if(!isset($ticket_id)) $ticket_id = NULL;
+$from_shortcode ??= false;
+$ticket_id ??= NULL;
 
 // Generate JavaScript code of Booking Module
 $javascript = '<script type="text/javascript">

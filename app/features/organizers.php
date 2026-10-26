@@ -34,19 +34,19 @@ class MEC_feature_organizers extends MEC_base
      */
     public function init()
     {
-        $this->factory->action('init', array($this, 'register_taxonomy'), 25);
-        $this->factory->action('mec_organizer_edit_form_fields', array($this, 'edit_form'));
-        $this->factory->action('mec_organizer_add_form_fields', array($this, 'add_form'));
-        $this->factory->action('edited_mec_organizer', array($this, 'save_metadata'));
-        $this->factory->action('created_mec_organizer', array($this, 'save_metadata'));
+        $this->factory->action('init', $this->register_taxonomy(...), 25);
+        $this->factory->action('mec_organizer_edit_form_fields', $this->edit_form(...));
+        $this->factory->action('mec_organizer_add_form_fields', $this->add_form(...));
+        $this->factory->action('edited_mec_organizer', $this->save_metadata(...));
+        $this->factory->action('created_mec_organizer', $this->save_metadata(...));
         
-        $this->factory->action('mec_metabox_details', array($this, 'meta_box_organizer'), 40);
-        if(!isset($this->settings['fes_section_organizer']) or (isset($this->settings['fes_section_organizer']) and $this->settings['fes_section_organizer'])) $this->factory->action('mec_fes_metabox_details', array($this, 'meta_box_organizer'), 31);
+        $this->factory->action('mec_metabox_details', $this->meta_box_organizer(...), 40);
+        if(!isset($this->settings['fes_section_organizer']) or (isset($this->settings['fes_section_organizer']) and $this->settings['fes_section_organizer'])) $this->factory->action('mec_fes_metabox_details', $this->meta_box_organizer(...), 31);
         
-        $this->factory->filter('manage_edit-mec_organizer_columns', array($this, 'filter_columns'));
-        $this->factory->filter('manage_mec_organizer_custom_column', array($this, 'filter_columns_content'), 10, 3);
+        $this->factory->filter('manage_edit-mec_organizer_columns', $this->filter_columns(...));
+        $this->factory->filter('manage_mec_organizer_custom_column', $this->filter_columns_content(...), 10, 3);
         
-        $this->factory->action('save_post', array($this, 'save_event'), 2);
+        $this->factory->action('save_post', $this->save_event(...), 2);
     }
     
     /**
@@ -61,9 +61,9 @@ class MEC_feature_organizers extends MEC_base
         register_taxonomy(
             'mec_organizer',
             $this->main->get_main_post_type(),
-            array(
+            [
                 'label'=>$plural_label,
-                'labels'=>array(
+                'labels'=>[
                     'name'=>$plural_label,
                     'singular_name'=>$singular_label,
                     'all_items'=>sprintf(__('All %s', 'modern-events-calendar-lite'), $plural_label),
@@ -76,12 +76,12 @@ class MEC_feature_organizers extends MEC_base
                     'search_items'=>sprintf(__('Search %s', 'modern-events-calendar-lite'), $plural_label),
                     'back_to_items'=>sprintf(__('← Back to %s', 'modern-events-calendar-lite'), $plural_label),
                     'not_found'=>sprintf(__('no %s found.', 'modern-events-calendar-lite'), strtolower($plural_label)),
-                ),
-                'rewrite'=>array('slug'=>'events-organizer'),
+                ],
+                'rewrite'=>['slug'=>'events-organizer'],
                 'public'=>false,
                 'show_ui'=>true,
                 'hierarchical'=>false,
-            )
+            ]
         );
         
         register_taxonomy_for_object_type('mec_organizer', $this->main->get_main_post_type());
@@ -180,7 +180,7 @@ class MEC_feature_organizers extends MEC_base
 
         $tel = isset($_POST['tel']) ? sanitize_text_field($_POST['tel']) : '';
         $email = isset($_POST['email']) ? sanitize_text_field($_POST['email']) : '';
-        $url = (isset($_POST['url']) and trim($_POST['url'])) ? (strpos($_POST['url'], 'http') === false ? 'http://'.sanitize_text_field($_POST['url']) : sanitize_text_field($_POST['url'])) : '';
+        $url = (isset($_POST['url']) and trim($_POST['url'])) ? (!str_contains($_POST['url'], 'http') ? 'http://'.sanitize_text_field($_POST['url']) : sanitize_text_field($_POST['url'])) : '';
         $thumbnail = isset($_POST['thumbnail']) ? sanitize_text_field($_POST['thumbnail']) : '';
         
         update_term_meta($term_id, 'tel', $tel);
@@ -252,13 +252,13 @@ class MEC_feature_organizers extends MEC_base
      */
     public function meta_box_organizer($post)
     {
-        $organizers = get_terms('mec_organizer', array('orderby'=>'name', 'hide_empty'=>'0'));
+        $organizers = get_terms('mec_organizer', ['orderby'=>'name', 'hide_empty'=>'0']);
 
         $organizer_id = get_post_meta($post->ID, 'mec_organizer_id', true);
         $organizer_id = apply_filters('wpml_object_id', $organizer_id, 'mec_organizer', true);
 
         $organizer_ids = get_post_meta($post->ID, 'mec_additional_organizer_ids', true);
-        if(!is_array($organizer_ids)) $organizer_ids = array();
+        if(!is_array($organizer_ids)) $organizer_ids = [];
         $organizer_ids = array_unique($organizer_ids);
 
         $additional_organizers_status = (!isset($this->settings['additional_organizers']) or (isset($this->settings['additional_organizers']) and $this->settings['additional_organizers'])) ? true : false;
@@ -267,7 +267,7 @@ class MEC_feature_organizers extends MEC_base
         if(!$use_all_organizers)
         {
             $additional_organizers_status = false;
-            $organizers = array();
+            $organizers = [];
         }
     ?>
         <div class="mec-meta-box-fields mec-event-tab-content" id="mec-organizer">
@@ -373,7 +373,7 @@ class MEC_feature_organizers extends MEC_base
         if(defined('DOING_AUTOSAVE') and DOING_AUTOSAVE) return false;
 
         // Get Modern Events Calendar Data
-        $_mec = isset($_POST['mec']) ? $_POST['mec'] : array();
+        $_mec = $_POST['mec'] ?? [];
         
         // Selected a saved organizer
         if(isset($_mec['organizer_id']) and $_mec['organizer_id'])
@@ -418,7 +418,7 @@ class MEC_feature_organizers extends MEC_base
             
         $tel = (isset($_mec['organizer']['tel']) and trim($_mec['organizer']['tel'])) ? sanitize_text_field($_mec['organizer']['tel']) : '';
         $email = (isset($_mec['organizer']['email']) and trim($_mec['organizer']['email'])) ? sanitize_text_field($_mec['organizer']['email']) : '';
-        $url = (isset($_mec['organizer']['url']) and trim($_mec['organizer']['url'])) ? (strpos($_mec['organizer']['url'], 'http') === false ? 'http://'.sanitize_text_field($_mec['organizer']['url']) : sanitize_text_field($_mec['organizer']['url'])) : '';
+        $url = (isset($_mec['organizer']['url']) and trim($_mec['organizer']['url'])) ? (!str_contains($_mec['organizer']['url'], 'http') ? 'http://'.sanitize_text_field($_mec['organizer']['url']) : sanitize_text_field($_mec['organizer']['url'])) : '';
         $thumbnail = (isset($_mec['organizer']['thumbnail']) and trim($_mec['organizer']['thumbnail'])) ? sanitize_text_field($_mec['organizer']['thumbnail']) : '';
         
         update_term_meta($organizer_id, 'tel', $tel);

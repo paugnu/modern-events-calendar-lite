@@ -19,7 +19,7 @@ if(!function_exists('bp_activity_add')) return;
 $date = $event->date;
 $timestamp = (isset($date['start']) and isset($date['start']['timestamp'])) ? $date['start']['timestamp'] : current_time('timestamp');
 
-$limit = isset($settings['bp_attendees_module_limit']) ? $settings['bp_attendees_module_limit'] : 30;
+$limit = $settings['bp_attendees_module_limit'] ?? 30;
 $bookings = $this->get_bookings($event->data->ID, $timestamp, $limit);
 
 // Book Library
@@ -28,10 +28,10 @@ $book = $this->getBook();
 // Start Date belongs to future but booking module cannot show so return without any output
 if(!$this->can_show_booking_module($event) and $timestamp > time()) return;
 
-$attendees = array();
+$attendees = [];
 foreach($bookings as $booking)
 {
-    if(!isset($attendees[$booking->post_author])) $attendees[$booking->post_author] = array();
+    $attendees[$booking->post_author] ??= [];
     $attendees[$booking->post_author][] = $booking->ID;
 }
 
@@ -48,7 +48,7 @@ $u = $this->getUser();
         <li>
             <div class="mec-attendee-avatar">
                 <a href="<?php echo bp_core_get_user_domain($attendee_id); ?>" title="<?php echo bp_core_get_user_displayname($attendee_id); ?>">
-                    <?php echo bp_core_fetch_avatar(array('item_id'=>$attendee_id, 'type'=>'thumb')); ?>
+                    <?php echo bp_core_fetch_avatar(['item_id'=>$attendee_id, 'type'=>'thumb']); ?>
                 </a>
             </div>
             <?php
@@ -68,7 +68,7 @@ $u = $this->getUser();
             <!-- MEC BuddyPress Integration Attendees Modules -->
             <div class="mec-attendees-toggle mec-util-hidden">
             <?php
-                $un_attendees = array();
+                $un_attendees = [];
                 foreach($attendee_bookings as $booking_id)
                 {
                     $mec_attendees = get_post_meta($booking_id, 'mec_attendees', true);
@@ -76,7 +76,7 @@ $u = $this->getUser();
                     {
                         if(!is_numeric($mec_attendee_key)) continue;
 
-                        $email = isset($mec_attendee['email']) ? $mec_attendee['email'] : NULL;
+                        $email = $mec_attendee['email'] ?? NULL;
                         if(!$email) continue;
 
                         if(!isset($un_attendees[$email])) $un_attendees[$email] = $mec_attendee;

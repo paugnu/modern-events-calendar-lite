@@ -38,13 +38,13 @@ class MEC_user extends MEC_base
 
     public function register($attendee, $args)
     {
-        $name = isset($attendee['name']) ? $attendee['name'] : '';
-        $raw = (isset($attendee['reg']) and is_array($attendee['reg'])) ? $attendee['reg'] : array();
+        $name = $attendee['name'] ?? '';
+        $raw = (isset($attendee['reg']) and is_array($attendee['reg'])) ? $attendee['reg'] : [];
 
-        $email = isset($attendee['email']) ? $attendee['email'] : '';
+        $email = $attendee['email'] ?? '';
         if(!filter_var($email, FILTER_VALIDATE_EMAIL)) return false;
 
-        $reg = array();
+        $reg = [];
         foreach($raw as $k => $v) $reg[$k] = (is_array($v) ? $v : stripslashes($v));
 
         $existed_user_id = $this->main->email_exists($email);
@@ -54,7 +54,7 @@ class MEC_user extends MEC_base
 
         // Update WordPress user first name and last name
         $ex = explode(' ', $name);
-        $first_name = isset($ex[0]) ? $ex[0] : '';
+        $first_name = $ex[0] ?? '';
         $last_name = '';
 
         if(isset($ex[1]))
@@ -95,14 +95,14 @@ class MEC_user extends MEC_base
             update_user_meta($user_id, 'nickname', $name);
 
             // Map Data
-            $event_id = (isset($args['event_id']) ? $args['event_id'] : 0);
+            $event_id = ($args['event_id'] ?? 0);
             if($event_id)
             {
                 $reg_fields = $this->main->get_reg_fields($event_id);
 
                 foreach($reg as $reg_id => $reg_value)
                 {
-                    $reg_field = (isset($reg_fields[$reg_id]) ? $reg_fields[$reg_id] : array());
+                    $reg_field = ($reg_fields[$reg_id] ?? []);
                     if(isset($reg_field['mapping']) and trim($reg_field['mapping']))
                     {
                         update_user_meta($user_id, $reg_field['mapping'], (is_array($reg_value) ? implode(',', $reg_value) : $reg_value));

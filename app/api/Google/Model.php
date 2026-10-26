@@ -28,9 +28,9 @@ class Google_Model implements ArrayAccess
    * instead - it will be replaced when converting to JSON with a real null.
    */
   const NULL_VALUE = "{}gapi-php-null";
-  protected $internal_gapi_mappings = array();
-  protected $modelData = array();
-  protected $processed = array();
+  protected $internal_gapi_mappings = [];
+  protected $modelData = [];
+  protected $processed = [];
 
   /**
    * Polymorphic - accepts a variable number of arguments dependent
@@ -60,7 +60,7 @@ class Google_Model implements ArrayAccess
         $val = $this->modelData[$key];
       } else if (isset($this->$keyDataType) &&
           ($this->$keyDataType == 'array' || $this->$keyDataType == 'map')) {
-        $val = array();
+        $val = [];
       } else {
         $val = null;
       }
@@ -75,7 +75,7 @@ class Google_Model implements ArrayAccess
           $this->modelData[$key] = $this->createObjectFromName($keyTypeName, $val);
         }
       } else if (is_array($val)) {
-        $arrayObject = array();
+        $arrayObject = [];
         foreach ($val as $arrayIndex => $arrayItem) {
           $arrayObject[$arrayIndex] =
             $this->createObjectFromName($keyTypeName, $arrayItem);
@@ -85,7 +85,7 @@ class Google_Model implements ArrayAccess
       $this->processed[$key] = true;
     }
 
-    return isset($this->modelData[$key]) ? $this->modelData[$key] : null;
+    return $this->modelData[$key] ?? null;
   }
 
   /**
@@ -163,7 +163,7 @@ class Google_Model implements ArrayAccess
     if ($value instanceof Google_Model) {
       return $value->toSimpleObject();
     } else if (is_array($value)) {
-      $return = array();
+      $return = [];
       foreach ($value as $key => $a_value) {
         $a_value = $this->getSimpleValue($a_value);
         if ($a_value !== null) {
@@ -210,12 +210,7 @@ class Google_Model implements ArrayAccess
       return false;
     }
     $keys = array_keys($array);
-    foreach ($keys as $key) {
-      if (is_string($key)) {
-        return true;
-      }
-    }
-    return false;
+    return array_any($keys, fn($key) => is_string($key));
   }
 
   /**
@@ -253,9 +248,7 @@ class Google_Model implements ArrayAccess
 
   public function offsetGet($offset)
   {
-    return isset($this->$offset) ?
-        $this->$offset :
-        $this->__get($offset);
+    return $this->$offset ?? $this->__get($offset);
   }
 
   public function offsetSet($offset, $value)

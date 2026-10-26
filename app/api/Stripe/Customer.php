@@ -57,11 +57,9 @@ class Customer extends ApiResource
     public static function getSavedNestedResources()
     {
         static $savedNestedResources = null;
-        if (null === $savedNestedResources) {
-            $savedNestedResources = new Util\Set([
-                'source',
-            ]);
-        }
+        $savedNestedResources ??= new Util\Set([
+            'source',
+        ]);
 
         return $savedNestedResources;
     }
@@ -75,7 +73,7 @@ class Customer extends ApiResource
     public function deleteDiscount($params = null, $opts = null)
     {
         $url = $this->instanceUrl() . '/discount';
-        list($response, $opts) = $this->_request('delete', $url, $params, $opts);
+        [$response, $opts] = $this->_request('delete', $url, $params, $opts);
         $this->refreshFrom(['discount' => null], $opts, true);
     }
 

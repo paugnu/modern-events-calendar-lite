@@ -11,7 +11,7 @@ $settings = $this->get_settings();
 if(!isset($settings['next_event_module_status']) or (isset($settings['next_event_module_status']) and !$settings['next_event_module_status'])) return;
 
 // Next Event Method
-$method = (isset($settings['next_event_module_method']) ? $settings['next_event_module_method'] : 'occurrence');
+$method = ($settings['next_event_module_method'] ?? 'occurrence');
 $maximum = (isset($settings['next_event_module_multiple_count']) ? (int) $settings['next_event_module_multiple_count'] : 10);
 
 // Not Multiple Occurrences
@@ -22,10 +22,10 @@ if($method != 'multiple')
 }
 
 // Date Format
-$date_format1 = isset($settings['next_event_module_date_format1']) ? $settings['next_event_module_date_format1'] : 'M d Y';
+$date_format1 = $settings['next_event_module_date_format1'] ?? 'M d Y';
 $time_format = get_option('time_format');
 
-$date = array();
+$date = [];
 if(!empty($event->date)) $date = $event->date;
 
 $occurrence = (isset($date['start']) and isset($date['start']['date'])) ? $date['start']['date'] : date('Y-m-d');
@@ -42,10 +42,10 @@ if(is_array($date) and isset($date['start']) and isset($date['start']['timestamp
 // Nothing Found!
 if(!is_array($dates) or (is_array($dates) and !count($dates))) return false;
 
-$time_comment = isset($event->data->meta['mec_comment']) ? $event->data->meta['mec_comment'] : '';
-$allday = isset($event->data->meta['mec_allday']) ? $event->data->meta['mec_allday'] : 0;
-$hide_time = isset($event->data->meta['mec_hide_time']) ? $event->data->meta['mec_hide_time'] : 0;
-$hide_end_time = isset($event->data->meta['mec_hide_end_time']) ? $event->data->meta['mec_hide_end_time'] : 0;
+$time_comment = $event->data->meta['mec_comment'] ?? '';
+$allday = $event->data->meta['mec_allday'] ?? 0;
+$hide_time = $event->data->meta['mec_hide_time'] ?? 0;
+$hide_end_time = $event->data->meta['mec_hide_end_time'] ?? 0;
 ?>
 <div class="mec-next-event-details mec-frontbox" id="mec_next_event_details">
     <div class="mec-next-<?php echo $method; ?>">
@@ -53,8 +53,8 @@ $hide_end_time = isset($event->data->meta['mec_hide_end_time']) ? $event->data->
         <ul>
             <?php foreach($dates as $date): ?>
             <li>
-                <a href="<?php echo $this->get_event_date_permalink($event, $date['start']['date'], true, array('start_raw' => date($time_format, $date['start']['timestamp']))); ?>">
-                    <span class="mec-date"><?php echo $this->date_label($date['start'], (isset($date['end']) ? $date['end'] : NULL), $date_format1); ?></span>
+                <a href="<?php echo $this->get_event_date_permalink($event, $date['start']['date'], true, ['start_raw' => date($time_format, $date['start']['timestamp'])]); ?>">
+                    <span class="mec-date"><?php echo $this->date_label($date['start'], ($date['end'] ?? NULL), $date_format1); ?></span>
 
                     <?php if(!$hide_time): ?>
                     <span class="mec-time">

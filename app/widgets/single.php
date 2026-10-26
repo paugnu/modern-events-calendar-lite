@@ -20,12 +20,12 @@ class MEC_single_widget extends WP_Widget
 	 */
 	public function __construct()
 	{
-		parent::__construct($this->get_widget_slug(), __('MEC Single Sidebar Items', 'modern-events-calendar-lite'), array('classname' => $this->get_widget_slug() . '-class', 'description' => __('To manage event details page elements.', 'modern-events-calendar-lite')));
+		parent::__construct($this->get_widget_slug(), __('MEC Single Sidebar Items', 'modern-events-calendar-lite'), ['classname' => $this->get_widget_slug() . '-class', 'description' => __('To manage event details page elements.', 'modern-events-calendar-lite')]);
 
 		// Refreshing the widget's cached output with each new post
-		add_action('save_post', array($this, 'flush_widget_cache'));
-		add_action('deleted_post', array($this, 'flush_widget_cache'));
-		add_action('switch_theme', array($this, 'flush_widget_cache'));
+		add_action('save_post', $this->flush_widget_cache(...));
+		add_action('deleted_post', $this->flush_widget_cache(...));
+		add_action('switch_theme', $this->flush_widget_cache(...));
 	}
 
 	/**
@@ -44,15 +44,12 @@ class MEC_single_widget extends WP_Widget
 	 */
 	public function widget($args, $instance)
 	{
-		$cache = array();
+		$cache = [];
 
 		if(!$this->is_preview()) $cache = wp_cache_get('MEC_single_widget', 'widget');
-		if(!is_array($cache)) $cache = array();
+		if(!is_array($cache)) $cache = [];
 
-		if(!isset($args['widget_id']))
-		{
-			$args['widget_id'] = $this->id;
-		}
+		$args['widget_id'] ??= $this->id;
 
 		if(isset($cache[$args['widget_id']]))
 		{

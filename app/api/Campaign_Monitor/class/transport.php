@@ -43,13 +43,11 @@ if(!function_exists("CS_REST_TRANSPORT_can_use_raw_socket")) {
 if (!class_exists('CS_REST_BaseTransport')) {
     class CS_REST_BaseTransport {
         
-        var $_log;
-        
-        function __construct($log) {
-            $this->_log = $log;
+        public function __construct(public $_log)
+        {
         }
         
-        function split_and_inflate($response, $may_be_compressed) {        
+        public function split_and_inflate($response, $may_be_compressed) {        
             $ra = explode("\r\n\r\n", $response);
             
             $result = array_pop($ra);
@@ -60,10 +58,10 @@ if (!class_exists('CS_REST_BaseTransport')) {
                 $result = gzinflate(substr($result, 10, -8));
         
                 $this->_log->log_message('Inflated gzipped response: '.$original_length.' bytes ->'.
-                    strlen($result).' bytes', get_class(), CS_REST_LOG_VERBOSE);
+                    strlen($result).' bytes', self::class, CS_REST_LOG_VERBOSE);
             }
             
-            return array($headers, $result); 
+            return [$headers, $result]; 
         }
 
     }
@@ -77,9 +75,9 @@ if (!class_exists('CS_REST_BaseTransport')) {
 if (!class_exists('CS_REST_CurlTransport')) {
     class CS_REST_CurlTransport extends CS_REST_BaseTransport {
 
-        var $_curl_zlib;
+        public $_curl_zlib;
 
-        function __construct($log) {
+        public function __construct($log) {
             parent::__construct($log);
             
             $curl_version = curl_version();
@@ -89,17 +87,17 @@ if (!class_exists('CS_REST_CurlTransport')) {
         /**
          * @return string The type of transport used
          */
-        function get_type() {
+        public function get_type() {
             return 'cURL';
         }
 
-        function make_call($call_options) {
+        public function make_call($call_options) {
             $ch = curl_init();
 
             curl_setopt($ch, CURLOPT_URL, $call_options['route']);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_HEADER, true);
-            $headers = array();
+            $headers = [];
             $headers[] = 'Content-Type: '.$call_options['contentType'];
             
 
@@ -129,7 +127,7 @@ if (!class_exists('CS_REST_CurlTransport')) {
             $inflate_response = false;
             if($this->_curl_zlib) {
                 $this->_log->log_message('curl+zlib support available. Requesting gzipped response.',
-                    get_class($this), CS_REST_LOG_VERBOSE);
+                    static::class, CS_REST_LOG_VERBOSE);
                 curl_setopt($ch, CURLOPT_ENCODING, 'gzip');
             } else if(function_exists('gzinflate')) {
                 $headers[] = 'Accept-Encoding: gzip';
@@ -141,7 +139,7 @@ if (!class_exists('CS_REST_CurlTransport')) {
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
                 if(strlen(ini_get('curl.cainfo')) === 0) {
-                    curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__).'/cacert.pem');
+                    curl_setopt($ch, CURLOPT_CAINFO, __DIR__.'/cacert.pem');
                 }
             }
 
@@ -153,7 +151,7 @@ if (!class_exists('CS_REST_CurlTransport')) {
                     break;
                 case CS_REST_POST:
                     curl_setopt($ch, CURLOPT_POST, true);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, isset($call_options['data']) ? $call_options['data'] : '');
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $call_options['data'] ?? '');
                     break;
                 case CS_REST_DELETE:
                     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, CS_REST_DELETE);
@@ -168,24 +166,24 @@ if (!class_exists('CS_REST_CurlTransport')) {
 
             if(!$response && $response !== '') {
                 $this->_log->log_message('Error making request with curl_error: '.curl_errno($ch),
-                    get_class($this), CS_REST_LOG_ERROR);
+                    static::class, CS_REST_LOG_ERROR);
 
-                require_once dirname(__FILE__).'/exceptions.php';
+                require_once __DIR__.'/exceptions.php';
                 throw new CurlException(curl_error($ch), curl_errno($ch));
             }
             
-            list( $headers, $result ) = $this->split_and_inflate($response, $inflate_response);
+            [$headers, $result] = $this->split_and_inflate($response, $inflate_response);
             
             $this->_log->log_message('API Call Info for '.$call_options['method'].' '.
             curl_getinfo($ch, CURLINFO_EFFECTIVE_URL).': '.curl_getinfo($ch, CURLINFO_SIZE_UPLOAD).
     		    ' bytes uploaded. '.curl_getinfo($ch, CURLINFO_SIZE_DOWNLOAD).' bytes downloaded'.
     		    ' Total time (seconds): '.curl_getinfo($ch, CURLINFO_TOTAL_TIME), 
-            get_class($this), CS_REST_LOG_VERBOSE);
+            static::class, CS_REST_LOG_VERBOSE);
 
-            $result = array(
+            $result = [
     			'code' => curl_getinfo($ch, CURLINFO_HTTP_CODE),
     		    'response' => $result
-            );
+            ];
 
             curl_close($ch);
 
@@ -196,9 +194,9 @@ if (!class_exists('CS_REST_CurlTransport')) {
 
 if (!class_exists('CS_REST_SocketWrapper')) {
     class CS_REST_SocketWrapper {
-        var $socket;
+        public $socket;
 
-        function open($domain, $port) {
+        public function open($domain, $port) {
             $this->socket = fsockopen($domain, $port, $errno, $errstr, CS_REST_SOCKET_TIMEOUT);
 
             if(!$this->socket) {
@@ -211,18 +209,18 @@ if (!class_exists('CS_REST_SocketWrapper')) {
             return true;
         }
 
-        function write($data) {
+        public function write($data) {
             fwrite($this->socket, $data);
         }
 
-        function read() {
+        public function read() {
             ob_start();
             fpassthru($this->socket);
 
             return ob_get_clean();
         }
 
-        function close() {
+        public function close() {
             fclose($this->socket);
         }
     }
@@ -231,14 +229,12 @@ if (!class_exists('CS_REST_SocketWrapper')) {
 if (!class_exists('CS_REST_SocketTransport')) {
     class CS_REST_SocketTransport extends CS_REST_BaseTransport {
 
-        var $_socket_wrapper;
+        public $_socket_wrapper;
 
-        function __construct($log, $socket_wrapper = NULL) {
+        public function __construct($log, $socket_wrapper = NULL) {
             parent::__construct($log);
 
-            if(is_null($socket_wrapper)) {
-                $socket_wrapper = new CS_REST_SocketWrapper();
-            }
+            $socket_wrapper ??= new CS_REST_SocketWrapper();
 
             $this->_socket_wrapper = $socket_wrapper;
         }
@@ -246,12 +242,12 @@ if (!class_exists('CS_REST_SocketTransport')) {
         /**
          * @return string The type of transport used
          */
-        function get_type() {
+        public function get_type() {
             return 'Socket';
         }
 
-        function make_call($call_options) {
-            $start_host = strpos($call_options['route'], $call_options['host']);
+        public function make_call($call_options) {
+            $start_host = strpos($call_options['route'], (string) $call_options['host']);
             $host_len = strlen($call_options['host']);
 
             $domain = substr($call_options['route'], $start_host, $host_len);
@@ -261,7 +257,7 @@ if (!class_exists('CS_REST_SocketTransport')) {
             $port = 80;
 
             $this->_log->log_message('Creating socket to '.$domain.' over '.$protocol.' for request to '.$path,
-                get_class($this), CS_REST_LOG_VERBOSE);
+                static::class, CS_REST_LOG_VERBOSE);
 
             if($protocol === 'https://') {
                 $domain = 'ssl://'.$domain;
@@ -273,7 +269,7 @@ if (!class_exists('CS_REST_SocketTransport')) {
                 
                 $request = $this->_build_request($call_options, $host, $path, $inflate_response);
                 $this->_log->log_message('Sending <pre>'.$request.'</pre> down the socket',
-                get_class($this), CS_REST_LOG_VERBOSE);
+                static::class, CS_REST_LOG_VERBOSE);
                  
                 $this->_socket_wrapper->write($request);
                 $response = $this->_socket_wrapper->read();
@@ -282,33 +278,33 @@ if (!class_exists('CS_REST_SocketTransport')) {
                 $this->_log->log_message('API Call Info for '.$call_options['method'].' '.
                 $call_options['route'].': '.strlen($request).
     	            ' bytes uploaded. '.strlen($response).' bytes downloaded', 
-                get_class($this), CS_REST_LOG_VERBOSE);
+                static::class, CS_REST_LOG_VERBOSE);
                 	
-                list( $headers, $result ) = $this->split_and_inflate($response, $inflate_response);
+                [$headers, $result] = $this->split_and_inflate($response, $inflate_response);
                     
                 $this->_log->log_message('Received headers <pre>'.$headers.'</pre>',
-                    get_class($this), CS_REST_LOG_VERBOSE);
+                    static::class, CS_REST_LOG_VERBOSE);
                 	
-                return array(
+                return [
     			    'code' => $this->_get_status_code($headers),
     			    'response' => trim($result)
-                );
+                ];
             }
         }
 
-        function _get_status_code($headers) {
+        public function _get_status_code($headers) {
             if (preg_match('%^\s*HTTP/1\.1 (?P<code>\d{3})%', $headers, $regs)) {
                 $this->_log->log_message('Got HTTP Status Code: '.$regs['code'],
-                get_class($this), CS_REST_LOG_VERBOSE);
+                static::class, CS_REST_LOG_VERBOSE);
                 return $regs['code'];
             }
 
             $this->_log->log_message('Failed to get HTTP status code from request headers <pre>'.$headers.'</pre>',
-                get_class($this), CS_REST_LOG_ERROR);
+                static::class, CS_REST_LOG_ERROR);
             trigger_error('Failed to get HTTP status code from request', E_USER_ERROR);        
         }
 
-        function _build_request($call_options, $host, $path, $accept_gzip) {
+        public function _build_request($call_options, $host, $path, $accept_gzip) {
             $request_auth_details = '';
 
             if (array_key_exists('authdetails', $call_options)) {

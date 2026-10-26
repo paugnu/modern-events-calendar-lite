@@ -34,19 +34,19 @@ class MEC_feature_locations extends MEC_base
      */
     public function init()
     {
-        $this->factory->action('init', array($this, 'register_taxonomy'), 20);
-        $this->factory->action('mec_location_edit_form_fields', array($this, 'edit_form'));
-        $this->factory->action('mec_location_add_form_fields', array($this, 'add_form'));
-        $this->factory->action('edited_mec_location', array($this, 'save_metadata'));
-        $this->factory->action('created_mec_location', array($this, 'save_metadata'));
+        $this->factory->action('init', $this->register_taxonomy(...), 20);
+        $this->factory->action('mec_location_edit_form_fields', $this->edit_form(...));
+        $this->factory->action('mec_location_add_form_fields', $this->add_form(...));
+        $this->factory->action('edited_mec_location', $this->save_metadata(...));
+        $this->factory->action('created_mec_location', $this->save_metadata(...));
         
-        $this->factory->action('mec_metabox_details', array($this, 'meta_box_location'), 30);
-        if(!isset($this->settings['fes_section_location']) or (isset($this->settings['fes_section_location']) and $this->settings['fes_section_location'])) $this->factory->action('mec_fes_metabox_details', array($this, 'meta_box_location'), 30);
+        $this->factory->action('mec_metabox_details', $this->meta_box_location(...), 30);
+        if(!isset($this->settings['fes_section_location']) or (isset($this->settings['fes_section_location']) and $this->settings['fes_section_location'])) $this->factory->action('mec_fes_metabox_details', $this->meta_box_location(...), 30);
         
-        $this->factory->filter('manage_edit-mec_location_columns', array($this, 'filter_columns'));
-        $this->factory->filter('manage_mec_location_custom_column', array($this, 'filter_columns_content'), 10, 3);
+        $this->factory->filter('manage_edit-mec_location_columns', $this->filter_columns(...));
+        $this->factory->filter('manage_mec_location_custom_column', $this->filter_columns_content(...), 10, 3);
         
-        $this->factory->action('save_post', array($this, 'save_event'), 1);
+        $this->factory->action('save_post', $this->save_event(...), 1);
     }
     
     /**
@@ -61,9 +61,9 @@ class MEC_feature_locations extends MEC_base
         register_taxonomy(
             'mec_location',
             $this->main->get_main_post_type(),
-            array(
+            [
                 'label'=>$plural_label,
-                'labels'=>array(
+                'labels'=>[
                     'name'=>$plural_label,
                     'singular_name'=>$singular_label,
                     'all_items'=>sprintf(__('All %s', 'modern-events-calendar-lite'), $plural_label),
@@ -76,12 +76,12 @@ class MEC_feature_locations extends MEC_base
                     'search_items'=>sprintf(__('Search %s', 'modern-events-calendar-lite'), $plural_label),
                     'back_to_items'=>sprintf(__('← Back to %s', 'modern-events-calendar-lite'), $plural_label),
                     'not_found'=>sprintf(__('no %s found.', 'modern-events-calendar-lite'), strtolower($plural_label)),
-                ),
-                'rewrite'=>array('slug'=>'events-location'),
+                ],
+                'rewrite'=>['slug'=>'events-location'],
                 'public'=>false,
                 'show_ui'=>true,
                 'hierarchical'=>false,
-            )
+            ]
         );
         
         register_taxonomy_for_object_type('mec_location', $this->main->get_main_post_type());
@@ -103,8 +103,8 @@ class MEC_feature_locations extends MEC_base
         $thumbnail = get_metadata('term', $term->term_id, 'thumbnail', true);
 
         // Map Options
-        $status = isset($this->settings['google_maps_status']) ? $this->settings['google_maps_status'] : 1;
-        $api_key = isset($this->settings['google_maps_api_key']) ? $this->settings['google_maps_api_key'] : '';
+        $status = $this->settings['google_maps_status'] ?? 1;
+        $api_key = $this->settings['google_maps_api_key'] ?? '';
     ?>
         <tr class="form-field">
             <th scope="row">
@@ -174,8 +174,8 @@ class MEC_feature_locations extends MEC_base
         $this->main->load_map_assets();
 
         // Map Options
-        $status = isset($this->settings['google_maps_status']) ? $this->settings['google_maps_status'] : 1;
-        $api_key = isset($this->settings['google_maps_api_key']) ? $this->settings['google_maps_api_key'] : '';
+        $status = $this->settings['google_maps_status'] ?? 1;
+        $api_key = $this->settings['google_maps_api_key'] ?? '';
     ?>
         <div class="form-field">
             <label for="mec_address"><?php _e('Address', 'modern-events-calendar-lite'); ?></label>
@@ -310,20 +310,20 @@ class MEC_feature_locations extends MEC_base
     {
         $this->main->load_map_assets();
 
-        $locations = get_terms('mec_location', array('orderby'=>'name', 'hide_empty'=>'0'));
+        $locations = get_terms('mec_location', ['orderby'=>'name', 'hide_empty'=>'0']);
         $dont_show_map = get_post_meta($post->ID, 'mec_dont_show_map', true);
 
         $location_id = get_post_meta($post->ID, 'mec_location_id', true);
         $location_id = apply_filters('wpml_object_id', $location_id, 'mec_location', true);
 
         $location_ids = get_post_meta($post->ID, 'mec_additional_location_ids', true);
-        if(!is_array($location_ids)) $location_ids = array();
+        if(!is_array($location_ids)) $location_ids = [];
 
         $additional_locations_status = (!isset($this->settings['additional_locations']) or (isset($this->settings['additional_locations']) and $this->settings['additional_locations'])) ? true : false;
 
         // Map Options
-        $status = isset($this->settings['google_maps_status']) ? $this->settings['google_maps_status'] : 1;
-        $api_key = isset($this->settings['google_maps_api_key']) ? $this->settings['google_maps_api_key'] : '';
+        $status = $this->settings['google_maps_status'] ?? 1;
+        $api_key = $this->settings['google_maps_api_key'] ?? '';
     ?>
         <div class="mec-meta-box-fields mec-event-tab-content" id="mec-location">
             <h4><?php echo sprintf(__('Event Main %s', 'modern-events-calendar-lite'), $this->main->m('taxonomy_location', __('Location', 'modern-events-calendar-lite'))); ?></h4>
@@ -442,7 +442,7 @@ class MEC_feature_locations extends MEC_base
         if(defined('DOING_AUTOSAVE') and DOING_AUTOSAVE) return false;
 
         // Get Modern Events Calendar Data
-        $_mec = isset($_POST['mec']) ? $_POST['mec'] : array();
+        $_mec = $_POST['mec'] ?? [];
         
         // Selected a saved location
         if(isset($_mec['location_id']) and $_mec['location_id'])

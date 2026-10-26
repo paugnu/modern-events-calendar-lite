@@ -7,11 +7,11 @@ defined('MECEXEC') or die();
 $styling = $this->main->get_styling();
 $settings = $this->main->get_settings();
 $current_month_divider = $this->request->getVar('current_month_divider', 0);
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
 $event_colorskin = (isset($styling['mec_colorskin']) || isset($styling['color'])) ? 'colorskin-custom' : '';
-$map_events = array();
+$map_events = [];
 ?>
 <div class="mec-wrap <?php echo $event_colorskin; ?>">
 	<div class="mec-event-list-<?php echo $this->style; ?>">
@@ -27,10 +27,10 @@ $map_events = array();
                     $map_events[] = $event;
 
                     $location_id = $this->main->get_master_location_id($event);
-                    $location = ($location_id ? $this->main->get_location_data($location_id) : array());
+                    $location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
                     $organizer_id = $this->main->get_master_organizer_id($event);
-                    $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+                    $organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
                     $start_time = (isset($event->data->time) ? $event->data->time['start'] : '');
                     $end_time = (isset($event->data->time) ? $event->data->time['end'] : '');
@@ -76,14 +76,14 @@ $map_events = array();
                         <?php do_action('list_std_title_hook', $event); ?>
                         <?php $soldout = $this->main->get_flags($event); ?>
                         <h4 class="mec-event-title"><?php echo $this->display_link($event); ?><?php echo $soldout.$event_color; echo $this->main->get_normal_labels($event, $display_label).$this->main->display_cancellation_reason($event, $reason_for_cancellation); ?><?php echo $this->display_custom_data($event); ?><?php do_action('mec_shortcode_virtual_badge', $event->data->ID ); ?><?php echo $this->get_label_captions($event,'mec-fc-style'); ?></h4>
-                        <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                        <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                         <div class="mec-event-detail">
-                            <div class="mec-event-loc-place"><?php echo (isset($location['name']) ? $location['name'] : '') . (isset($location['address']) && !empty($location['address']) ? ' | '.$location['address'] : ''); ?></div>
+                            <div class="mec-event-loc-place"><?php echo ($location['name'] ?? '') . (isset($location['address']) && !empty($location['address']) ? ' | '.$location['address'] : ''); ?></div>
                             <?php if($this->include_events_times and trim($start_time)) echo $this->main->display_time($start_time, $end_time); ?>
                             <?php echo $this->display_categories($event); ?>
                             <?php echo $this->display_organizers($event); ?>
                         </div>
-                        <ul class="mec-event-sharing"><?php echo $this->main->module('links.list', array('event'=>$event)); ?></ul>
+                        <ul class="mec-event-sharing"><?php echo $this->main->module('links.list', ['event'=>$event]); ?></ul>
                     </div>
                     <div class="col-md-4 col-sm-4 mec-btn-wrapper">
                         <?php echo $this->booking_button($event, 'icon'); ?>
@@ -99,9 +99,9 @@ $map_events = array();
                         <div class="mec-event-time mec-color"><?php if($this->include_events_times and trim($start_time)) {echo '<i class="mec-sl-clock"></i>'; echo $this->main->display_time($start_time, $end_time); } ?></div>
                     <?php endif; ?>
                     <?php echo $this->get_label_captions($event); ?>
-                    <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                    <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                     <h4 class="mec-event-title"><?php echo $this->display_link($event); ?><?php echo $this->display_custom_data($event); ?><?php echo $this->main->get_flags($event).$event_color.$this->main->get_normal_labels($event, $display_label).$this->main->display_cancellation_reason($event, $reason_for_cancellation); ?><?php do_action('mec_shortcode_virtual_badge', $event->data->ID ); ?></h4>
-                    <?php if(isset($location['name'])): ?><div class="mec-event-detail"><div class="mec-event-loc-place"><i class="mec-sl-map-marker"></i> <?php echo (isset($location['name']) ? $location['name'] : ''); ?></div></div><?php endif; ?>
+                    <?php if(isset($location['name'])): ?><div class="mec-event-detail"><div class="mec-event-loc-place"><i class="mec-sl-map-marker"></i> <?php echo ($location['name'] ?? ''); ?></div></div><?php endif; ?>
                     <?php echo $this->display_categories($event); ?>
                     <?php echo $this->display_organizers($event); ?>
                     <?php do_action('mec_list_classic_after_location', $event, $this->skin_options); ?>
@@ -135,7 +135,7 @@ $map_events = array();
                         <h4 class="mec-event-title"><?php echo $this->display_link($event); ?><?php echo $this->display_custom_data($event); ?><?php echo $this->main->get_flags($event).$event_color.$this->main->get_normal_labels($event, $display_label).$this->main->display_cancellation_reason($event, $reason_for_cancellation); ?><?php do_action('mec_shortcode_virtual_badge', $event->data->ID ); ?></h4>
                         <div class="mec-event-detail">
                             <?php echo $this->main->date_i18n($this->date_format_minimal_3, strtotime($event->date['start']['date'])); ?>
-                            <?php echo (isset($location['name']) ? ', <span class="mec-event-loc-place">' . $location['name'] .'</span>' : ''); ?> <?php if($this->localtime) echo $this->main->module('local-time.type2', array('event'=>$event)); ?>
+                            <?php echo (isset($location['name']) ? ', <span class="mec-event-loc-place">' . $location['name'] .'</span>' : ''); ?> <?php if($this->localtime) echo $this->main->module('local-time.type2', ['event'=>$event]); ?>
                         </div>
                         <?php do_action('mec_list_minimal_after_details', $event); ?>
                         <?php echo $this->display_categories($event); ?>
@@ -178,10 +178,10 @@ $map_events = array();
                                 </div>
                                 <?php echo $this->get_label_captions($event); ?>
                                 <?php echo $this->main->display_time($start_time, $end_time); ?>
-                                <?php if($this->localtime) echo $this->main->module('local-time.type1', array('event'=>$event)); ?>
+                                <?php if($this->localtime) echo $this->main->module('local-time.type1', ['event'=>$event]); ?>
                                 <?php if(isset($location['name'])): ?>
                                 <div class="mec-venue-details">
-                                    <span><?php echo (isset($location['name']) ? $location['name'] : ''); ?></span><address class="mec-event-address"><span><?php echo (isset($location['address']) ? $location['address'] : ''); ?></span></address>
+                                    <span><?php echo ($location['name'] ?? ''); ?></span><address class="mec-event-address"><span><?php echo ($location['address'] ?? ''); ?></span></address>
                                 </div>
                                 <?php endif; ?>
                                 <?php echo $this->display_categories($event); ?>
@@ -201,7 +201,7 @@ $map_events = array();
                             </li>
                             <li>
                                 <ul class="mec-event-sharing">
-                                    <?php echo $this->main->module('links.list', array('event'=>$event)); ?>
+                                    <?php echo $this->main->module('links.list', ['event'=>$event]); ?>
                                 </ul>
                             </li>
                         </ul>
@@ -236,7 +236,7 @@ $map_events = array();
                             </div>
                             <div class="mec-content-toggle" aria-hidden="true" style="display: none;">
                                 <div class="mec-toggle-content">
-                                    <?php echo $this->render->vsingle(array('id'=>$event->data->ID, 'layout'=>'m2')); ?>
+                                    <?php echo $this->render->vsingle(['id'=>$event->data->ID, 'layout'=>'m2']); ?>
                                 </div>
                             </div>
                         </div><!-- toggle item end -->
@@ -266,8 +266,8 @@ if(isset($this->map_on_top) and $this->map_on_top and isset($map_events) and !em
         {
             id: "'.$this->id.'",
             autoinit: false,
-            atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
-            zoom: '.(isset($settings['google_maps_zoomlevel']) ? $settings['google_maps_zoomlevel'] : 14).',
+            atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
+            zoom: '.($settings['google_maps_zoomlevel'] ?? 14).',
             icon: "'.apply_filters('mec_marker_icon', $this->main->asset('img/m-04.png')).'",
             styles: '.((isset($settings['google_maps_style']) and trim($settings['google_maps_style']) != '') ? $this->main->get_googlemap_style($settings['google_maps_style']) : "''").',
             markers: jsonPush,

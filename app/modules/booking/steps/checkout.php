@@ -11,11 +11,11 @@ $event_id = $event->ID;
 $gateways = $this->main->get_gateways();
 
 $booking_options = get_post_meta($event_id, 'mec_booking', true);
-if(!is_array($booking_options)) $booking_options = array();
+if(!is_array($booking_options)) $booking_options = [];
 
 $gateway_settings = $this->main->get_gateways_options();
 
-$active_gateways = array();
+$active_gateways = [];
 foreach($gateways as $gateway)
 {
     if(!$gateway->enabled()) continue;
@@ -31,7 +31,7 @@ foreach($gateways as $gateway)
     // When Stripe Connect is enabled and organizer is connected then skip other gateways
     if($gateway->id() == 7 and get_user_meta(get_post_field('post_author', $event_id), 'mec_stripe_id', true)) // Stripe Connect
     {
-        $active_gateways = array($gateway);
+        $active_gateways = [$gateway];
         break;
     }
 }
@@ -117,7 +117,7 @@ if($mecFluentEnable)
     <?php endif; ?>
     <?php do_action('mec-booking-after-coupon-form', $transaction_id, $uniqueid); ?>
     <div class="mec-book-form-gateways">
-        <?php $first_gateway_id = NULL; foreach($active_gateways as $gateway): if(is_null($first_gateway_id)) $first_gateway_id = $gateway->id(); ?>
+        <?php $first_gateway_id = NULL; foreach($active_gateways as $gateway): $first_gateway_id ??= $gateway->id(); ?>
         <div class="mec-book-form-gateway-label">
             <label>
                 <?php if(count($active_gateways) > 1): ?>

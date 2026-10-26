@@ -17,20 +17,6 @@ use InvalidArgumentException;
 class InvalidDateException extends InvalidArgumentException
 {
     /**
-     * The invalid field.
-     *
-     * @var string
-     */
-    private $field;
-
-    /**
-     * The invalid value.
-     *
-     * @var mixed
-     */
-    private $value;
-
-    /**
      * Constructor.
      *
      * @param string          $field
@@ -38,11 +24,15 @@ class InvalidDateException extends InvalidArgumentException
      * @param int             $code
      * @param \Exception|null $previous
      */
-    public function __construct($field, $value, $code = 0, Exception $previous = null)
+    public function __construct(/**
+     * The invalid field.
+     */
+    private $field, /**
+     * The invalid value.
+     */
+    private $value, $code = 0, ?Exception $previous = null)
     {
-        $this->field = $field;
-        $this->value = $value;
-        parent::__construct($field.' : '.$value.' is not a valid value.', $code, $previous);
+        parent::__construct($this->field.' : '.$this->value.' is not a valid value.', $code, $previous);
     }
 
     /**

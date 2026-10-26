@@ -12,12 +12,12 @@ echo '<dl class="mec-calendar-table-head"><dt class="mec-calendar-day-head">'.im
 $week_start = $this->main->get_first_day_of_week();
 
 // Single Event Display Method
-$target_set = isset($this->skin_options['sed_method']) ? $this->skin_options['sed_method'] : false;
+$target_set = $this->skin_options['sed_method'] ?? false;
 $target_url = ($target_set == 'new') ? 'target="_blank"' : '';
 
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
 // days and weeks vars
 $running_day = date('w', mktime(0, 0, 0, $month, 1, $year));
@@ -102,7 +102,7 @@ elseif($week_start == 5) // Friday
                     $tooltip_content .= (!empty($event->data->thumbnails['thumbnail']) || !empty($event->data->content)) ? '<div class="mec-tooltip-event-content">' : '';
                     $tooltip_content .= !empty($event->data->thumbnails['thumbnail']) ? '<div class="mec-tooltip-event-featured">'.$event->data->thumbnails['thumbnail'].'</div>' : '';
                     $tooltip_content .= !empty($event->data->content) ? '<div class="mec-tooltip-event-desc">'.$event_content.' , ...</div>' : '';
-                    if($this->localtime) $tooltip_content .= $this->main->module('local-time.type2', array('event'=>$event));
+                    if($this->localtime) $tooltip_content .= $this->main->module('local-time.type2', ['event'=>$event]);
                     $tooltip_content .= (!empty($event->data->thumbnails['thumbnail']) || !empty($event->data->content)) ? '</div>' : '';
                     $tooltip_content .= $this->booking_button($event);
                     $tooltip_content .= $this->display_custom_data($event);

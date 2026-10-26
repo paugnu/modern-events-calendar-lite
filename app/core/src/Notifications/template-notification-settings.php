@@ -47,7 +47,7 @@ $options = $atts['options'];
             </div>
             <div class="mec-col-9">
                 <?php
-                    $users = isset($options['receiver_users']) ? $options['receiver_users'] : array();
+                    $users = $options['receiver_users'] ?? [];
                     echo \MEC\Base::get_main()->get_users_dropdown($users, $group_id . '_notification');
                 ?>
                 <span class="mec-tooltip">
@@ -68,7 +68,7 @@ $options = $atts['options'];
             </div>
             <div class="mec-col-9">
                 <?php
-                    $roles = isset($options['receiver_roles']) ? $options['receiver_roles'] : array();
+                    $roles = $options['receiver_roles'] ?? [];
                     echo \MEC\Base::get_main()->get_roles_dropdown($roles, $group_id . '_notification');
                 ?>
                 <span class="mec-tooltip">
@@ -87,7 +87,7 @@ $options = $atts['options'];
                 <label for="mec_notifications_<?php echo $group_id;  ?>_notification_recipients"><?php _e('Custom Recipients', 'mec'); ?></label>
             </div>
             <div class="mec-col-9">
-                <input type="text" name="<?php echo $base_field_name; ?>[<?php echo $group_id; ?>_notification][recipients]" id="mec_notifications_<?php echo $group_id;  ?>_notification_recipients" value="<?php echo (isset($options['recipients']) ? $options['recipients'] : ''); ?>" />
+                <input type="text" name="<?php echo $base_field_name; ?>[<?php echo $group_id; ?>_notification][recipients]" id="mec_notifications_<?php echo $group_id;  ?>_notification_recipients" value="<?php echo ($options['recipients'] ?? ''); ?>" />
                 <span class="mec-tooltip">
                     <div class="box left">
                         <h5 class="title"><?php _e('Custom Recipients', 'mec'); ?></h5>
@@ -107,9 +107,9 @@ $options = $atts['options'];
             wp_editor(
                 $content,
                 'mec_notifications_' . $group_id . '_notification_content',
-                array(
+                [
                     'textarea_name'=> $base_field_name.'['. $group_id.'_notification][content]'
-                )
+                ]
             );
             ?>
         </div>

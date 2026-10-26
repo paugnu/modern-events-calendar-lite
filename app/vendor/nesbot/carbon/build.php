@@ -13,13 +13,11 @@ $tagsCommand = count($remotes)
 $tags = array_map(function ($ref) {
     $ref = explode('refs/tags/', $ref);
 
-    return isset($ref[1]) ? $ref[1] : $ref[0];
-}, array_filter(explode("\n", trim(shell_exec($tagsCommand))), function ($ref) {
-    return substr($ref, -3) !== '^{}';
-}));
-usort($tags, 'version_compare');
+    return $ref[1] ?? $ref[0];
+}, array_filter(explode("\n", trim(shell_exec($tagsCommand))), fn($ref) => !str_ends_with($ref, '^{}')));
+usort($tags, version_compare(...));
 
-$tag = isset($argv[1]) && !in_array($argv[1], array('last', 'latest')) ? $argv[1] : end($tags);
+$tag = isset($argv[1]) && !in_array($argv[1], ['last', 'latest']) ? $argv[1] : end($tags);
 
 if (strtolower($tag) !== 'all') {
     if (!in_array($tag, $tags)) {
@@ -32,7 +30,7 @@ if (strtolower($tag) !== 'all') {
         exit(1);
     }
 
-    $tags = array($tag);
+    $tags = [$tag];
 }
 
 foreach ($tags as $tag) {
@@ -51,7 +49,7 @@ foreach ($tags as $tag) {
 
     $zip->open($archive, ZipArchive::CREATE | ZipArchive::OVERWRITE);
 
-    foreach (array('src', 'vendor', 'Carbon') as $directory) {
+    foreach (['src', 'vendor', 'Carbon'] as $directory) {
         if (is_dir($directory)) {
             $directory = realpath($directory);
             $base = dirname($directory);

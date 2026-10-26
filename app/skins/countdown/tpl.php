@@ -7,11 +7,11 @@ defined('MECEXEC') or die();
 $styling = $this->main->get_styling();
 $event = $this->events[0];
 $settings = $this->main->get_settings();
-$this->localtime = isset($this->skin_options['include_local_time']) ? $this->skin_options['include_local_time'] : false;
-$display_label = isset($this->skin_options['display_label']) ? $this->skin_options['display_label'] : false;
-$reason_for_cancellation = isset($this->skin_options['reason_for_cancellation']) ? $this->skin_options['reason_for_cancellation'] : false;
+$this->localtime = $this->skin_options['include_local_time'] ?? false;
+$display_label = $this->skin_options['display_label'] ?? false;
+$reason_for_cancellation = $this->skin_options['reason_for_cancellation'] ?? false;
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 
@@ -21,10 +21,10 @@ if(!isset($event->data)) return;
 $event_colorskin = (isset($styling['mec_colorskin']) || isset($styling['color'])) ? 'colorskin-custom' : '';
 
 $location_id = $this->main->get_master_location_id($event);
-$event_location = ($location_id ? $this->main->get_location_data($location_id) : array());
+$event_location = ($location_id ? $this->main->get_location_data($location_id) : []);
 
 $organizer_id = $this->main->get_master_organizer_id($event);
-$event_organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : array());
+$event_organizer = ($organizer_id ? $this->main->get_organizer_data($organizer_id) : []);
 
 $event_date = (isset($event->date['start']) ? $event->date['start']['date'] : $event->data->meta['mec_start_date']);
 $event_title = $event->data->title;
@@ -36,18 +36,18 @@ $event_time = '';
 if(isset($event->data->time['start_raw'])) $event_time = $event->data->time['start_raw'];
 else
 {
-    $event_time .= sprintf("%02d", (isset($event->data->meta['mec_date']['start']['hour']) ? $event->data->meta['mec_date']['start']['hour'] : 8)).':';
-    $event_time .= sprintf("%02d", (isset($event->data->meta['mec_date']['start']['minutes']) ? $event->data->meta['mec_date']['start']['minutes'] : 0));
-    $event_time .= (isset($event->data->meta['mec_date']['start']['ampm']) ? $event->data->meta['mec_date']['start']['ampm'] : 'AM');
+    $event_time .= sprintf("%02d", ($event->data->meta['mec_date']['start']['hour'] ?? 8)).':';
+    $event_time .= sprintf("%02d", ($event->data->meta['mec_date']['start']['minutes'] ?? 0));
+    $event_time .= ($event->data->meta['mec_date']['start']['ampm'] ?? 'AM');
 }
 
 $event_etime = '';
 if(isset($event->data->time['end_raw'])) $event_etime = $event->data->time['end_raw'];
 else
 {
-    $event_etime .= sprintf("%02d", (isset($event->data->meta['mec_date']['end']['hour']) ? $event->data->meta['mec_date']['end']['hour'] : 6)).':';
-    $event_etime .= sprintf("%02d", (isset($event->data->meta['mec_date']['end']['minutes']) ? $event->data->meta['mec_date']['end']['minutes'] : 0));
-    $event_etime .= (isset($event->data->meta['mec_date']['end']['ampm']) ? $event->data->meta['mec_date']['end']['ampm'] : 'PM');
+    $event_etime .= sprintf("%02d", ($event->data->meta['mec_date']['end']['hour'] ?? 6)).':';
+    $event_etime .= sprintf("%02d", ($event->data->meta['mec_date']['end']['minutes'] ?? 0));
+    $event_etime .= ($event->data->meta['mec_date']['end']['ampm'] ?? 'PM');
 }
 
 $start_time = date('D M j Y G:i:s', strtotime($start_date.' '.date('H:i:s', strtotime($event_time))));
@@ -69,7 +69,7 @@ if($ongoing and $d3 < $d2) $ongoing = false;
 if($d1 < $d2 and !$ongoing) return;
 
 $gmt_offset = $this->main->get_gmt_offset($event);
-if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Safari') === false) $gmt_offset = ' : '.$gmt_offset;
+if(isset($_SERVER['HTTP_USER_AGENT']) and !str_contains($_SERVER['HTTP_USER_AGENT'], 'Safari')) $gmt_offset = ' : '.$gmt_offset;
 if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Edge') == true) $gmt_offset = substr(trim($gmt_offset), 0 , 3);
 if(isset($_SERVER['HTTP_USER_AGENT']) and strpos($_SERVER['HTTP_USER_AGENT'], 'Trident') == true) $gmt_offset = substr(trim($gmt_offset), 2 , 3);
 
@@ -145,7 +145,7 @@ do_action('mec_countdown_skin_head');
                     </div>
                 </ul>
             </div>
-            <?php if($this->localtime) echo $this->main->module('local-time.type3', array('event'=>$event)); ?>
+            <?php if($this->localtime) echo $this->main->module('local-time.type3', ['event'=>$event]); ?>
         </div>
         <div class="mec-event-countdown-part3 col-md-3">
             <?php echo $this->display_link($event, $this->main->m('event_detail', __('EVENT DETAIL', 'modern-events-calendar-lite')), 'mec-event-button'); ?>
@@ -191,7 +191,7 @@ do_action('mec_countdown_skin_head');
                     </div>
                 </ul>
             </div>
-            <?php if($this->localtime) echo $this->main->module('local-time.type3', array('event'=>$event)); ?>
+            <?php if($this->localtime) echo $this->main->module('local-time.type3', ['event'=>$event]); ?>
         </div>
         <div class="mec-event-countdown-part3 col-md-3">
             <?php echo $this->display_link($event, $this->main->m('event_detail', __('EVENT DETAIL', 'modern-events-calendar-lite')), 'mec-event-button'); ?>
@@ -203,7 +203,7 @@ do_action('mec_countdown_skin_head');
             <div class="mec-event-countdown-part-title">
                 <div class="mec-event-upcoming"><?php echo sprintf(__('%s Upcoming Event', 'modern-events-calendar-lite'), '<span>'.__('Next', 'modern-events-calendar-lite').'</span>'); ?></div>
             </div>
-            <?php if($this->localtime) echo $this->main->module('local-time.type3', array('event'=>$event)); ?>
+            <?php if($this->localtime) echo $this->main->module('local-time.type3', ['event'=>$event]); ?>
             <div class="mec-event-countdown-part-details">
                 <div class="mec-event-date">
                     <span class="mec-date1"><?php echo $this->main->date_i18n($this->date_format_style31, strtotime($event_date)); ?></span>

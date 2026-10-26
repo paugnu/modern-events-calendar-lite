@@ -21,7 +21,7 @@ trait NestedResource
     {
         self::_validateParams($params);
 
-        list($response, $opts) = static::_staticRequest($method, $url, $params, $options);
+        [$response, $opts] = static::_staticRequest($method, $url, $params, $options);
         $obj = \Stripe\Util\Util::convertToStripeObject($response->json, $opts);
         $obj->setLastResponse($response);
 

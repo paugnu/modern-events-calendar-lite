@@ -6,9 +6,9 @@ use MEC\Singleton;
 
 class FormFields extends Singleton {
 
-	public function input_key($key,$field_type, $values = array(), $prefix = 'reg'){
+	public function input_key($key,$field_type, $values = [], $prefix = 'reg'){
 
-		$allowed_mapping_for = array(
+		$allowed_mapping_for = [
 			'text',
 			'url',
 			'date',
@@ -16,12 +16,12 @@ class FormFields extends Singleton {
 			'textarea',
 			'checkbox',
 			'select',
-		);
+		];
 
 		$html = '';
-		if(false !== strpos($prefix,'_reg') && in_array($field_type,$allowed_mapping_for)){
+		if(str_contains($prefix,'_reg') && in_array($field_type,$allowed_mapping_for)){
 
-			$v = isset( $values['mapping'] ) ? $values['mapping'] : '';
+			$v = $values['mapping'] ?? '';
 			$html = $this->get_wp_user_fields_dropdown(
 				'mec[' . $prefix . '_fields][' . $key . '][mapping]',
 				$v
@@ -45,7 +45,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_text( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_text( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '" class="mec_form_field_item">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -76,7 +76,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_name( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_name( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
              <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -106,7 +106,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_mec_email( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_mec_email( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
              <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -136,7 +136,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_email( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_email( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -167,7 +167,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_url( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_url( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -198,7 +198,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_file( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_file( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -228,7 +228,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_date( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_date( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -259,7 +259,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_tel( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_tel( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -290,7 +290,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_textarea( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_textarea( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -321,7 +321,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_p( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_p( $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_' . $key . '">
             <span class="mec_' . $prefix . '_field_sort mec_field_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -344,7 +344,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_checkbox( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_checkbox( $key, $values = [], $prefix = 'reg' ) {
 
 		$i     = 0;
 		$field = '<li id="mec_' . $prefix . '_fields_' . $key . '">
@@ -390,7 +390,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_radio( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_radio( $key, $values = [], $prefix = 'reg' ) {
 
 		$i     = 0;
 		$field = '<li id="mec_' . $prefix . '_fields_' . $key . '">
@@ -436,7 +436,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_select( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_select( $key, $values = [], $prefix = 'reg' ) {
 
 		$i     = 0;
 		$field = '<li id="mec_' . $prefix . '_fields_' . $key . '">
@@ -489,7 +489,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_agreement( $key, $values = array(), $prefix = 'reg' ) {
+	public function field_agreement( $key, $values = [], $prefix = 'reg' ) {
 
 		// WordPress Pages
 		$pages = get_pages();
@@ -545,7 +545,7 @@ class FormFields extends Singleton {
 	 *
 	 * @return string
 	 */
-	public function field_option( $field_key, $key, $values = array(), $prefix = 'reg' ) {
+	public function field_option( $field_key, $key, $values = [], $prefix = 'reg' ) {
 
 		return '<li id="mec_' . $prefix . '_fields_option_' . $field_key . '_' . $key . '" class="mec_fields_option">
             <span class="mec_' . $prefix . '_field_option_sort mec_field_option_sort">' . __( 'Sort', 'mec' ) . '</span>
@@ -571,7 +571,7 @@ class FormFields extends Singleton {
 	public function get_wp_user_fields() {
 
 		$raw_fields = get_user_meta( get_current_user_id() );
-		$forbidden  = array(
+		$forbidden  = [
 			'nickname',
 			'syntax_highlighting',
 			'comment_shortcuts',
@@ -588,30 +588,30 @@ class FormFields extends Singleton {
 			'show_welcome_panel',
 			'rich_editing',
 			'nav_menu_recently_edited',
-		);
+		];
 
-		$fields = array();
+		$fields = [];
 		foreach ( $raw_fields as $key => $values ) {
-			if ( substr( $key, 0, 1 ) === '_' ) {
+			if ( str_starts_with($key, '_') ) {
 				continue;
 			}
-			if ( substr( $key, 0, 4 ) === 'icl_' ) {
+			if ( str_starts_with($key, 'icl_') ) {
 				continue;
 			}
-			if ( substr( $key, 0, 4 ) === 'mec_' ) {
+			if ( str_starts_with($key, 'mec_') ) {
 				continue;
 			}
-			if ( substr( $key, 0, 3 ) === 'wp_' ) {
+			if ( str_starts_with($key, 'wp_') ) {
 				continue;
 			}
-			if ( substr( $key, 0, 10 ) === 'dismissed_' ) {
+			if ( str_starts_with($key, 'dismissed_') ) {
 				continue;
 			}
 			if ( in_array( $key, $forbidden ) ) {
 				continue;
 			}
 
-			$value = ( isset( $values[0] ) ? $values[0] : null );
+			$value = ( $values[0] ?? null );
 			if ( is_array( $value ) ) {
 				continue;
 			}

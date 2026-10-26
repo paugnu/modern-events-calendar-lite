@@ -6,7 +6,7 @@ defined('MECEXEC') or die();
 $render_path = $this->get_render_path();
 $styling = $this->main->get_styling();
 
-$dark_mode = (isset($styling['dark_mode']) ? $styling['dark_mode'] : '');
+$dark_mode = ($styling['dark_mode'] ?? '');
 if($dark_mode == 1) $set_dark = 'mec-dark-mode';
 else $set_dark = '';
 
@@ -16,7 +16,7 @@ $items_html = ob_get_clean();
 
 if(isset($this->atts['return_items']) and $this->atts['return_items'])
 {
-    echo json_encode(array('html'=>$items_html, 'end_date'=>$this->end_date, 'offset'=>$this->next_offset, 'count'=>$this->found, 'has_more_event' => (int) $this->has_more_events));
+    echo json_encode(['html'=>$items_html, 'end_date'=>$this->end_date, 'offset'=>$this->next_offset, 'count'=>$this->found, 'has_more_event' => (int) $this->has_more_events]);
     exit;
 }
 
@@ -34,7 +34,7 @@ jQuery(document).ready(function()
         end_date: "'.$this->end_date.'",
 		offset: "'.$this->next_offset.'",
 		limit: "'.$this->limit.'",
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",

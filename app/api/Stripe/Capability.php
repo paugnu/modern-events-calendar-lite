@@ -60,7 +60,7 @@ class Capability extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function retrieve($_id, $_opts = null)
+    public static function retrieve($_id, $_opts = null): never
     {
         $msg = 'Capabilities cannot be retrieved without an account ID. ' .
                'Retrieve a capability using `Account::retrieveCapability(' .
@@ -76,7 +76,7 @@ class Capability extends ApiResource
      *
      * @throws \Stripe\Exception\BadMethodCallException
      */
-    public static function update($_id, $_params = null, $_options = null)
+    public static function update($_id, $_params = null, $_options = null): never
     {
         $msg = 'Capabilities cannot be updated without an account ID. ' .
                'Update a capability using `Account::updateCapability(' .

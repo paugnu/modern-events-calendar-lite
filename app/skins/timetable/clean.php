@@ -13,9 +13,9 @@ $date_events = ob_get_clean();
 // Return the data if called by AJAX
 if(isset($this->atts['return_items']) and $this->atts['return_items'])
 {
-    echo json_encode(array(
+    echo json_encode([
         'date_events'=>$date_events,
-    ));
+    ]);
     exit;
 }
 
@@ -30,7 +30,7 @@ jQuery(document).ready(function()
     {
         id: "'.$this->id.'",
         ajax_url: "'.admin_url('admin-ajax.php', NULL).'",
-        atts: "'.http_build_query(array('atts'=>$this->atts), '', '&').'",
+        atts: "'.http_build_query(['atts'=>$this->atts], '', '&').'",
         sed_method: "'.$sed_method.'",
         image_popup: "'.$this->image_popup.'",
         sf:
